@@ -2,17 +2,6 @@ import { Suspense, lazy } from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import DashboardLayout from '../layouts';
-// import ConstructionList from '../pages/dashboard/construction/ConstructionList';
-// layouts
-// import MainLayout from '../layouts/main';
-// import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
-// guards
-// import GuestGuard from '../guards/GuestGuard';
-// import AuthGuard from '../guards/AuthGuard';
-// import RoleBasedGuard from '../guards/RoleBasedGuard';
-// config
-// import { PATH_AFTER_LOGIN } from '../config';
-// import LoadingScreen from '../components/LoadingScreen';
 
 // ----------------------------------------------------------------------
 
@@ -58,64 +47,63 @@ export default function Router() {
     {
       path: 'dashboard',
       element: (
-        // <AuthGuard>
-        //   <DashboardLayout />
-        // </AuthGuard>
         <DashboardLayout />
       ),
       children: [
         // { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         // { path: 'analytics', element: <GeneralAnalytics /> },
         {
-          path: 'construction',
+          path: 'voucher',
           children: [
-            { element: <Navigate to="/dashboard/construction/list" replace />, index: true },
-            { path: 'list', element: <ConstructionList /> },
-            { path: 'new', element: <ConstructionCreateEdit /> },
-            { path: ':id/edit', element: <ConstructionCreateEdit /> },
-            { path: ':id/history', element: <ConstructionHistoryTimeKeeping /> },
+            { element: <Navigate to="/dashboard/voucher/list" replace />, index: true },
+            { path: 'list', element: <VoucherList /> },
+            { path: 'new', element: <VoucherCreateEdit /> },
+            { path: ':id/edit', element: <VoucherCreateEdit /> },
           ],
         },
+
+        {
+          path: 'product',
+          children: [
+            { element: <Navigate to="/dashboard/product/list" replace />, index: true },
+            { path: 'list', element: <ProductList /> },
+          ],
+        },
+
+        {
+          path: 'bill',
+          children: [
+            { element: <Navigate to="/dashboard/bill/list" replace />, index: true },
+            { path: 'list', element: <BillList /> },
+          ],
+        },
+
         {
           path: 'employee',
           children: [
             { element: <Navigate to="/dashboard/employee/list" replace />, index: true },
             { path: 'list', element: <EmployeeList /> },
-            // { path: 'new', element: <UserCreate /> },
-            // { path: ':id/edit', element: <UserCreate /> },
+          ],
+        },
+
+        {
+          path: 'customer',
+          children: [
+            { element: <Navigate to="/dashboard/customer/list" replace />, index: true },
+            { path: 'list', element: <CustomerList /> },
           ],
         },
       ],
     },
 
-    { path: '/', element: <Navigate to="/dashboard/employee/list" replace /> },
+    // { path: '/', element: <Navigate to="/dashboard/employee/list" replace /> },
     // { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }
 
-// AUTHENTICATION
-// const Login = Loadable(lazy(() => import('../pages/auth/Login')));
-// const Register = Loadable(lazy(() => import('../pages/auth/Register')));
-// const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword')));
-// const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
-
-// DASHBOARD
-
-// GENERAL
-// const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
-
-// CONSTRUCTION
-const ConstructionList = Loadable(lazy(() => import('../pages/dashboard/construction/ConstructionList')));
-const ConstructionCreateEdit = Loadable(lazy(() => import('../pages/dashboard/construction/ConstructionCreateEdit')));
-const ConstructionHistoryTimeKeeping = Loadable(lazy(() => import('../pages/dashboard/construction/ConstructionHistoryTimeKeeping')));
-// const InvoiceDetails = Loadable(lazy(() => import('../pages/dashboard/InvoiceDetails')));
-// const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/InvoiceCreate')));
-// const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/InvoiceEdit')));
-
-// EMPLOYEE
-// const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
-// const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
+const VoucherList = Loadable(lazy(() => import('../pages/dashboard/voucher/VoucherList')));
+const VoucherCreateEdit = Loadable(lazy(() => import('../pages/dashboard/voucher/VoucherCreateEdit')));
+const BillList = Loadable(lazy(() => import('../pages/dashboard/bill/BillList')));
+const ProductList = Loadable(lazy(() => import('../pages/dashboard/product/ProductList')));
 const EmployeeList = Loadable(lazy(() => import('../pages/dashboard/employee/EmployeeList')));
-// const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
-// const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
-
+const CustomerList = Loadable(lazy(() => import('../pages/dashboard/customer/CustomerList')));
