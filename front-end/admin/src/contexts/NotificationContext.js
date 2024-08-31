@@ -24,9 +24,9 @@ const emitterToast = {
   position: "top-right",
   autoClose: 5000,
   hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: false,
-  draggable: true,
+  // closeOnClick: true,
+  // pauseOnHover: false,
+  // draggable: true,
   progress: undefined,
   theme: "light",
   transition: Bounce,
@@ -47,7 +47,14 @@ function NofiticationProvider({ children }) {
         onOpenInfoNotify: infoNotify,
       }}
     >
-      <ToastContainer limit={3} pauseOnFocusLoss={false} />
+      <ToastContainer
+        draggable
+        autoClose={5000}
+        closeOnClick
+        limit={3}
+        pauseOnFocusLoss={false}
+        transition={Bounce}
+      />
       {children}
     </NotificationContext.Provider>
   )

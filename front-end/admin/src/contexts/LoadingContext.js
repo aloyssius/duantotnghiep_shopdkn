@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { createContext, useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
+import LoadingScreen from '../components/LoadingScreen';
 
 const initialState = {
   onOpenLoading: () => { },
@@ -37,6 +38,7 @@ function LoadingProvider({ children }) {
     setIsLoading(false);
   }
 
+
   return (
     <LoadingContext.Provider
       value={{
@@ -45,9 +47,7 @@ function LoadingProvider({ children }) {
       }}
     >
       {isLoading &&
-        <div style={{ ...rootStyle }}>
-          <AtomSpinner color="#108ee9" />
-        </div>
+        <LoadingScreen />
       }
       {children}
     </LoadingContext.Provider>
