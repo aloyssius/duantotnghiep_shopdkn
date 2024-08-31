@@ -1,38 +1,49 @@
 iframe#webpack-dev-server-client-overlay {
   display: none;
 }
-.root-color{
-color: #108ee9;
+
+.ant-table-thead .ant-table-cell {
+  background-color: #38B6FF !important;
+  color: white !important;
 }
 
-.root-bg-color{
-color: #108ee9;
+.root-color {
+  color: #38B6FF;
 }
 
-.color-red{
+.ant-btn-primary {
+  background-color: #38B6FF;
+}
+
+.root-bg-color {
+  color: #38B6FF;
+}
+
+.color-red {
   color: red;
 }
 
-.d-flex{
+.d-flex {
   display: flex;
 }
-.justify-content-between{
+
+.justify-content-between {
   justify-content: space-between;
 }
 
-.pointer{
+.pointer {
   cursor: pointer;
 }
 
-.d-block{
+.d-block {
   display: block;
 }
 
-.d-inline{
+.d-inline {
   display: inline;
 }
 
-.d-inline-block{
+.d-inline-block {
   display: inline-block;
 }
 
@@ -40,42 +51,51 @@ color: #108ee9;
   font-weight: 500;
 }
 
-.fw-400{
+.fw-400 {
   font-weight: 400;
 }
 
-.fs-11{
+.fs-11 {
   font-size: 11px;
 }
-.fs-12{
+
+.fs-12 {
   font-size: 12px;
 }
-.fs-13{
+
+.fs-13 {
   font-size: 13px;
 }
-.fs-14{
+
+.fs-14 {
   font-size: 14px;
 }
-.fs-15{
+
+.fs-15 {
   font-size: 15px;
 }
-.fs-16{
+
+.fs-16 {
   font-size: 16px;
 }
-.fs-17{
+
+.fs-17 {
   font-size: 17px;
 }
-.fs-18{
+
+.fs-18 {
   font-size: 18px;
 }
-.fs-19{
+
+.fs-19 {
   font-size: 19px;
 }
-.fs-20{
+
+.fs-20 {
   font-size: 20px;
 }
 
-.text-center{
+.text-center {
   text-align: center;
 }
 
@@ -158,6 +178,7 @@ color: #108ee9;
 .mt-20 {
   margin-top: 20px;
 }
+
 .ms-1 {
   margin-left: 1px;
 }
@@ -397,12 +418,15 @@ color: #108ee9;
 .mb-20 {
   margin-bottom: 20px;
 }
-.justify-content-end{
+
+.justify-content-end {
   justify-content: end;
 }
-.justify-content-start{
+
+.justify-content-start {
   justify-content: start;
 }
+
 .required:before {
   display: inline-block;
   content: "*";
