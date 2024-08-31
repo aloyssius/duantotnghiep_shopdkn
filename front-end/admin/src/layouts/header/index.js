@@ -38,7 +38,7 @@ export default function DashboardHeader({ onOpenSidebar }) {
           onOpenSidebar={onOpenSidebar}
         />
       </div>
-      <div className='header-right' style={{ position: !isMobile ? "absolute" : "", right: !isMobile ? "30px" : "20px" }}>
+      <div className='header-right' style={{ position: !isMobile ? "absolute" : "", right: !isMobile ? "20px" : "20px" }}>
         <AccountPopover />
       </div>
     </Header>

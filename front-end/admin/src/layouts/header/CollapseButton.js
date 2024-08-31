@@ -21,7 +21,7 @@ export default function CollapseButton({ onToggleCollapse, isCollapse, onOpenSid
       onClick={isMobile ? onOpenSidebar : onToggleCollapse}
       style={{
         cursor: "pointer",
-        marginLeft: isMobile ? "-5px" : !isCollapse ? "45px" : "",
+        marginLeft: isMobile ? "-5px" : !isCollapse ? "70px" : "10px",
         width: "32px",
         height: "32px",
         display: "flex",

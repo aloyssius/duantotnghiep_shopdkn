@@ -15,6 +15,12 @@ export const AccountPopover = () => {
       content={
         <>
           <Divider dashed style={{ margin: "10px 0" }} />
+          <Link to={'/'} style={{ color: "#38B6FF" }}>
+            <div className='my-account'>
+              Tài khoản
+            </div>
+          </Link>
+          <Divider dashed style={{ margin: "10px 0" }} />
           <Link to={'/'} style={{ color: "red" }}>
             <div className='logout'>
               Đăng xuất
@@ -24,7 +30,7 @@ export const AccountPopover = () => {
       }
       title={
         <>
-          <span>Trần Quang Hiền</span>
+          <span>Hồ Văn Thắng</span>
           <span className='d-block fw-400'>(Admin)</span>
         </>
       }
