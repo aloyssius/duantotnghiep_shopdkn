@@ -1,11 +1,11 @@
-import logo from '../assets/img/Blue Minimal Real Estate Free Logo.png'
-import logoCollapse from '../assets/img/Blue Minimal Real Estate Free Logo child.png'
+import logo from '../assets/img/logo-admin.png'
+import logoCollapse from '../assets/img/logo-collapse.png'
 import { Link } from 'react-router-dom'
 
 export const Logo = () => {
 
   return (
-    <img src={logo} style={{ width: "130px", /* marginTop: "25px", */ marginLeft: "15px" }} />
+    <img src={logo} style={{ width: "85px", /* marginTop: "25px", */ marginLeft: "35px" }} />
   )
 
 }
@@ -13,8 +13,8 @@ export const Logo = () => {
 export const LogoMobile = () => {
 
   return (
-    <Link to='/'>
-      <img src={logo} style={{ width: "255px" }} />
+    <Link to='/' style={{ display: 'flex', justifyContent: 'center', paddingBottom: 10 }}>
+      <img src={logo} style={{ width: "135px" }} />
     </Link>
   )
 
@@ -24,7 +24,7 @@ export const LogoCollapse = () => {
 
   return (
     // <Link to='/'>
-    <img src={logoCollapse} style={{ width: "50px"/* , marginTop: "25px"  */ }} />
+    <img src={logoCollapse} style={{ width: "40px"/* , marginTop: "25px"  */ }} />
     // </Link>
   )
 
