@@ -28,17 +28,4 @@ class BaseModel extends Model
     {
         return Carbon::parse($value)->timezone('Asia/Ho_Chi_Minh')->format('H:i:s d-m-Y');
     }
-
-    public function getUpdatedAtAttribute($value)
-    {
-        return Carbon::parse($value)->timezone('Asia/Ho_Chi_Minh')->format('H:i:s d-m-Y');
-    }
-
-    public function getDeletedAtAttribute($value)
-    {
-        if ($value !== null) {
-            return Carbon::parse($value)->timezone('Asia/Ho_Chi_Minh')->format('H:i:s d-m-Y');
-        }
-        return null;
-    }
 }

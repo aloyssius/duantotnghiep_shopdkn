@@ -7,25 +7,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Voucher extends BaseModel
 {
-    use SoftDeletes;
+    protected $table = 'voucher';
 
     protected $fillable = [
-        'id',
-        'code',
-        'name',
-        'value',
-        'type_discount',
-        'max_discount_value',
-        'min_order_value',
-        'quantity',
-        'status',
-        'start_time',
-        'end_time',
+        'ma',
+        'mo_ta',
+        'gia_tri',
+        'dieu_kien_ap_dung',
+        'luot_su_dung',
+        'trang_thai',
+        'ngay_bat_dau',
+        'ngay_ket_thuc',
     ];
     protected $casts = [
-        'value' => 'float',
-        'max_discount_value' => 'float',
-        'min_order_value' => 'float',
+        'gia_tri' => 'float',
     ];
 
     public function __construct(array $attributes = [])
@@ -34,7 +29,7 @@ class Voucher extends BaseModel
         parent::__construct($attributes);
     }
 
-    public function getStartTimeAttribute($value)
+    public function getNgayBatDauAttribute($value)
     {
         if ($value !== null) {
             return Carbon::parse($value)->format('H:i:s d-m-Y');
@@ -42,7 +37,7 @@ class Voucher extends BaseModel
         return null;
     }
 
-    public function getEndTimeAttribute($value)
+    public function getNgayKetThucAttribute($value)
     {
         if ($value !== null) {
             return Carbon::parse($value)->format('H:i:s d-m-Y');

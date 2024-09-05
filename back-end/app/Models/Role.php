@@ -4,10 +4,11 @@ namespace App\Models;
 
 class Role extends BaseModel
 {
+    protected $table = 'vai_tro';
 
     protected $fillable = [
-        'code',
-        'name',
+        'ma',
+        'ten',
     ];
 
     public function __construct(array $attributes = [])
