@@ -13,10 +13,10 @@ class RoleTableSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        DB::table('roles')->insert([
-            ['id' => $faker->uuid, 'code' => Role::ADMIN, 'name' => Role::ADMIN_VI],
-            ['id' => $faker->uuid, 'code' => Role::EMPLOYEE, 'name' => Role::EMPLOYEE_VI],
-            ['id' => $faker->uuid, 'code' => Role::CUSTOMER, 'name' => Role::CUSTOMER_VI],
+        DB::table('vai_tro')->insert([
+            ['id' => $faker->uuid, 'ma' => Role::ADMIN, 'ten' => Role::ADMIN_VI],
+            ['id' => $faker->uuid, 'ma' => Role::EMPLOYEE, 'ten' => Role::EMPLOYEE_VI],
+            ['id' => $faker->uuid, 'ma' => Role::CUSTOMER, 'ten' => Role::CUSTOMER_VI],
         ]);
     }
 }

@@ -22,59 +22,52 @@ class AccountTableSeeder extends Seeder
         $created_at5 = Carbon::parse($created_at4)->addMinutes(1);
         $created_at6 = Carbon::parse($created_at5)->addMinutes(1);
 
-        $role = Role::where('code', ConstantsRole::ADMIN)->first();
-        $role1 = Role::where('code', ConstantsRole::EMPLOYEE)->first();
+        $role = Role::where('ma', ConstantsRole::ADMIN)->first();
+        $role1 = Role::where('ma', ConstantsRole::EMPLOYEE)->first();
 
-        DB::table('accounts')->insert([
+        DB::table('tai_khoan')->insert([
             'id' => $faker->uuid,
-            'code' => "AD0001",
-            'full_name' => "TQH",
-            'email_verified_at' => null,
-            'password' => bcrypt("123456"),
-            'email' => 'simbasimba7503@gmail.com',
-            'gender' => 0,
-            'status' => CommonStatus::IS_ACTIVE,
-            'role_id' => $role ? $role->id : null,
+            'ma' => "AD0001",
+            'ho_va_ten' => "Anh Ngọc",
+            'mat_khau' => bcrypt("123456"),
+            'email' => 'chuanhngoc2003@gmail.com',
+            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'id_vai_tro' => $role ? $role->id : null,
             'created_at' => $created_at1,
         ]);
 
-        DB::table('accounts')->insert([
+        DB::table('tai_khoan')->insert([
             'id' => $faker->uuid,
-            'code' => "NV0002",
-            'full_name' => "Hồ Văn Thắng",
-            'email_verified_at' => null,
-            'password' => bcrypt("123456"),
-            'phone_number' => '0978774485',
-            'email' => 'sxmb1983@gmail.com',
-            'gender' => 0,
-            'status' => CommonStatus::IS_ACTIVE,
-            'role_id' => $role1 ? $role1->id : null,
+            'ma' => "NV0002",
+            'ho_va_ten' => "Hồ Văn Thắng",
+            'mat_khau' => bcrypt("123456"),
+            'so_dien_thoai' => '0978774485',
+            'email' => 'hovanthang2003@gmail.com',
+            'gioi_tinh' => 0,
+            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'id_vai_tro' => $role1 ? $role1->id : null,
             'created_at' => $created_at2,
         ]);
 
-        DB::table('accounts')->insert([
+        DB::table('tai_khoan')->insert([
             'id' => $faker->uuid,
-            'code' => "AD0003",
-            'full_name' => "Hồ Khánh Đăng",
-            'email_verified_at' => null,
-            'password' => bcrypt("123456"),
+            'ma' => "AD0003",
+            'ho_va_ten' => "Hồ Khánh Đăng",
+            'mat_khau' => bcrypt("123456"),
             'email' => 'danghkph22590@fpt.edu.vn',
-            'gender' => 0,
-            'status' => CommonStatus::IS_ACTIVE,
-            'role_id' => $role ? $role->id : null,
+            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'id_vai_tro' => $role ? $role->id : null,
             'created_at' => $created_at3,
         ]);
 
-        DB::table('accounts')->insert([
+        DB::table('tai_khoan')->insert([
             'id' => $faker->uuid,
-            'code' => "AD0004",
-            'full_name' => "Đỗ Dương",
-            'email_verified_at' => null,
-            'password' => bcrypt("123456"),
-            'email' => 'hagolive2003@gmail.com',
-            'gender' => 0,
-            'status' => CommonStatus::IS_ACTIVE,
-            'role_id' => $role ? $role->id : null,
+            'ma' => "AD0004",
+            'ho_va_ten' => "Đỗ Dương",
+            'mat_khau' => bcrypt("123456"),
+            'email' => 'doduong2003@gmail.com',
+            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'id_vai_tro' => $role ? $role->id : null,
             'created_at' => $created_at4,
         ]);
     }
