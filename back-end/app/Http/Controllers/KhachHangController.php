@@ -70,11 +70,11 @@ class KhachHangController extends Controller
             throw new NotFoundException("Không tìm thấy khách hàng có id là " . $id);
         }
 
-        // $addresses = Address::select(AddressResource::fields())
-        //     ->where('account_id', '=', $account->id)
-        //     ->orderBy('created_at', 'desc')
-        //     ->get();
-        // $account['addresses'] = AddressResource::collection($addresses);
+        $addresses = Address::select(AddressResource::fields())
+            ->where('account_id', '=', $account->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $account['addresses'] = AddressResource::collection($addresses);
         return ApiResponse::responseObject(new AccountResource($account));
     }
 
