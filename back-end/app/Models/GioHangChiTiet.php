@@ -4,21 +4,34 @@ namespace App\Models;
 
 use App\Constants\ProductStatus;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class CartDetails extends BaseModel
+class GioHangChiTiet extends Model
 {
-    protected $table = 'cart_details';
+    use HasUuids;
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
+    protected $table = 'gio_hang_chi_tiet';
 
     protected $fillable = [
-        'quantity',
-        'cart_id',
-        'product_details_id',
+        'so_luong',
+        'id_gio_hang',
+        'id_san_pham',
     ];
 
     protected $casts = [
-        'price' => 'float',
+        'don_gia' => 'float',
     ];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->timezone('Asia/Ho_Chi_Minh')->format('H:i:s d-m-Y');
+    }
 
     public static function getCartItemsByAccount($id)
     {
@@ -59,12 +72,6 @@ class CartDetails extends BaseModel
         }
 
         return $convertedCartItems;
-    }
-
-    public function __construct(array $attributes = [])
-    {
-        $this->fillable = array_merge(parent::getBaseFillable(), $this->fillable);
-        parent::__construct($attributes);
     }
 
     public function setCreatedAtAttribute($value)

@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
-class BaseModel extends Model
+class MauSac extends Model
 {
     use HasUuids;
 
@@ -14,15 +14,13 @@ class BaseModel extends Model
 
     protected $keyType = 'string';
 
-    protected $baseFillable = [
-        'created_by',
-        'updated_by',
-    ];
+    protected $table = 'mau_sac';
 
-    public function getBaseFillable()
-    {
-        return $this->baseFillable;
-    }
+    protected $fillable = [
+        'ma_mau_sac',
+        'ten_mau_sac',
+        'trang_thai',
+    ];
 
     public function getCreatedAtAttribute($value)
     {

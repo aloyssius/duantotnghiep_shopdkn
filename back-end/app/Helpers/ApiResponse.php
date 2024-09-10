@@ -27,39 +27,7 @@ class ApiResponse
         return response()->json($response, $code);
     }
 
-    public static function responsePageCustom($data, $statusCounts = [], $otherData = [], $message = '', $code = 200)
-    {
-        $showSql = DB::getQueryLog();
-
-        $response = [
-            'success' => true,
-            'status' => $code,
-            'data'    => $data['data'],
-            'page' => [
-                'currentPage' => $data['currentPage'],
-                'totalPages' => $data['totalPages'],
-                'totalElements' => $data['totalElements'] ?? null,
-                'pageSize' => $data['pageSize'],
-            ],
-            'sql' => $showSql,
-
-        ];
-        if (!empty($message)) {
-            $response['message'] = $message;
-        }
-
-        if ($statusCounts) {
-            $response['statusCounts'] = $statusCounts;
-        }
-
-        if ($otherData) {
-            $response['otherData'] = $otherData;
-        }
-
-        return response()->json($response, $code);
-    }
-
-    public static function responsePage($page, $statusCounts = [], $otherData = [], $message = '', $code = 200)
+    public static function responsePage($page, $otherData = [], $message = '', $code = 200)
     {
         $showSql = DB::getQueryLog();
 
@@ -80,24 +48,10 @@ class ApiResponse
             $response['message'] = $message;
         }
 
-        if ($statusCounts) {
-            $response['statusCounts'] = $statusCounts;
-        }
-
         if ($otherData) {
             $response['otherData'] = $otherData;
         }
 
-        return response()->json($response, $code);
-    }
-
-    public static function responseErrorObject($code = 500, $error = [], $message = '')
-    {
-        $response = [
-            'status' => $code,
-            'error' => $error,
-            'message'    => $message,
-        ];
         return response()->json($response, $code);
     }
 
@@ -106,16 +60,6 @@ class ApiResponse
         $response = [
             'status' => $code,
             'error' => $error,
-            'message'    => $message,
-        ];
-        return response()->json($response, $code);
-    }
-
-    public static function responseErrorVnPay($rspCode,  $message = '', $code = 400)
-    {
-        $response = [
-            'status' => $code,
-            'rspCode' => $rspCode,
             'message'    => $message,
         ];
         return response()->json($response, $code);

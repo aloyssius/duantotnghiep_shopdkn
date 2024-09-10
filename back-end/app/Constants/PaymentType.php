@@ -2,7 +2,7 @@
 
 namespace App\Constants;
 
-class TransactionType
+class PaymentType
 {
     const CASH = 'cash';
     const TRANSFER = 'transfer';

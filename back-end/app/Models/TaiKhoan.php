@@ -3,16 +3,18 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use App\Models\Address;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
-class Account extends BaseModel
+class TaiKhoan extends Model
 {
+    use HasUuids;
+
     protected $table = 'tai_khoan';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
 
     protected $fillable = [
         'ma',
@@ -23,7 +25,7 @@ class Account extends BaseModel
         'email',
         'gioi_tinh',
         'trang_thai',
-        'id_vai_tro',
+        'vai_tro',
     ];
 
     protected $casts = [
@@ -31,7 +33,7 @@ class Account extends BaseModel
     ];
 
     protected $hidden = [
-        'password',
+        'mat_khau',
     ];
 
     public function getNgaySinhAttribute($value)

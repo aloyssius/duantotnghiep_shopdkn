@@ -26,27 +26,6 @@ class AttributeTableSeeder extends Seeder
         $created_at11 = Carbon::parse($created_at10)->addMinutes(1);
         $created_at12 = Carbon::parse($created_at11)->addMinutes(1);
 
-        DB::table('danh_muc')->insert([
-            'id' => $faker->uuid,
-            'ma' => "DM0001",
-            'ten' => "Nam",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
-            'created_at' => $created_at1,
-        ]);
-        DB::table('danh_muc')->insert([
-            'id' => $faker->uuid,
-            'ma' => "DM0002",
-            'ten' => "Nữ",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
-            'created_at' => $created_at2,
-        ]);
-        DB::table('danh_muc')->insert([
-            'id' => $faker->uuid,
-            'ma' => "DM0003",
-            'ten' => "Unisex",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
-            'created_at' => $created_at3,
-        ]);
         DB::table('thuong_hieu')->insert([
             'id' => $faker->uuid,
             'ma' => "TH0001",

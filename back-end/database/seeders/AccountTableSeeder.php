@@ -19,11 +19,7 @@ class AccountTableSeeder extends Seeder
         $created_at2 = Carbon::parse($created_at1)->addMinutes(1);
         $created_at3 = Carbon::parse($created_at2)->addMinutes(1);
         $created_at4 = Carbon::parse($created_at3)->addMinutes(1);
-        $created_at5 = Carbon::parse($created_at4)->addMinutes(1);
-        $created_at6 = Carbon::parse($created_at5)->addMinutes(1);
 
-        $role = Role::where('ma', ConstantsRole::ADMIN)->first();
-        $role1 = Role::where('ma', ConstantsRole::EMPLOYEE)->first();
 
         DB::table('tai_khoan')->insert([
             'id' => $faker->uuid,
@@ -31,8 +27,7 @@ class AccountTableSeeder extends Seeder
             'ho_va_ten' => "Anh Ngọc",
             'mat_khau' => bcrypt("123456"),
             'email' => 'chuanhngoc2003@gmail.com',
-            'trang_thai' => CommonStatus::IS_ACTIVE,
-            'id_vai_tro' => $role ? $role->id : null,
+            'vai_tro' => ConstantsRole::ADMIN,
             'created_at' => $created_at1,
         ]);
 
@@ -40,12 +35,12 @@ class AccountTableSeeder extends Seeder
             'id' => $faker->uuid,
             'ma' => "NV0002",
             'ho_va_ten' => "Hồ Văn Thắng",
+            'ngay_sinh' => now(),
             'mat_khau' => bcrypt("123456"),
             'so_dien_thoai' => '0978774485',
             'email' => 'hovanthang2003@gmail.com',
             'gioi_tinh' => 0,
-            'trang_thai' => CommonStatus::IS_ACTIVE,
-            'id_vai_tro' => $role1 ? $role1->id : null,
+            'vai_tro' => ConstantsRole::EMPLOYEE,
             'created_at' => $created_at2,
         ]);
 
@@ -55,8 +50,7 @@ class AccountTableSeeder extends Seeder
             'ho_va_ten' => "Hồ Khánh Đăng",
             'mat_khau' => bcrypt("123456"),
             'email' => 'danghkph22590@fpt.edu.vn',
-            'trang_thai' => CommonStatus::IS_ACTIVE,
-            'id_vai_tro' => $role ? $role->id : null,
+            'vai_tro' => ConstantsRole::ADMIN,
             'created_at' => $created_at3,
         ]);
 
@@ -66,8 +60,7 @@ class AccountTableSeeder extends Seeder
             'ho_va_ten' => "Đỗ Dương",
             'mat_khau' => bcrypt("123456"),
             'email' => 'doduong2003@gmail.com',
-            'trang_thai' => CommonStatus::IS_ACTIVE,
-            'id_vai_tro' => $role ? $role->id : null,
+            'vai_tro' => ConstantsRole::ADMIN,
             'created_at' => $created_at4,
         ]);
     }

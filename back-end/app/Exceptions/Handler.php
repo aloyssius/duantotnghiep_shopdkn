@@ -37,32 +37,26 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof NotFoundHttpException) {
             return ApiResponse::responseError(
-                ConstantSystem::NOT_FOUND_CODE,
-                ConstantSystem::END_POINT_NOT_FOUND,
+                404,
+                'end_point_not_found',
                 'Đường dẫn api không tồn tại.'
             );
         } else if ($exception instanceof RestApiException) {
             return ApiResponse::responseError(
-                ConstantSystem::BAD_REQUEST_CODE,
-                ConstantSystem::BAD_REQUEST,
+                400,
+                'bad_request',
                 $exception->getMessage(),
-            );
-        } else if ($exception instanceof VNPayException) {
-            return ApiResponse::responseErrorVnPay(
-                $exception->getRspCode(),
-                $exception->getMessage(),
-                ConstantSystem::BAD_REQUEST_CODE,
             );
         } else if ($exception instanceof NotFoundException) {
             return ApiResponse::responseError(
-                ConstantSystem::NOT_FOUND_CODE,
-                ConstantSystem::MODEL_NOT_FOUND,
+                404,
+                'not_found',
                 $exception->getMessage(),
             );
         } else if ($exception instanceof Exception) {
             return ApiResponse::responseError(
-                ConstantSystem::SERVER_ERROR_CODE,
-                ConstantSystem::SERVER_ERROR,
+                500,
+                'server_error',
                 $exception->getMessage(),
             );
         }

@@ -32,6 +32,5 @@ Route::middleware(['api', 'cors'])->group(function () {
     require __DIR__ . '/api/bills/api.php';
     require __DIR__ . '/api/products/api.php';
     require __DIR__ . '/api/vouchers/api.php';
-    require __DIR__ . '/api/promotions/api.php';
     require __DIR__ . '/api/carts/api.php';
 });

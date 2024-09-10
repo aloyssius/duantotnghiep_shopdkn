@@ -2,21 +2,36 @@
 
 namespace App\Models;
 
-use App\Constants\ProductStatus;
 use App\Http\Resources\Products\ProductResource;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Product extends BaseModel
+class SanPham extends Model
 {
+    use HasUuids;
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
+    protected $table = 'san_pham';
 
     protected $fillable = [
-        'name',
-        'code',
-        'status',
-        'description',
-        'brand_id'
+        'ma_san_pham',
+        'ten_san_pham',
+        'mo_ta',
+        'don_gia',
+        'id_mau_sac',
+        'id_thuong_hieu',
+        'trang_thai',
     ];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->timezone('Asia/Ho_Chi_Minh')->format('H:i:s d-m-Y');
+    }
 
     public static function getProducts($req)
     {

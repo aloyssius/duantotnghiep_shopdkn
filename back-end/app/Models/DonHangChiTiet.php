@@ -2,21 +2,29 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class BillDetails extends BaseModel
+class DonHangChiTiet extends Model
 {
-    protected $table = 'bill_details';
+    use HasUuids;
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
+    protected $table = 'don_hang_chi_tiet';
 
     protected $fillable = [
-        'quantity',
-        'price',
-        'product_details_id',
-        'bill_id',
+        'so_luong',
+        'don_gia',
+        'id_san_pham',
+        'id_don_hang',
     ];
 
     protected $casts = [
-        'price' => 'float',
+        'don_gia' => 'float',
     ];
 
     public static function getBillItemsByBillId($id)

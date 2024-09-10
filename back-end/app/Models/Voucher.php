@@ -3,11 +3,18 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
-class Voucher extends BaseModel
+class Voucher extends Model
 {
+    use HasUuids;
+
     protected $table = 'voucher';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
 
     protected $fillable = [
         'ma',
@@ -19,15 +26,10 @@ class Voucher extends BaseModel
         'ngay_bat_dau',
         'ngay_ket_thuc',
     ];
+
     protected $casts = [
         'gia_tri' => 'float',
     ];
-
-    public function __construct(array $attributes = [])
-    {
-        $this->fillable = array_merge(parent::getBaseFillable(), $this->fillable);
-        parent::__construct($attributes);
-    }
 
     public function getNgayBatDauAttribute($value)
     {
@@ -43,5 +45,10 @@ class Voucher extends BaseModel
             return Carbon::parse($value)->format('H:i:s d-m-Y');
         }
         return null;
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->timezone('Asia/Ho_Chi_Minh')->format('H:i:s d-m-Y');
     }
 }
