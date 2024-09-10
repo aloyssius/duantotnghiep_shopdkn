@@ -4,20 +4,20 @@ namespace App\Constants;
 
 class OrderStatus
 {
-    const PENDING_COMFIRM = 'pending_confirm';
-    const WAITTING_DELIVERY = 'waitting_delivery';
-    const DELIVERING = 'delivering';
-    const COMPLETED = 'completed';
-    const CANCELED = 'canceled';
+    const CHO_XAC_NHAN = 'cho_xac_nhan';
+    const CHO_GIAO_HANG = 'cho_giao_hang';
+    const DANG_GIAO_HANG = 'dang_giao_hang';
+    const HOAN_THANH = 'hoan_thanh';
+    const DA_HUY = 'da_huy';
 
     public static function toArray(): array
     {
         return [
-            self::PENDING_COMFIRM,
-            self::WAITTING_DELIVERY,
-            self::DELIVERING,
-            self::COMPLETED,
-            self::CANCELED,
+            self::CHO_XAC_NHAN,
+            self::CHO_GIAO_HANG,
+            self::DANG_GIAO_HANG,
+            self::HOAN_THANH,
+            self::DA_HUY,
         ];
     }
 }

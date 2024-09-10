@@ -30,42 +30,42 @@ class AttributeTableSeeder extends Seeder
             'id' => $faker->uuid,
             'ma' => "TH0001",
             'ten' => "Nike",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at1,
         ]);
         DB::table('thuong_hieu')->insert([
             'id' => $faker->uuid,
             'ma' => "TH0002",
             'ten' => "Adidas",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at2,
         ]);
         DB::table('thuong_hieu')->insert([
             'id' => $faker->uuid,
             'ma' => "TH0003",
             'ten' => "Converse",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at3,
         ]);
         DB::table('thuong_hieu')->insert([
             'id' => $faker->uuid,
             'ma' => "TH0004",
             'ten' => "Vans",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at4,
         ]);
         DB::table('thuong_hieu')->insert([
             'id' => $faker->uuid,
             'ma' => "TH0005",
             'ten' => "New Balance",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at5,
         ]);
         DB::table('thuong_hieu')->insert([
             'id' => $faker->uuid,
             'ma' => "TH0006",
             'ten' => "Puma",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at6,
         ]);
 
@@ -73,77 +73,77 @@ class AttributeTableSeeder extends Seeder
             'id' => $faker->uuid,
             'ma' => "#C10013",
             'ten' => "Red",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at1,
         ]);
         DB::table('mau_sac')->insert([
             'id' => $faker->uuid,
             'ma' => "#464646",
             'ten' => "Black",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at2,
         ]);
         DB::table('mau_sac')->insert([
             'id' => $faker->uuid,
             'ma' => "#E9662C",
             'ten' => "Orange",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at3,
         ]);
         DB::table('mau_sac')->insert([
             'id' => $faker->uuid,
             'ma' => "#F5D255",
             'ten' => "Yellow",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at4,
         ]);
         DB::table('mau_sac')->insert([
             'id' => $faker->uuid,
             'ma' => "#F1778A",
             'ten' => "Pink",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at5,
         ]);
         DB::table('mau_sac')->insert([
             'id' => $faker->uuid,
             'ma' => "#8A5CA0",
             'ten' => "Violet",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at6,
         ]);
         DB::table('mau_sac')->insert([
             'id' => $faker->uuid,
             'ma' => "#6D9951",
             'ten' => "Green",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at7,
         ]);
         DB::table('mau_sac')->insert([
             'id' => $faker->uuid,
             'ma' => "#FFFFFF",
             'ten' => "White",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at8,
         ]);
         DB::table('mau_sac')->insert([
             'id' => $faker->uuid,
             'ma' => "#865439",
             'ten' => "Brown",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at9,
         ]);
         DB::table('mau_sac')->insert([
             'id' => $faker->uuid,
             'ma' => "#C3C3C3",
             'ten' => "Grey",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at10,
         ]);
         DB::table('mau_sac')->insert([
             'id' => $faker->uuid,
             'ma' => "#003171",
             'ten' => "Blue",
-            'trang_thai' => CommonStatus::IS_ACTIVE,
+            'trang_thai' => CommonStatus::DANG_HOAT_DONG,
             'created_at' => $created_at11,
         ]);
     }

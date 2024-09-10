@@ -4,15 +4,16 @@ namespace App\Constants;
 
 class VoucherStatus
 {
-    const ON_GOING = 'on_going';
-    const UP_COMMING = 'up_comming';
-    const FINISHED = 'finished';
+    const DANG_DIEN_RA = 'dang_dien_ra';
+    const SAP_DIEN_RA = 'sap_dien_ra';
+    const DA_KET_THUC = 'da_ket_thuc';
+
     public static function toArray(): array
     {
         return [
-            self::ON_GOING,
-            self::UP_COMMING,
-            self::FINISHED,
+            self::DANG_DIEN_RA,
+            self::SAP_DIEN_RA,
+            self::DA_KET_THUC,
         ];
     }
 }

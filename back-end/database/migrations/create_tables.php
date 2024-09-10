@@ -27,8 +27,8 @@ return new class extends Migration
             $table->string('mat_khau', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
             $table->string('email', ConstantSystem::EMAIL_MAX_LENGTH)->nullable();
             $table->boolean('gioi_tinh')->nullable();
-            $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::IS_ACTIVE);
-            $table->enum('vai_tro', Role::toArray())->default(Role::EMPLOYEE);
+            $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::DANG_HOAT_DONG);
+            $table->enum('vai_tro', Role::toArray());
         });
 
         Schema::create('voucher', function (Blueprint $table) {
@@ -38,15 +38,15 @@ return new class extends Migration
             $table->string('mo_ta', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
             $table->decimal('gia_tri', 15, 2)->default(0);
             $table->decimal('dieu_kien_ap_dung', 15, 2)->default(0);
-            $table->enum('trang_thai', VoucherStatus::toArray())->default(VoucherStatus::UP_COMMING);
-            $table->integer('luot_su_dung')->default(0);
+            $table->enum('trang_thai', VoucherStatus::toArray())->default(VoucherStatus::SAP_DIEN_RA);
+            $table->integer('so_luong')->default(0);
             $table->timestamp('ngay_bat_dau')->nullable();
             $table->timestamp('ngay_ket_thuc')->nullable();
         });
 
         Schema::create('gio_hang', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('account_id')->unique();
+            $table->uuid('id_tai_khoan')->unique();
         });
 
         Schema::create('mau_sac', function (Blueprint $table) {
@@ -54,7 +54,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('ma', ConstantSystem::CODE_MAX_LENGTH)->unique();
             $table->string('ten', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
-            $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::IS_ACTIVE);
+            $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::DANG_HOAT_DONG);
         });
 
         Schema::create('thuong_hieu', function (Blueprint $table) {
@@ -62,7 +62,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('ma', ConstantSystem::CODE_MAX_LENGTH)->unique();
             $table->string('ten', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
-            $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::IS_ACTIVE);
+            $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::DANG_HOAT_DONG);
         });
 
         Schema::create('san_pham', function (Blueprint $table) {
@@ -70,7 +70,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('ma', ConstantSystem::CODE_MAX_LENGTH)->unique();
             $table->string('ten', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
-            $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::IS_ACTIVE);
+            $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::DANG_HOAT_DONG);
             $table->text('mo_ta')->nullable();
             $table->decimal('don_gia', 15, 2)->default(0);
             $table->foreignUuid('id_thuong_hieu')->references('id')->on('thuong_hieu');
@@ -82,7 +82,7 @@ return new class extends Migration
             $table->foreignUuid('id_san_pham')->references('id')->on('san_pham');
             $table->string('ten_kich_co', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
             $table->integer('so_luong_ton')->default(0);
-            $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::IS_ACTIVE);
+            $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::DANG_HOAT_DONG);
         });
 
         Schema::create('gio_hang_chi_tiet', function (Blueprint $table) {
@@ -100,9 +100,9 @@ return new class extends Migration
             $table->timestamp('ngay_huy_don')->nullable();
             $table->timestamp('ngay_giao_hang')->nullable();
             $table->timestamp('ngay_hoan_thanh')->nullable();
-            $table->enum('trang_thai', OrderStatus::toArray())->default(OrderStatus::PENDING_COMFIRM);
-            $table->enum('hinh_thuc_thanh_toan', PaymentType::toArray())->default(PaymentType::CASH);
-            $table->enum('trang_thai_thanh_toan', CommonStatus::toArray())->default(CommonStatus::UN_ACTIVE);
+            $table->enum('trang_thai', OrderStatus::toArray())->default(OrderStatus::CHO_XAC_NHAN);
+            $table->enum('hinh_thuc_thanh_toan', PaymentType::toArray())->default(PaymentType::TIEN_MAT);
+            $table->enum('trang_thai_thanh_toan', CommonStatus::toArray())->default(CommonStatus::DANG_HOAT_DONG);
             $table->string('ho_va_ten', ConstantSystem::FULL_NAME_MAX_LENGTH)->nullable();
             $table->string('email', ConstantSystem::EMAIL_MAX_LENGTH)->nullable();
             $table->string('dia_chi', ConstantSystem::ADDRESS_MAX_LENGTH)->nullable();

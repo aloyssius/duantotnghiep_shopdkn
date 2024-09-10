@@ -2,23 +2,21 @@
 
 namespace App\Helpers;
 
-use Illuminate\Database\Eloquent\Builder;
-
 class CustomCodeHelper
 {
-    public static function generateCode($model, $prefixCode)
+    public static function taoMa($model, $ma)
     {
-        $result = $prefixCode;
+        $ketQua = $ma;
 
-        $lastModel = $model->orderBy('created_at', 'desc')->first();
-        if ($lastModel) {
-            $lastCode = substr($lastModel->code, 2); // ex: 'KH0001' -> '0001'
-            $nextCode = str_pad((int) $lastCode + 1, 4, '0', STR_PAD_LEFT);
-            $result = $result . $nextCode;
+        $modelMoiNhat = $model->orderBy('created_at', 'desc')->first();
+        if ($modelMoiNhat) {
+            $chuSo = substr($modelMoiNhat->code, 2); // vi du: 'KH0007' -> '0007'
+            $chuSoMoi = str_pad((int) $chuSo + 1, 4, '0', STR_PAD_LEFT); // -> '0008'
+            $ketQua = $ketQua . $chuSoMoi; // 'KH0008'
         } else {
-            $result = $result . '0001';
+            $ketQua = $ketQua . '0001';
         }
 
-        return $result;
+        return $ketQua;
     }
 }

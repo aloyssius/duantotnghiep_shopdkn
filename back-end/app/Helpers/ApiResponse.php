@@ -11,29 +11,22 @@ use function PHPUnit\Framework\isEmpty;
 class ApiResponse
 {
 
-    public static function responseObject($data, $message = '', $code = 200)
+    public static function responseObject($data)
     {
         $showSql = DB::getQueryLog();
 
         $response = [
-            'success' => true,
-            'status' => $code,
             'data'    => $data,
             'sql' => $showSql,
         ];
-        if (!empty($message)) {
-            $response['message'] = $message;
-        }
-        return response()->json($response, $code);
+        return response()->json($response, 200);
     }
 
-    public static function responsePage($page, $otherData = [], $message = '', $code = 200)
+    public static function responsePage($page, $otherData = [])
     {
         $showSql = DB::getQueryLog();
 
         $response = [
-            'success' => true,
-            'status' => $code,
             'data'    => $page->items(),
             'page' => [
                 'currentPage' => $page->currentPage(),
@@ -44,15 +37,12 @@ class ApiResponse
             'sql' => $showSql,
 
         ];
-        if (!empty($message)) {
-            $response['message'] = $message;
-        }
 
         if ($otherData) {
             $response['otherData'] = $otherData;
         }
 
-        return response()->json($response, $code);
+        return response()->json($response, 200);
     }
 
     public static function responseError($code = 500, $error = '', $message = '')

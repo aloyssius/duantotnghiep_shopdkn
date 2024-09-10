@@ -14,9 +14,6 @@ class ConstantSystem
     const IDENTITY_CARD_MAX_LENGTH = 12;
     const URL_MAX_LENGTH = 2048;
 
-    const CURRENT_PAGE = 1;
-    const PAGE_SIZE = 10;
-
     const CUSTOMER_CODE_PREFIX = 'KH';
     const EMPLOYEE_CODE_PREFIX = 'NV';
     const BILL_CODE_PREFIX = 'HD';

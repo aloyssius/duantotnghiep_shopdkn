@@ -159,6 +159,7 @@ class KhachHangController extends Controller
             DB::beginTransaction();
 
             $accountCreated = Account::create($accountConverted);
+            // $account->code = CustomCodeHelper::taoMa($account, 'KH');
 
             DB::commit();
         } catch (\Exception $e) {

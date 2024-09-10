@@ -4,14 +4,14 @@ namespace App\Constants;
 
 class PaymentType
 {
-    const CASH = 'cash';
-    const TRANSFER = 'transfer';
+    const TIEN_MAT = 'tien_mat';
+    const CHUYEN_KHOAN = 'chuyen_khoan';
 
     public static function toArray(): array
     {
         return [
-            self::CASH,
-            self::TRANSFER,
+            self::TIEN_MAT,
+            self::CHUYEN_KHOAN,
         ];
     }
 }

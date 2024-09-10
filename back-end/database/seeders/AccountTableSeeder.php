@@ -20,7 +20,6 @@ class AccountTableSeeder extends Seeder
         $created_at3 = Carbon::parse($created_at2)->addMinutes(1);
         $created_at4 = Carbon::parse($created_at3)->addMinutes(1);
 
-
         DB::table('tai_khoan')->insert([
             'id' => $faker->uuid,
             'ma' => "AD0001",
@@ -40,7 +39,7 @@ class AccountTableSeeder extends Seeder
             'so_dien_thoai' => '0978774485',
             'email' => 'hovanthang2003@gmail.com',
             'gioi_tinh' => 0,
-            'vai_tro' => ConstantsRole::EMPLOYEE,
+            'vai_tro' => ConstantsRole::NHAN_VIEN,
             'created_at' => $created_at2,
         ]);
 
