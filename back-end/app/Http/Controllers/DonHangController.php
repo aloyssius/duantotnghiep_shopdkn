@@ -87,7 +87,7 @@ class DonHangController extends Controller
         $listDonHang->orderBy('created_at', 'desc');
 
         // phân trang
-        $response = $listDonHang->paginate($req->pageSize, ['*'], 'currentPage', $req->currentPage);
+        $response = $listDonHang->paginate(10, ['*'], 'currentPage', $req->currentPage);
 
         return ApiResponse::responsePage(DonHangResource::collection($response));
     }
