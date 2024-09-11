@@ -221,44 +221,70 @@ class KhachHangController extends Controller
     return ApiResponse::responseObject(new KhachHangResource($khachHang));
 }
 
-    public function storeAddress(AddressRequestBody $req)
+    public function update(TaiKhoanRequestBody $req, $id)
     {
-        $addressConverted = ConvertHelper::convertColumnsToSnakeCase($req->all());
-        Address::create($addressConverted);
-
-        $addresses = Address::select(AddressResource::fields())
-            ->where('account_id', '=', $req->accountId)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return ApiResponse::responseObject(AddressResource::collection($addresses));
-    }
-
-    public function storeAddressDefault(AddressRequestBody $req)
-    {
-        $address = Address::where('id', '=', $req->id)->first();
-
-        if (!$address) {
-            throw new NotFoundException("Không tìm thấy địa chỉ có id là " . $req->id);
+        $khachHang = TaiKhoan::find($id);
+        if (!$khachHang) {
+            throw new NotFoundException("Không tìm thấy khách hàng có id là " . $id);
         }
 
-        $addressDefault = Address::where('account_id', '=', $req->accountId)
-            ->where('is_default', '=', AddressDefault::IS_DEFAULT)
-            ->first();
+            // $khachHang->ma = $req->input('ma', $khachHang->ma); // Sử dụng giá trị hiện tại nếu không có trong request
+            $khachHang->ho_va_ten = $req->input('hoVaTen', $khachHang->ho_va_ten);
+            $khachHang->ngay_sinh = $req->input('ngaySinh', $khachHang->ngay_sinh);
+            $khachHang->so_dien_thoai = $req->input('soDienThoai', $khachHang->so_dien_thoai);
+            if ($req->has('matKhau')) {
+                $khachHang->mat_khau = Hash::make($req->input('matKhau')); // Mã hóa mật khẩu nếu có thay đổi
+            }
+            $khachHang->email = $req->input('email', $khachHang->email);
+            $khachHang->gioi_tinh = $req->input('gioiTinh', $khachHang->gioi_tinh);
+            $khachHang->trang_thai = $req->input('trangThai', $khachHang->trang_thai);
+            // $khachHang->vai_tro = $req->input('vaiTro', $khachHang->vai_tro);
 
-        if ($addressDefault) {
-            $addressDefault['is_default'] = AddressDefault::UN_DEFAULT;
-            $addressDefault->save();
-        }
+            // Lưu các thay đổi vào cơ sở dữ liệu
+            $khachHang->save();
 
-        $address['is_default'] = AddressDefault::IS_DEFAULT;
-        $address->save();
-
-        $addresses = Address::select(AddressResource::fields())
-            ->where('account_id', '=', $req->accountId)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return ApiResponse::responseObject(AddressResource::collection($addresses));
+            // Trả về dữ liệu khách hàng đã cập nhật dưới dạng JSON
+            return ApiResponse::responseObject(new KhachHangResource($khachHang));
     }
+
+    // public function storeAddress(AddressRequestBody $req)
+    // {
+    //     $addressConverted = ConvertHelper::convertColumnsToSnakeCase($req->all());
+    //     Address::create($addressConverted);
+
+    //     $addresses = Address::select(AddressResource::fields())
+    //         ->where('account_id', '=', $req->accountId)
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
+
+    //     return ApiResponse::responseObject(AddressResource::collection($addresses));
+    // }
+
+    // public function storeAddressDefault(AddressRequestBody $req)
+    // {
+    //     $address = Address::where('id', '=', $req->id)->first();
+
+    //     if (!$address) {
+    //         throw new NotFoundException("Không tìm thấy địa chỉ có id là " . $req->id);
+    //     }
+
+    //     $addressDefault = Address::where('account_id', '=', $req->accountId)
+    //         ->where('is_default', '=', AddressDefault::IS_DEFAULT)
+    //         ->first();
+
+    //     if ($addressDefault) {
+    //         $addressDefault['is_default'] = AddressDefault::UN_DEFAULT;
+    //         $addressDefault->save();
+    //     }
+
+    //     $address['is_default'] = AddressDefault::IS_DEFAULT;
+    //     $address->save();
+
+    //     $addresses = Address::select(AddressResource::fields())
+    //         ->where('account_id', '=', $req->accountId)
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
+
+    //     return ApiResponse::responseObject(AddressResource::collection($addresses));
+    // }
 }
