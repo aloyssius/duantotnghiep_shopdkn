@@ -66,19 +66,52 @@ class KhachHangController extends Controller
     //     return ApiResponse::responsePage(AccountResource::collection($accounts), $statusCounts);
     // }
 
+    // public function index(Request $req)
+    // {
+
+    //     $khachHang = TaiKhoan::query();
+
+    //     $khachHang->orderBy('created_at', 'desc');
+
+    //     $response = $khachHang->paginate($req->pageSize, ['*'], 'currentPage', $req->currentPage);
+
+    //     return ApiResponse::responsePage(KhachHangResource::collection($response));
+
+    // }
+
     public function index(Request $req)
     {
-
         $khachHang = TaiKhoan::query();
-
+    
+        // Tìm kiếm theo mã
+        if ($req->has('ma')) {
+            $query->where('ma', 'like', '%' . $req->input('ma') . '%');
+        }
+    
+        // Tìm kiếm theo họ và tên
+        if ($req->has('hoVaTen')) {
+            $khachHang->where('ho_va_ten', 'like', '%' . $req->input('hoVaTen') . '%');
+        }
+    
+        // Tìm kiếm theo số điện thoại
+        if ($req->has('soDienThoai')) {
+            $khachHang->where('so_dien_thoai', 'like', '%' . $req->input('soDienThoai') . '%');
+        }
+    
+        // Tìm kiếm theo email
+        if ($req->has('email')) {
+            $khachHang->where('email', 'like', '%' . $req->input('email') . '%');
+        }
+    
+        // Sắp xếp theo ngày tạo
         $khachHang->orderBy('created_at', 'desc');
-
+    
+        // Phân trang
         $response = $khachHang->paginate($req->pageSize, ['*'], 'currentPage', $req->currentPage);
-
+        // $response = $query->paginate($req->input('pageSize', 15), ['*'], 'currentPage', $req->input('currentPage', 1));
+    
         return ApiResponse::responsePage(KhachHangResource::collection($response));
-
     }
-
     // public function show($id)
     // {
     //     $account = Account::find($id);
