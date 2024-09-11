@@ -127,7 +127,7 @@ class NhanVienController extends Controller
             throw new NotFoundException("Không tìm thấy nhân viên có id là " . $id);
         }
 
-        return ApiResponse::responseObject(new NhanVienResource($khachHang));
+        return ApiResponse::responseObject(new NhanVienResource($nhanVien));
     }
 
     // public function update(AccountRequestBody $req)
@@ -171,6 +171,32 @@ class NhanVienController extends Controller
 
     //     return ApiResponse::responseObject(new AccountResource($account));
     // }
+
+    public function update(TaiKhoanRequestBody $req, $id)
+    {
+        $nhanVien = TaiKhoan::find($id);
+        if (!$nhanVien) {
+            throw new NotFoundException("Không tìm thấy nhân viên có id là " . $id);
+        }
+
+            // $nhanVien->ma = $req->input('ma', $nhanVien->ma); // Sử dụng giá trị hiện tại nếu không có trong request
+            $nhanVien->ho_va_ten = $req->input('hoVaTen', $nhanVien->ho_va_ten);
+            $nhanVien->ngay_sinh = $req->input('ngaySinh', $nhanVien->ngay_sinh);
+            $nhanVien->so_dien_thoai = $req->input('soDienThoai', $nhanVien->so_dien_thoai);
+            if ($req->has('matKhau')) {
+                $nhanVien->mat_khau = Hash::make($req->input('matKhau')); // Mã hóa mật khẩu nếu có thay đổi
+            }
+            $nhanVien->email = $req->input('email', $nhanVien->email);
+            $nhanVien->gioi_tinh = $req->input('gioiTinh', $nhanVien->gioi_tinh);
+            $nhanVien->trang_thai = $req->input('trangThai', $nhanVien->trang_thai);
+            // $nhanVien->vai_tro = $req->input('vaiTro', $nhanVien->vai_tro);
+
+            // Lưu các thay đổi vào cơ sở dữ liệu
+            $nhanVien->save();
+
+            // Trả về dữ liệu khách hàng đã cập nhật dưới dạng JSON
+            return ApiResponse::responseObject(new NhanVienResource($nhanVien));
+    }
 
 
     // public function store(AccountRequestBody $req)
