@@ -95,6 +95,16 @@ class KhachHangController extends Controller
     //     return ApiResponse::responseObject(new AccountResource($account));
     // }
 
+    public function show($id)
+    {
+        $khachHang = TaiKhoan::find($id);
+        if (!$khachHang) {
+            throw new NotFoundException("Không tìm thấy khách hàng có id là " . $id);
+        }
+
+        return ApiResponse::responseObject(new KhachHangResource($khachHang));
+    }
+
     // public function update(AccountRequestBody $req)
     // {
     //     $account = Account::find($req->id);
