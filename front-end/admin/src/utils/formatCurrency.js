@@ -5,8 +5,10 @@ export const displayCurrencyVnd = (data) => {
 export const formatCurrencyVnd = (data) => {
   const hasNonZeroNumber = /\d*[1-9]\d*/.test(data);
 
+  let stringData = String(data);
+
   if (hasNonZeroNumber) {
-    return data
+    return stringData
       .replace(/[^0-9]+/g, "")
       .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   } else {
@@ -15,6 +17,9 @@ export const formatCurrencyVnd = (data) => {
 };
 
 export const formatNumber = (data) => {
-  return data
+
+  let stringData = String(data);
+
+  return stringData
     .replace(/[^0-9]+/g, "");
 };

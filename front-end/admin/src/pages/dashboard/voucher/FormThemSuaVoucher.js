@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useNavigate } from "react-router-dom"
@@ -9,32 +8,20 @@ import { useForm, Controller } from 'react-hook-form';
 // antd
 import { Col, Row, Button, Space, DatePicker } from "antd"
 // date
-import moment from 'moment';
 import dayjs from 'dayjs';
-import 'dayjs/locale/vi';
-import locale from 'antd/es/date-picker/locale/vi_VN';
 // routes
-import { PATH_DASHBOARD } from "../../../routes/paths"
+import { DUONG_DAN_TRANG } from "../../../routes/duong-dan"
 // components
-import Modal from '../../../components/Modal';
 import FormProvider from '../../../components/hook-form/FormProvider';
 import RHFInput from '../../../components/hook-form/RHFInput';
 // hooks
 import useConfirm from '../../../hooks/useConfirm';
 import useNotification from '../../../hooks/useNotification';
 
-import { clientPost } from '../../../utils/axios';
-
 
 // ----------------------------------------------------------------------
 
-VoucherCreateEditForm.propTypes = {
-  isEdit: PropTypes.bool,
-  currentConstruction: PropTypes.object,
-  isEditting: PropTypes.bool,
-};
-
-export default function VoucherCreateEditForm({ isEdit, currentVoucher }) {
+export default function FormThemSuaVoucher({ laCapNhat, voucherHienTai }) {
   const navigate = useNavigate();
 
   const { onOpenSuccessNotify } = useNotification();
@@ -65,13 +52,13 @@ export default function VoucherCreateEditForm({ isEdit, currentVoucher }) {
   } = methods;
 
   useEffect(() => {
-    if (isEdit && currentVoucher) {
+    if (laCapNhat && voucherHienTai) {
       reset(defaultValues);
     }
-    if (!isEdit) {
+    if (!laCapNhat) {
       reset(defaultValues);
     }
-  }, [isEdit, currentVoucher])
+  }, [laCapNhat, voucherHienTai])
 
   const post = async (body) => {
     try {

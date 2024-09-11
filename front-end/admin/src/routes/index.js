@@ -17,80 +17,48 @@ const Loadable = (Component) => (props) => {
 
 export default function Router() {
   return useRoutes([
-    // {
-    //   path: 'auth',
-    //   children: [
-    //     {
-    //       path: 'login',
-    //       element: (
-    //         <GuestGuard>
-    //           <Login />
-    //         </GuestGuard>
-    //       ),
-    //     },
-    //     {
-    //       path: 'register',
-    //       element: (
-    //         <GuestGuard>
-    //           <Register />
-    //         </GuestGuard>
-    //       ),
-    //     },
-    //     { path: 'login-unprotected', element: <Login /> },
-    //     { path: 'register-unprotected', element: <Register /> },
-    //     { path: 'reset-password', element: <ResetPassword /> },
-    //     { path: 'verify', element: <VerifyCode /> },
-    //   ],
-    // },
-
-    // Dashboard Routes
     {
-      path: 'dashboard',
+      path: '/',
       element: (
         <DashboardLayout />
       ),
       children: [
-        // { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        // { path: 'analytics', element: <GeneralAnalytics /> },
+        { path: 'thong-ke', element: <ThongKe /> },
         {
           path: 'voucher',
           children: [
-            { element: <Navigate to="/dashboard/voucher/list" replace />, index: true },
-            { path: 'list', element: <VoucherList /> },
-            { path: 'new', element: <VoucherCreateEdit /> },
-            { path: ':id/edit', element: <VoucherCreateEdit /> },
+            { path: 'danh-sach', element: <DanhSachVoucher /> },
+            { path: 'tao-moi', element: <ThemSuaVoucher /> },
+            { path: ':id', element: <ThemSuaVoucher /> },
           ],
         },
 
         {
-          path: 'product',
+          path: 'san-pham',
           children: [
-            { element: <Navigate to="/dashboard/product/list" replace />, index: true },
-            { path: 'list', element: <ProductList /> },
+            { path: 'danh-sach', element: <DanhSachSanPham /> },
           ],
         },
 
         {
-          path: 'bill',
+          path: 'don-hang',
           children: [
-            { element: <Navigate to="/dashboard/bill/list" replace />, index: true },
-            { path: 'list', element: <BillList /> },
+            { path: 'danh-sach', element: <DanhSachDonHang /> },
+            { path: ':id', element: <DonHangChiTiet /> },
           ],
         },
 
         {
-          path: 'employee',
+          path: 'nhan-vien',
           children: [
-            { element: <Navigate to="/dashboard/employee/list" replace />, index: true },
-            { path: 'list', element: <EmployeeList /> },
+            { path: 'danh-sach', element: <DanhSachNhanVien /> },
           ],
         },
 
         {
-          path: 'customer',
+          path: 'khach-hang',
           children: [
-            { element: <Navigate to="/dashboard/customer/list" replace />, index: true },
-            { path: 'list', element: <CustomerList /> },
+            { path: 'danh-sach', element: <DanhSachKhachHang /> },
           ],
         },
       ],
@@ -101,9 +69,11 @@ export default function Router() {
   ]);
 }
 
-const VoucherList = Loadable(lazy(() => import('../pages/dashboard/voucher/VoucherList')));
-const VoucherCreateEdit = Loadable(lazy(() => import('../pages/dashboard/voucher/VoucherCreateEdit')));
-const BillList = Loadable(lazy(() => import('../pages/dashboard/bill/BillList')));
-const ProductList = Loadable(lazy(() => import('../pages/dashboard/product/ProductList')));
-const EmployeeList = Loadable(lazy(() => import('../pages/dashboard/employee/EmployeeList')));
-const CustomerList = Loadable(lazy(() => import('../pages/dashboard/customer/CustomerList')));
+const DanhSachVoucher = Loadable(lazy(() => import('../pages/dashboard/voucher/DanhSachVoucher')));
+const ThemSuaVoucher = Loadable(lazy(() => import('../pages/dashboard/voucher/ThemSuaVoucher')));
+const DanhSachDonHang = Loadable(lazy(() => import('../pages/dashboard/don-hang/DanhSachDonHang')));
+const DonHangChiTiet = Loadable(lazy(() => import('../pages/dashboard/don-hang/DonHangChiTiet')));
+const DanhSachSanPham = Loadable(lazy(() => import('../pages/dashboard/san-pham/DanhSachSanPham')));
+const DanhSachNhanVien = Loadable(lazy(() => import('../pages/dashboard/nhan-vien/DachSachNhanVien')));
+const DanhSachKhachHang = Loadable(lazy(() => import('../pages/dashboard/khach-hang/DanhSachKhachHang')));
+const ThongKe = Loadable(lazy(() => import('../pages/dashboard/thong-ke/ThongKe')));
