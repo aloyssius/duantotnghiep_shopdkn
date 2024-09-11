@@ -28,6 +28,7 @@ use Illuminate\Support\Str;
 use App\Models\TaiKhoan;
 use App\Http\Resources\NhanVienResource;
 use App\Http\Requests\TaiKhoanRequestBody;
+use App\Helpers\CustomCodeHelper;
 
 class NhanVienController extends Controller
 {
@@ -172,66 +173,90 @@ class NhanVienController extends Controller
     // }
 
 
-    public function store(AccountRequestBody $req)
+    // public function store(AccountRequestBody $req)
+    // {
+    //     $account = Account::query();
+    //     $prefix = 'NV';
+
+    //     $roleEmployee = Role::where('code', RoleEnum::EMPLOYEE)->first();
+    //     $roleAdmin = Role::where('code', RoleEnum::ADMIN)->first();
+
+    //     $findEmailAdmin = Account::where('email', $req->email)
+    //         ->whereIn('role_id', [$roleAdmin->id, $roleEmployee->id])->first();
+
+    //     if ($findEmailAdmin) {
+    //         throw new RestApiException("Địa chỉ email này đã tồn tại");
+    //     }
+
+    //     $findPhoneNumberAdmin = Account::where('phone_number', $req->phoneNumber)
+    //         ->whereIn('role_id', [$roleEmployee->id])->first();
+
+    //     if ($findPhoneNumberAdmin) {
+    //         throw new RestApiException("SĐT này đã tồn tại");
+    //     }
+
+    //     $length = 12;
+    //     $pass = Str::random($length, 'aA0');
+
+    //     $moreColumns = [
+    //         'code' => EmployeeCodeHelper::generateCode($account, $prefix),
+    //         'roleId' => $roleEmployee->id,
+    //         'password' => bcrypt($pass),
+    //     ];
+
+    //     // convert req
+    //     $accountConverted = ConvertHelper::convertColumnsToSnakeCase($req->all(), $moreColumns);
+
+    //     try {
+    //         DB::beginTransaction();
+
+    //         // save
+    //         $accountCreated = Account::create($accountConverted);
+
+    //         DB::commit();
+    //     } catch (\Exception $e) {
+    //         throw new RestApiException($e->getMessage());
+    //     }
+
+    //     SendEmailCreateCustomer::dispatch($accountCreated, $pass)->delay(now()->addSeconds(3));
+
+    //     return ApiResponse::responseObject(new AccountResource($accountCreated));
+    // }
+
+    public function store(TaiKhoanRequestBody $req)
     {
-        $account = Account::query();
-        $prefix = 'NV';
-
-        $roleEmployee = Role::where('code', RoleEnum::EMPLOYEE)->first();
-        $roleAdmin = Role::where('code', RoleEnum::ADMIN)->first();
-
-        $findEmailAdmin = Account::where('email', $req->email)
-            ->whereIn('role_id', [$roleAdmin->id, $roleEmployee->id])->first();
-
-        if ($findEmailAdmin) {
-            throw new RestApiException("Địa chỉ email này đã tồn tại");
-        }
-
-        $findPhoneNumberAdmin = Account::where('phone_number', $req->phoneNumber)
-            ->whereIn('role_id', [$roleEmployee->id])->first();
-
-        if ($findPhoneNumberAdmin) {
-            throw new RestApiException("SĐT này đã tồn tại");
-        }
-
-        $length = 12;
-        $pass = Str::random($length, 'aA0');
-
-        $moreColumns = [
-            'code' => EmployeeCodeHelper::generateCode($account, $prefix),
-            'roleId' => $roleEmployee->id,
-            'password' => bcrypt($pass),
-        ];
-
-        // convert req
-        $accountConverted = ConvertHelper::convertColumnsToSnakeCase($req->all(), $moreColumns);
-
-        try {
-            DB::beginTransaction();
-
-            // save
-            $accountCreated = Account::create($accountConverted);
-
-            DB::commit();
-        } catch (\Exception $e) {
-            throw new RestApiException($e->getMessage());
-        }
-
-        SendEmailCreateCustomer::dispatch($accountCreated, $pass)->delay(now()->addSeconds(3));
-
-        return ApiResponse::responseObject(new AccountResource($accountCreated));
+        // Tạo mã mới cho nhân viên
+        $maMoi = CustomCodeHelper::taoMa(TaiKhoan::query(), 'NV');
+    
+        // Tạo một đối tượng TaiKhoan mới từ dữ liệu đã được xác thực
+        $nhanVien = new TaiKhoan();
+        $nhanVien->ma = $maMoi; // Đảm bảo mã mới được gán cho trường ma
+        $nhanVien->ho_va_ten = $req->input('hoVaTen');
+        $nhanVien->ngay_sinh = $req->input('ngaySinh');
+        $nhanVien->so_dien_thoai = $req->input('soDienThoai');
+        $nhanVien->mat_khau = Hash::make($req->input('matKhau')); // Mã hóa mật khẩu
+        $nhanVien->email = $req->input('email');
+        $nhanVien->gioi_tinh = $req->input('gioiTinh');
+        $nhanVien->trang_thai = 'dang_hoat_dong'; //Tự động đặt trạng thái là 'khach_hang'
+        $nhanVien->vai_tro = 'nhan_vien'; // Tự động đặt vai trò là 'khach_hang'
+    
+        // Lưu đối tượng TaiKhoan vào cơ sở dữ liệu
+        $nhanVien->save();
+    
+        // Trả về phản hồi với dữ liệu khách hàng mới được tạo
+        return ApiResponse::responseObject(new NhanVienResource($nhanVien));
     }
 
-    public function storeAddress(AddressRequestBody $req)
-    {
-        $addressConverted = ConvertHelper::convertColumnsToSnakeCase($req->all());
-        $addressCreated = Address::create($addressConverted);
+    // public function storeAddress(AddressRequestBody $req)
+    // {
+    //     $addressConverted = ConvertHelper::convertColumnsToSnakeCase($req->all());
+    //     $addressCreated = Address::create($addressConverted);
 
-        $addresses = Address::select(AddressResource::fields())
-            ->where('account_id', '=', $req->accountId)
-            ->orderBy('created_at', 'desc')
-            ->get();
+    //     $addresses = Address::select(AddressResource::fields())
+    //         ->where('account_id', '=', $req->accountId)
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
 
-        return ApiResponse::responseObject(AddressResource::collection($addresses));
-    }
+    //     return ApiResponse::responseObject(AddressResource::collection($addresses));
+    // }
 }

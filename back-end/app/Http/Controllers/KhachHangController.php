@@ -247,8 +247,8 @@ class KhachHangController extends Controller
     $khachHang->mat_khau = Hash::make($req->input('matKhau')); // Mã hóa mật khẩu
     $khachHang->email = $req->input('email');
     $khachHang->gioi_tinh = $req->input('gioiTinh');
-    $khachHang->trang_thai = $req->input('trangThai');
-    $khachHang->vai_tro = $req->input('vaiTro');
+    $khachHang->trang_thai = 'dang_hoat_dong'; //Tự động đặt trạng thái là 'khach_hang'
+    $khachHang->vai_tro = 'khach_hang'; // Tự động đặt vai trò là 'khach_hang'
 
     // Lưu đối tượng TaiKhoan vào cơ sở dữ liệu
     $khachHang->save();
