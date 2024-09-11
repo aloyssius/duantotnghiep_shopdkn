@@ -28,6 +28,10 @@ class SanPham extends Model
         'trang_thai',
     ];
 
+    protected $casts = [
+        'don_gia' => 'float',
+    ];
+
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->timezone('Asia/Ho_Chi_Minh')->format('H:i:s d-m-Y');
@@ -136,11 +140,5 @@ class SanPham extends Model
         $data['pageSize'] = $req->pageSize;
 
         return $data;
-    }
-
-    public function __construct(array $attributes = [])
-    {
-        $this->fillable = array_merge(parent::getBaseFillable(), $this->fillable);
-        parent::__construct($attributes);
     }
 }

@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 // routes
-import { PATH_DASHBOARD } from "../../../routes/paths";
+import { DUONG_DAN_TRANG } from "../../../routes/duong-dan";
 // components
 import Page from '../../../components/Page';
 import Container from '../../../components/Container';
 import { HeaderBreadcrumbs } from '../../../components/HeaderSection';
-import VoucherCreateEditForm from './VoucherCreateEditForm';
+import FormThemSuaVoucher from './FormThemSuaVoucher';
 
-export default function VoucherCreateEdit() {
+export default function ThemSuaVoucher() {
   const { pathname } = useLocation();
   const { id } = useParams();
-  const isEdit = pathname.includes('edit');
+  const laCapNhat = pathname.includes('/cap-nhat');
   const [data, setData] = useState({});
 
   useEffect(() => {
@@ -20,23 +20,23 @@ export default function VoucherCreateEdit() {
 
   return (
     <>
-      <Page title={isEdit ? "Cập nhật voucher" : "Thêm mới voucher"}>
+      <Page title={laCapNhat ? "Cập nhật voucher" : "Thêm mới voucher"}>
         <Container>
           <HeaderBreadcrumbs
-            heading={isEdit ? "Cập nhật voucher" : "Thêm mới voucher"}
+            heading={laCapNhat ? "Cập nhật voucher" : "Thêm mới voucher"}
             links={[
               {
-                title: <Link to={PATH_DASHBOARD.voucher.list}>Danh sách voucher</Link>,
+                title: <Link to={DUONG_DAN_TRANG.voucher.danh_sach}>Danh sách voucher</Link>,
               },
               {
-                title: isEdit ? "Cập nhật voucher" : "Thêm mới voucher",
+                title: laCapNhat ? "Cập nhật voucher" : "Thêm mới voucher",
               },
             ]}
           />
 
-          <VoucherCreateEditForm
-            isEdit={isEdit}
-            currentConstruction={data}
+          <FormThemSuaVoucher
+            laCapNhat={laCapNhat}
+            voucherHienTai={data}
           />
         </Container>
       </Page>

@@ -17,7 +17,7 @@ class DonHang extends Model
     protected $table = 'don_hang';
 
     protected $fillable = [
-        'ma_don_hag',
+        'ma_don_hang',
         'ngay_giao_hang',
         'ngay_hoan_thanh',
         'ngay_huy_don',
@@ -64,6 +64,7 @@ class DonHang extends Model
         }
         return null;
     }
+
     public function getCreatedAtAttribute($value)
     {
         if ($value !== null) {

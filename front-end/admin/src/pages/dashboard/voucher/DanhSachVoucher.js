@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ADMIN_API } from '../../../_api/_api';
+import axios from 'axios';
 import { displayCurrencyVnd } from '../../../utils/formatCurrency';
 import { FaPenToSquare } from "react-icons/fa6";
 // antd
@@ -7,7 +7,7 @@ import { Input, Table, Tag, Flex, DatePicker, Select, Tooltip, Pagination } from
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 // routes
 import { Link } from 'react-router-dom';
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { DUONG_DAN_TRANG } from '../../../routes/duong-dan';
 // components
 import Page from '../../../components/Page';
 import Container from '../../../components/Container';
@@ -16,8 +16,6 @@ import IconButton from '../../../components/IconButton';
 import Space from '../../../components/Space';
 // hooks
 import useLoading from '../../../hooks/useLoading';
-// utils
-import { clientGet } from '../../../utils/axios';
 
 const { Option } = Select;
 
@@ -102,7 +100,7 @@ const columns = [
     render: (text, record) => {
       return (
         <Tooltip title="Chỉnh sửa">
-          <Link to={PATH_DASHBOARD.voucher.edit(record.id)}>
+          <Link to={DUONG_DAN_TRANG.voucher.cap_nhat(record.id)}>
             <FaPenToSquare className='mt-8 fs-20 root-color' />
           </Link>
         </Tooltip>
@@ -111,7 +109,7 @@ const columns = [
   },
 ];
 
-export default function VoucherList() {
+export default function DanhSachVoucher() {
   const { onOpenLoading, onCloseLoading } = useLoading();
   const [data, setData] = useState([]);
   const [startDate, setStartDate] = useState(null);
@@ -123,7 +121,7 @@ export default function VoucherList() {
     const fetchData = async () => {
       onOpenLoading();
       try {
-        const response = await clientGet(ADMIN_API.voucher.getAll);
+        const response = await axios.get(ADMIN_API.voucher.getAll);
         setData(response);
       } catch (error) {
         console.error(error);
@@ -142,7 +140,7 @@ export default function VoucherList() {
           <HeaderAction
             heading='Danh sách voucher'
             action={
-              <Link to={PATH_DASHBOARD.voucher.create}>
+              <Link to={DUONG_DAN_TRANG.voucher.tao_moi}>
                 <IconButton
                   type='primary'
                   name='Thêm voucher'
@@ -235,7 +233,7 @@ const convertStatus = (status) => {
   }
 };
 
-export const convertColor = (status) => {
+const convertColor = (status) => {
   switch (status) {
     case "up_comming":
       return '#0fd93b';

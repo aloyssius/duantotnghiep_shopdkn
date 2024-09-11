@@ -31,6 +31,10 @@ iframe#webpack-dev-server-client-overlay {
   justify-content: space-between;
 }
 
+.justify-items-center {
+  justify-items: center;
+}
+
 .pointer {
   cursor: pointer;
 }

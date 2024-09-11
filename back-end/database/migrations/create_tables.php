@@ -102,7 +102,7 @@ return new class extends Migration
             $table->timestamp('ngay_hoan_thanh')->nullable();
             $table->enum('trang_thai', OrderStatus::toArray())->default(OrderStatus::CHO_XAC_NHAN);
             $table->enum('hinh_thuc_thanh_toan', PaymentType::toArray())->default(PaymentType::TIEN_MAT);
-            $table->enum('trang_thai_thanh_toan', CommonStatus::toArray())->default(CommonStatus::DANG_HOAT_DONG);
+            $table->enum('trang_thai_thanh_toan', ['da_thanh_toan', 'chua_thanh_toan'])->default('da_thanh_toan');
             $table->string('ho_va_ten', ConstantSystem::FULL_NAME_MAX_LENGTH)->nullable();
             $table->string('email', ConstantSystem::EMAIL_MAX_LENGTH)->nullable();
             $table->string('dia_chi', ConstantSystem::ADDRESS_MAX_LENGTH)->nullable();
