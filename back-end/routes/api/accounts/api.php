@@ -5,6 +5,7 @@
 // use App\Http\Controllers\Api\Bills\BillController;
 // use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KhachHangController;
+use App\Http\Controllers\NhanVienController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +54,11 @@ Route::get('/khach-hang', [KhachHangController::class, 'index']);
 Route::post('/khach-hang', [KhachHangController::class, 'store']);
 Route::get('khach-hang/{id}', [KhachHangController::class, 'show']);
 Route::put('khach-hang/{id}', [KhachHangController::class, 'update']);
+
+Route::get('/nhan-vien', [NhanVienController::class, 'index']);
+Route::post('/nhan-vien', [NhanVienController::class, 'store']);
+Route::get('nhan-vien/{id}', [NhanVienController::class, 'show']);
+Route::put('nhan-vien/{id}', [NhanVienController::class, 'update']);
 
 
 // Route::post('/account/login', [AuthController::class, 'login']);
