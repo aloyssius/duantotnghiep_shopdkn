@@ -119,57 +119,57 @@ class NhanVienController extends Controller
     //     return ApiResponse::responseObject(new AccountResource($account));
     // }
 
-    // public function show($id)
+    public function show($id)
+    {
+        $nhanVien = TaiKhoan::find($id);
+        if (!$nhanVien) {
+            throw new NotFoundException("Không tìm thấy nhân viên có id là " . $id);
+        }
+
+        return ApiResponse::responseObject(new NhanVienResource($khachHang));
+    }
+
+    // public function update(AccountRequestBody $req)
     // {
-    //     $nhanVien = TaiKhoan::find($id);
-    //     if (!$nhanVien) {
-    //         throw new NotFoundException("Không tìm thấy nhân viên có id là " . $id);
+    //     $account = Account::find($req->id);
+
+    //     if (!$account) {
+    //         throw new RestApiException("Không tìm thấy nhân viên");
     //     }
 
-    //     return ApiResponse::responseObject(new NhanVienResource($khachHang));
+    //     $roleEmployee = Role::where('code', RoleEnum::EMPLOYEE)->first();
+
+    //     if ($req->phoneNumber !== $account->phone_number) {
+    //         $findPhoneNumberAdmin = Account::where('phone_number', $req->phoneNumber)
+    //             ->whereIn('role_id', [$roleEmployee->id])->first();
+
+    //         if ($findPhoneNumberAdmin) {
+    //             throw new RestApiException("SĐT này đã tồn tại");
+    //         }
+    //     }
+
+    //     $birthDate = null;
+    //     if ($req->birthDate !== null && DateTime::createFromFormat('d-m-Y', $req->birthDate)) {
+    //         $birthDate = date('Y-m-d', strtotime($req->birthDate));
+    //     }
+
+    //     try {
+    //         DB::beginTransaction();
+
+    //         $account->full_name = $req->fullName;
+    //         $account->phone_number = $req->phoneNumber;
+    //         $account->birth_date = $birthDate === null ? null : $birthDate;
+    //         $account->gender = $req->gender;
+    //         $account->status = $req->status;
+    //         $account->save();
+
+    //         DB::commit();
+    //     } catch (\Exception $e) {
+    //         throw new RestApiException($e->getMessage());
+    //     }
+
+    //     return ApiResponse::responseObject(new AccountResource($account));
     // }
-
-    public function update(AccountRequestBody $req)
-    {
-        $account = Account::find($req->id);
-
-        if (!$account) {
-            throw new RestApiException("Không tìm thấy nhân viên");
-        }
-
-        $roleEmployee = Role::where('code', RoleEnum::EMPLOYEE)->first();
-
-        if ($req->phoneNumber !== $account->phone_number) {
-            $findPhoneNumberAdmin = Account::where('phone_number', $req->phoneNumber)
-                ->whereIn('role_id', [$roleEmployee->id])->first();
-
-            if ($findPhoneNumberAdmin) {
-                throw new RestApiException("SĐT này đã tồn tại");
-            }
-        }
-
-        $birthDate = null;
-        if ($req->birthDate !== null && DateTime::createFromFormat('d-m-Y', $req->birthDate)) {
-            $birthDate = date('Y-m-d', strtotime($req->birthDate));
-        }
-
-        try {
-            DB::beginTransaction();
-
-            $account->full_name = $req->fullName;
-            $account->phone_number = $req->phoneNumber;
-            $account->birth_date = $birthDate === null ? null : $birthDate;
-            $account->gender = $req->gender;
-            $account->status = $req->status;
-            $account->save();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            throw new RestApiException($e->getMessage());
-        }
-
-        return ApiResponse::responseObject(new AccountResource($account));
-    }
 
 
     public function store(AccountRequestBody $req)
