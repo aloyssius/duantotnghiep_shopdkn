@@ -9,6 +9,7 @@ use App\Http\Resources\Accounts\AccountResource;
 use App\Http\Resources\Accounts\AddressResource;
 use App\Models\Account;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Constants\Role as RoleEnum;
 use App\Exceptions\NotFoundException;
 use App\Helpers\ConvertHelper;
@@ -187,19 +188,28 @@ class KhachHangController extends Controller
     // }
 
     public function store(TaiKhoanRequestBody $req)
-    {
-        // Tạo một đối tượng KhachHang mới từ dữ liệu đã được xác thực
-        $khachHang = new KhachHang();
-        $khachHang->name = $req->input('name');
-        $khachHang->email = $req->input('email');
-        $khachHang->password = Hash::make($req->input('password')); // Mã hóa mật khẩu
+{
+    // Tạo mã mới cho khách hàng
+    $maMoi = CustomCodeHelper::taoMa(TaiKhoan::query(), 'KH');
 
-        // Lưu đối tượng KhachHang vào cơ sở dữ liệu
-        $khachHang->save();
+    // Tạo một đối tượng TaiKhoan mới từ dữ liệu đã được xác thực
+    $khachHang = new TaiKhoan();
+    $khachHang->ma = $maMoi; // Đảm bảo mã mới được gán cho trường ma
+    $khachHang->ho_va_ten = $req->input('hoVaTen');
+    $khachHang->ngay_sinh = $req->input('ngaySinh');
+    $khachHang->so_dien_thoai = $req->input('soDienThoai');
+    $khachHang->mat_khau = Hash::make($req->input('matKhau')); // Mã hóa mật khẩu
+    $khachHang->email = $req->input('email');
+    $khachHang->gioi_tinh = $req->input('gioiTinh');
+    $khachHang->trang_thai = $req->input('trangThai');
+    $khachHang->vai_tro = $req->input('vaiTro');
 
-        // Trả về phản hồi, có thể là chuyển hướng hoặc JSON
-        return redirect()->route('khach-hang.index')->with('success', 'Khách hàng đã được tạo thành công!');
-    }
+    // Lưu đối tượng TaiKhoan vào cơ sở dữ liệu
+    $khachHang->save();
+
+    // Trả về phản hồi với dữ liệu khách hàng mới được tạo
+    return ApiResponse::responseObject(new KhachHangResource($khachHang));
+}
 
     public function storeAddress(AddressRequestBody $req)
     {
