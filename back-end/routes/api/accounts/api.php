@@ -50,6 +50,8 @@ use Illuminate\Support\Facades\Route;
 
 // client
 Route::get('/khach-hang', [KhachHangController::class, 'index']);
+Route::post('/khach-hang', [KhachHangController::class, 'store']);
+Route::get('khach-hang/{id}', [KhachHangController::class, 'show']);
 
 
 // Route::post('/account/login', [AuthController::class, 'login']);
