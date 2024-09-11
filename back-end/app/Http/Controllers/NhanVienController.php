@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Accounts;
+namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
 use App\Helpers\QueryHelper;
@@ -9,6 +9,7 @@ use App\Http\Resources\Accounts\AddressResource;
 use App\Http\Resources\Accounts\AccountResource;
 use App\Models\Account;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Constants\Role as RoleEnum;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\RestApiException;
@@ -24,54 +25,109 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\TaiKhoan;
+use App\Http\Resources\NhanVienResource;
+use App\Http\Requests\TaiKhoanRequestBody;
 
 class NhanVienController extends Controller
 {
 
+    // public function index(Request $req)
+    // {
+
+    //     $accounts = Account::join('roles', 'accounts.role_id', 'roles.id')
+    //         ->select('accounts.id', 'accounts.full_name', 'accounts.email', 'accounts.avatar_url', 'accounts.code', 'accounts.phone_number', 'accounts.identity_card', 'accounts.birth_date', 'accounts.gender', 'accounts.status')
+    //         ->whereIn('roles.code', [RoleEnum::EMPLOYEE]);
+
+    //     if ($req->filled('search')) {
+    //         $search = $req->search;
+    //         $searchFields = ['accounts.code', 'accounts.full_name', 'accounts.phone_number', 'accounts.email'];
+    //         QueryHelper::buildQuerySearchContains($accounts, $search, $searchFields);
+    //     }
+
+    //     if ($req->filled('status')) {
+    //         QueryHelper::buildQueryEquals($accounts, 'accounts.status', $req->status);
+    //     }
+
+    //     if ($req->filled('gender')) {
+    //         QueryHelper::buildQueryEquals($accounts, 'accounts.gender', $req->gender);
+    //     }
+
+    //     $statusCounts = Account::join('roles', 'accounts.role_id', '=', 'roles.id')->select(DB::raw('count(status) as count, status'))
+    //         ->whereIn('roles.code', [RoleEnum::EMPLOYEE])
+    //         ->groupBy('status')
+    //         ->get();
+
+    //     QueryHelper::buildOrderBy($accounts, 'accounts.created_at', 'desc');
+    //     $accounts = QueryHelper::buildPagination($accounts, $req);
+
+    //     return ApiResponse::responsePage(AccountResource::collection($accounts), $statusCounts);
+    // }
+
     public function index(Request $req)
     {
+        $nhanVien = TaiKhoan::query();
 
-        $accounts = Account::join('roles', 'accounts.role_id', 'roles.id')
-            ->select('accounts.id', 'accounts.full_name', 'accounts.email', 'accounts.avatar_url', 'accounts.code', 'accounts.phone_number', 'accounts.identity_card', 'accounts.birth_date', 'accounts.gender', 'accounts.status')
-            ->whereIn('roles.code', [RoleEnum::EMPLOYEE]);
+        // Lọc theo vai_tro
+        $nhanVien->where('vai_tro', 'nhan_vien');
 
-        if ($req->filled('search')) {
-            $search = $req->search;
-            $searchFields = ['accounts.code', 'accounts.full_name', 'accounts.phone_number', 'accounts.email'];
-            QueryHelper::buildQuerySearchContains($accounts, $search, $searchFields);
+        // Tìm kiếm theo trang_thai
+        if ($req->has('trangThai')) {
+            $khachHang->where('trang_thai', $req->input('trangThai'));
         }
-
-        if ($req->filled('status')) {
-            QueryHelper::buildQueryEquals($accounts, 'accounts.status', $req->status);
+    
+        // Tìm kiếm theo mã
+        if ($req->has('ma')) {
+            $nhanVien->where('ma', 'like', '%' . $req->input('ma') . '%');
         }
-
-        if ($req->filled('gender')) {
-            QueryHelper::buildQueryEquals($accounts, 'accounts.gender', $req->gender);
+    
+        // Tìm kiếm theo họ và tên
+        if ($req->has('hoVaTen')) {
+            $nhanVien->where('ho_va_ten', 'like', '%' . $req->input('hoVaTen') . '%');
         }
-
-        $statusCounts = Account::join('roles', 'accounts.role_id', '=', 'roles.id')->select(DB::raw('count(status) as count, status'))
-            ->whereIn('roles.code', [RoleEnum::EMPLOYEE])
-            ->groupBy('status')
-            ->get();
-
-        QueryHelper::buildOrderBy($accounts, 'accounts.created_at', 'desc');
-        $accounts = QueryHelper::buildPagination($accounts, $req);
-
-        return ApiResponse::responsePage(AccountResource::collection($accounts), $statusCounts);
+    
+        // Tìm kiếm theo số điện thoại
+        if ($req->has('soDienThoai')) {
+            $nhanVien->where('so_dien_thoai', 'like', '%' . $req->input('soDienThoai') . '%');
+        }
+    
+        // Tìm kiếm theo email
+        if ($req->has('email')) {
+            $nhanVien->where('email', 'like', '%' . $req->input('email') . '%');
+        }
+    
+        // Sắp xếp theo ngày tạo
+        $nhanVien->orderBy('created_at', 'desc');
+    
+        // Phân trang
+        $response = $nhanVien->paginate($req->pageSize, ['*'], 'currentPage', $req->currentPage);
+        // $response = $query->paginate($req->input('pageSize', 15), ['*'], 'currentPage', $req->input('currentPage', 1));
+    
+        return ApiResponse::responsePage(NhanVienResource::collection($response));
     }
 
-    public function show($id)
-    {
+    // public function show($id)
+    // {
 
-        $account = Account::select('id', 'full_name', 'code', 'email', 'avatar_url', 'phone_number', 'birth_date', 'gender', 'status', 'created_at')
-            ->where("id", $id)->first();
+    //     $account = Account::select('id', 'full_name', 'code', 'email', 'avatar_url', 'phone_number', 'birth_date', 'gender', 'status', 'created_at')
+    //         ->where("id", $id)->first();
 
-        if (!$account) {
-            throw new NotFoundException("Không tìm thấy nhân viên có id là " . $id);
-        }
+    //     if (!$account) {
+    //         throw new NotFoundException("Không tìm thấy nhân viên có id là " . $id);
+    //     }
 
-        return ApiResponse::responseObject(new AccountResource($account));
-    }
+    //     return ApiResponse::responseObject(new AccountResource($account));
+    // }
+
+    // public function show($id)
+    // {
+    //     $nhanVien = TaiKhoan::find($id);
+    //     if (!$nhanVien) {
+    //         throw new NotFoundException("Không tìm thấy nhân viên có id là " . $id);
+    //     }
+
+    //     return ApiResponse::responseObject(new NhanVienResource($khachHang));
+    // }
 
     public function update(AccountRequestBody $req)
     {

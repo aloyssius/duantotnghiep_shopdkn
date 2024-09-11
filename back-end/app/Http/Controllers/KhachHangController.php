@@ -82,10 +82,13 @@ class KhachHangController extends Controller
     public function index(Request $req)
     {
         $khachHang = TaiKhoan::query();
+
+        // Lọc theo vai_tro
+        $khachHang->where('vai_tro', 'khach_hang');
     
         // Tìm kiếm theo mã
         if ($req->has('ma')) {
-            $query->where('ma', 'like', '%' . $req->input('ma') . '%');
+            $khachHang->where('ma', 'like', '%' . $req->input('ma') . '%');
         }
     
         // Tìm kiếm theo họ và tên
