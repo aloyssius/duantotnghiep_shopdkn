@@ -273,7 +273,7 @@ class KhachHangController extends Controller
             }
             $khachHang->email = $req->input('email', $khachHang->email);
             $khachHang->gioi_tinh = $req->input('gioiTinh', $khachHang->gioi_tinh);
-            $khachHang->trang_thai = $req->input('trangThai', $khachHang->trang_thai);
+            // $khachHang->trang_thai = $req->input('trangThai', $khachHang->trang_thai);
             // $khachHang->vai_tro = $req->input('vaiTro', $khachHang->vai_tro);
 
             // Lưu các thay đổi vào cơ sở dữ liệu
