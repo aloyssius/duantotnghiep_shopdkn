@@ -262,7 +262,7 @@ const hienThiTrangThai = (trangThai) => {
   }
 };
 
-export const hienThiMauSac = (trangThai) => {
+const hienThiMauSac = (trangThai) => {
   switch (trangThai) {
     case "cho_xac_nhan":
       return '#e8da0e';

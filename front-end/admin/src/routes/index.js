@@ -37,6 +37,8 @@ export default function Router() {
           path: 'san-pham',
           children: [
             { path: 'danh-sach', element: <DanhSachSanPham /> },
+            { path: 'tao-moi', element: <ThemSuaSanPham /> },
+            { path: ':id', element: <ThemSuaSanPham /> },
           ],
         },
 
@@ -71,6 +73,7 @@ export default function Router() {
 
 const DanhSachVoucher = Loadable(lazy(() => import('../pages/dashboard/voucher/DanhSachVoucher')));
 const ThemSuaVoucher = Loadable(lazy(() => import('../pages/dashboard/voucher/ThemSuaVoucher')));
+const ThemSuaSanPham = Loadable(lazy(() => import('../pages/dashboard/san-pham/ThemSuaSanPham')));
 const DanhSachDonHang = Loadable(lazy(() => import('../pages/dashboard/don-hang/DanhSachDonHang')));
 const DonHangChiTiet = Loadable(lazy(() => import('../pages/dashboard/don-hang/DonHangChiTiet')));
 const DanhSachSanPham = Loadable(lazy(() => import('../pages/dashboard/san-pham/DanhSachSanPham')));

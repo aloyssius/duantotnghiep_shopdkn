@@ -233,7 +233,7 @@ const convertStatus = (status) => {
   }
 };
 
-export const convertColor = (status) => {
+const convertColor = (status) => {
   switch (status) {
     case "up_comming":
       return '#0fd93b';

@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { formatCurrencyVnd } from '../../../utils/formatCurrency';
 import { FaPenToSquare } from "react-icons/fa6";
-import dayjs from 'dayjs'
 // antd
-import { Input, Table, Tag, Flex, DatePicker, Select, Tooltip, Pagination } from 'antd';
+import { Input, Table, Tag, Flex, Select, Tooltip, Pagination } from 'antd';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 // routes
 import { Link } from 'react-router-dom';
@@ -28,7 +27,7 @@ const danhSachCacTruongDuLieu = [
       return (
         <>
           <span className='fw-500'>
-            {record.ma}
+            {record.maSanPham}
           </span>
         </>
       )
@@ -41,20 +40,20 @@ const danhSachCacTruongDuLieu = [
       return (
         <>
           <span className='fw-500'>
-            {record.hoVaTen}
+            {record.tenSanPham}
           </span>
         </>
       )
     },
   },
   {
-    title: 'Thương hiệu',
+    title: 'Ngày tạo',
     align: "center",
     render: (text, record) => {
       return (
         <>
           <span className='fw-500'>
-            {record.soDienThoai}
+            {record.ngayTao}
           </span>
         </>
       )
@@ -67,7 +66,7 @@ const danhSachCacTruongDuLieu = [
       return (
         <>
           <span className='fw-500'>
-            {record.ngayTao}
+            {formatCurrencyVnd(record.donGia) + "đ"}
           </span>
         </>
       )
@@ -116,7 +115,7 @@ export default function DanhSachSanPham() {
       onOpenLoading();
       try {
         // gọi api từ backend
-        const response = await axios.get("http://127.0.0.1:8000/api/danh-sach-don-hang", {
+        const response = await axios.get("http://127.0.0.1:8000/api/danh-sach-san-pham", {
           // các tham số gửi về backend
           params: {
             currentPage,
@@ -232,7 +231,7 @@ const hienThiTrangThai = (trangThai) => {
   }
 };
 
-export const hienThiMauSac = (trangThai) => {
+const hienThiMauSac = (trangThai) => {
   switch (trangThai) {
     case "dang_hoat_dong":
       return '#0fd93b';
