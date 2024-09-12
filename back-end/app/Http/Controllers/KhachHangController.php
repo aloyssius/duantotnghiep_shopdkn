@@ -224,7 +224,7 @@ class KhachHangController extends Controller
     //     return ApiResponse::responseObject(new AccountResource($accountCreated));
     // }
 
-    public function store(TaiKhoanRequestBody $req)
+    public function store(Request $req)
 {
     // Tạo mã mới cho khách hàng
     $maMoi = CustomCodeHelper::taoMa(TaiKhoan::query(), 'KH');
@@ -248,7 +248,7 @@ class KhachHangController extends Controller
     return ApiResponse::responseObject(new KhachHangResource($khachHang));
 }
 
-    public function update(TaiKhoanRequestBody $req, $id)
+    public function update(Request $req, $id)
     {
         $khachHang = TaiKhoan::find($id);
         if (!$khachHang) {

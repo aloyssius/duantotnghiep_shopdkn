@@ -61,6 +61,8 @@ export default function Router() {
           path: 'khach-hang',
           children: [
             { path: 'danh-sach', element: <DanhSachKhachHang /> },
+            { path: 'tao-moi', element: <ThemSuaKhachHang /> },
+            { path: ':id', element: <ThemSuaKhachHang /> },
           ],
         },
       ],
@@ -78,5 +80,6 @@ const DanhSachDonHang = Loadable(lazy(() => import('../pages/dashboard/don-hang/
 const DonHangChiTiet = Loadable(lazy(() => import('../pages/dashboard/don-hang/DonHangChiTiet')));
 const DanhSachSanPham = Loadable(lazy(() => import('../pages/dashboard/san-pham/DanhSachSanPham')));
 const DanhSachNhanVien = Loadable(lazy(() => import('../pages/dashboard/nhan-vien/DachSachNhanVien')));
+const ThemSuaKhachHang = Loadable(lazy(() => import('../pages/dashboard/khach-hang/ThemSuaKhachHang')));
 const DanhSachKhachHang = Loadable(lazy(() => import('../pages/dashboard/khach-hang/DanhSachKhachHang')));
 const ThongKe = Loadable(lazy(() => import('../pages/dashboard/thong-ke/ThongKe')));
