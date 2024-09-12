@@ -161,7 +161,7 @@ class NhanVienController extends Controller
     //     return ApiResponse::responseObject(new AccountResource($account));
     // }
 
-    public function update(TaiKhoanRequestBody $req, $id)
+    public function update(Request $req, $id)
     {
         $nhanVien = TaiKhoan::find($id);
         if (!$nhanVien) {
@@ -238,7 +238,7 @@ class NhanVienController extends Controller
     //     return ApiResponse::responseObject(new AccountResource($accountCreated));
     // }
 
-    public function store(TaiKhoanRequestBody $req)
+    public function store(Request $req)
     {
         // Tạo mã mới cho nhân viên
         $maMoi = CustomCodeHelper::taoMa(TaiKhoan::query(), 'NV');

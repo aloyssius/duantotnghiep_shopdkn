@@ -7,24 +7,24 @@ import { DUONG_DAN_TRANG } from "../../../routes/duong-dan";
 import Page from '../../../components/Page';
 import Container from '../../../components/Container';
 import { HeaderBreadcrumbs } from '../../../components/HeaderSection';
-import FormThemSuaKhachHang from './FormThemSuaKhachHang';
+import FormThemSuaNhanVien from './FormThemSuaNhanVien';
 // hooks
 import useLoading from '../../../hooks/useLoading';
 
-export default function ThemSuaKhachHang() {
+export default function ThemSuaNhanVien() {
   const { id } = useParams();
 
   const { onOpenLoading, onCloseLoading } = useLoading();
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    // khai báo hàm lấy dữ liệu thông tin khách hàng
+    // khai báo hàm lấy dữ liệu thông tin nhân viên
     const layDuLieuTuBackEnd = async () => {
       // bật loading
       onOpenLoading();
       try {
         // gọi api từ backend
-        const response = await axios.get(`http://127.0.0.1:8000/api/khach-hang/${id}`);
+        const response = await axios.get(`http://127.0.0.1:8000/api/nhan-vien/${id}`);
 
         // nếu gọi api thành công sẽ set dữ liệu
         setData(response.data.data); // set dữ liệu được trả về từ backend
@@ -45,23 +45,23 @@ export default function ThemSuaKhachHang() {
 
   return (
     <>
-      <Page title={id ? "Cập nhật khách hàng" : "Thêm mới khách hàng"}>
+      <Page title={id ? "Cập nhật nhân viên" : "Thêm mới nhân viên"}>
         <Container>
           <HeaderBreadcrumbs
-            heading={id ? "Cập nhật khách hàng" : "Thêm mới khách hàng"}
+            heading={id ? "Cập nhật nhân viên" : "Thêm mới nhân viên"}
             links={[
               {
-                title: <Link to={DUONG_DAN_TRANG.khach_hang.danh_sach}>Danh sách khách hàng</Link>,
+                title: <Link to={DUONG_DAN_TRANG.nhan_vien.danh_sach}>Danh sách nhân viên</Link>,
               },
               {
-                title: id ? "Cập nhật khách hàng" : "Thêm mới khách hàng",
+                title: id ? "Cập nhật nhân viên" : "Thêm mới nhân viên",
               },
             ]}
           />
 
-          <FormThemSuaKhachHang
+          <FormThemSuaNhanVien
             laCapNhat={id ? true : false}
-            khachHangHienTai={data}
+            nhanVienHienTai={data}
           />
         </Container>
       </Page>

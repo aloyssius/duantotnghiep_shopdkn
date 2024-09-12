@@ -26,7 +26,7 @@ const DANH_SACH_GIOI_TINH_KHACH_HANG = ['Nam', 'Nữ'];
 
 // ----------------------------------------------------------------------
 
-export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
+export default function FormThemSuaNhanVien({ laCapNhat, nhanVienHienTai }) {
   const { onOpenSuccessNotify } = useNotification(); //mở thông báo
   const { showConfirm } = useConfirm(); // mở confirm
   const { onOpenLoading, onCloseLoading } = useLoading(); //mở, tắt loading
@@ -34,7 +34,7 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
   const navigate = useNavigate();
 
 //   useEffect(() => {
-//     // khai báo hàm lấy dữ liệu thuộc tính khách hàng
+//     // khai báo hàm lấy dữ liệu thuộc tính nhân viên
 //     const layDuLieuThuocTinhTuBackEnd = async () => {
 //       // bật loading
 //       onOpenLoading();
@@ -58,7 +58,7 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
 //   }, [])
 
   // validate
-  const KhachHangSchema = Yup.object().shape({
+  const NhanVienSchema = Yup.object().shape({
 //     tenSanPham: Yup.string().trim().required('Tên không được bỏ trống'),
 //     maSanPham: Yup.string().trim().required('Mã không được bỏ trống'),
 //     donGia: Yup.string().required('Đơn giá không được bỏ trống'),
@@ -68,18 +68,18 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
 
   // giá trị mặc định của biến, tương tự useState
   const defaultValues = {
-    hoVaTen: khachHangHienTai?.hoVaTen || '',
-    ngaySinh: khachHangHienTai?.ngaySinh || '',
-    soDienThoai: khachHangHienTai?.soDienThoai || '',
-    matKhau: khachHangHienTai?.matKhau || '',
-    email: khachHangHienTai?.email || '',
-    gioiTinh: chuyenDoiEnumThanhGioiTinh(khachHangHienTai?.gioiTinh),
-    // trangThai: chuyenDoiEnumThanhTrangThai(khachHangHienTai?.trangThai),
+    hoVaTen: nhanVienHienTai?.hoVaTen || '',
+    ngaySinh: nhanVienHienTai?.ngaySinh || '',
+    soDienThoai: nhanVienHienTai?.soDienThoai || '',
+    matKhau: nhanVienHienTai?.matKhau || '',
+    email: nhanVienHienTai?.email || '',
+    gioiTinh: chuyenDoiEnumThanhGioiTinh(nhanVienHienTai?.gioiTinh),
+    trangThai: chuyenDoiEnumThanhTrangThai(nhanVienHienTai?.trangThai),
   };
 
   // lấy methods từ use form
   const methods = useForm({
-    resolver: yupResolver(KhachHangSchema),
+    resolver: yupResolver(NhanVienSchema),
     defaultValues,
   });
 
@@ -92,21 +92,21 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
 
   useEffect(() => {
     // nếu là trang cập nhật => sẽ reset lại các biến trong defaultValues
-    if (laCapNhat && khachHangHienTai) {
+    if (laCapNhat && nhanVienHienTai) {
       reset(defaultValues);
     }
     // nếu là trang thêm mới => sẽ reset lại các biến trong defaultValues
     if (!laCapNhat) {
       reset(defaultValues);
     }
-  }, [laCapNhat, khachHangHienTai]) // gọi useEffect này mỗi khi các tham số truyền vào thay đỏi
+  }, [laCapNhat, nhanVienHienTai]) // gọi useEffect này mỗi khi các tham số truyền vào thay đỏi
 
-  // hàm gọi api thêm mới khách hàng
+  // hàm gọi api thêm mới nhân viên
   const post = async (body) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/khach-hang", body); // gọi api
-      navigate(DUONG_DAN_TRANG.khach_hang.cap_nhat(response.data.data.id)); // chuyển sang trang cập nhật
-      onOpenSuccessNotify('Thêm mới khách hàng thành công!') // hiển thị thông báo 
+      const response = await axios.post("http://127.0.0.1:8000/api/nhan-vien", body); // gọi api
+      navigate(DUONG_DAN_TRANG.nhan_vien.cap_nhat(response.data.data.id)); // chuyển sang trang cập nhật
+      onOpenSuccessNotify('Thêm mới nhân viên thành công!') // hiển thị thông báo 
     } catch (error) {
       console.log(error);
     }
@@ -114,9 +114,9 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
 
   const put = async (body, id) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:8000/api/khach-hang/${id}`, body); // gọi API cập nhật
-      navigate(DUONG_DAN_TRANG.khach_hang.cap_nhat(response.data.data.id)); // chuyển sang trang cập nhật
-      onOpenSuccessNotify('Cập nhật khách hàng thành công!'); // hiển thị thông báo 
+      const response = await axios.put(`http://127.0.0.1:8000/api/nhan-vien/${id}`, body); // gọi API cập nhật
+      navigate(DUONG_DAN_TRANG.nhan_vien.cap_nhat(response.data.data.id)); // chuyển sang trang cập nhật
+      onOpenSuccessNotify('Cập nhật nhân viên thành công!'); // hiển thị thông báo 
     } catch (error) {
       console.log(error);
     }
@@ -126,23 +126,23 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
     if (!laCapNhat) {
         const body = {
         ...data, // giữ các biến cũ trong data 
-        // trangThai: chuyenDoiThanhEnum(data.trangThai), // ghi đè thuộc tính trạng thái trong data, convert thành enum
+        trangThai: chuyenDoiThanhEnum(data.trangThai), // ghi đè thuộc tính trạng thái trong data, convert thành enum
         gioiTinh: chuyenDoiThanhEnumGioiTinh(data.gioiTinh),
         ngaySinh: moment(data.ngaySinh, "DD/MM/YYYY").format("YYYY-MM-DD") // Chuyển đổi định dạng ngày tháng
         }
         console.log(body);
         // hiển thị confirm
-        showConfirm("Xác nhận thêm mới khách hàng?", "Bạn có chắc chắn muốn thêm khách hàng?", () => post(body));
+        showConfirm("Xác nhận thêm mới nhân viên?", "Bạn có chắc chắn muốn thêm nhân viên?", () => post(body));
     }else{
         const body = {
             ...data, // giữ các biến cũ trong data 
-            // trangThai: chuyenDoiThanhEnum(data.trangThai), // ghi đè thuộc tính trạng thái trong data, convert thành enum
+            trangThai: chuyenDoiThanhEnum(data.trangThai), // ghi đè thuộc tính trạng thái trong data, convert thành enum
             gioiTinh: chuyenDoiThanhEnumGioiTinh(data.gioiTinh),
             ngaySinh: moment(data.ngaySinh, "DD/MM/YYYY").format("YYYY-MM-DD") // Chuyển đổi định dạng ngày tháng
             }
             console.log(body);
             // hiển thị confirm
-            showConfirm("Xác nhận cập nhật khách hàng?", "Bạn có chắc chắn muốn cập nhật khách hàng?", () => put(body,  khachHangHienTai?.id));
+            showConfirm("Xác nhận cập nhật nhân viên?", "Bạn có chắc chắn muốn cập nhật nhân viên?", () => put(body,  nhanVienHienTai?.id));
     }
   }
 
@@ -153,9 +153,9 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
 
           <Col span={9}>
             <RHFInput
-              label='Tên khách hàng'
+              label='Tên nhân viên'
               name='hoVaTen'
-              placeholder='Nhập tên khách hàng'
+              placeholder='Nhập tên nhân viên'
               required
             />
           </Col>
@@ -173,7 +173,7 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
             <RHFInput
               label='Số điện thoại'
               name='soDienThoai'
-              placeholder='Nhập mã số điện thoại khách hàng'
+              placeholder='Nhập mã số điện thoại nhân viên'
               required
             />
           </Col>
@@ -253,7 +253,7 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
             />
           </Col>
 
-          {/* <Col span={9}>
+          <Col span={9}>
             <Controller
               name='trangThai'
               control={control}
@@ -281,12 +281,12 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
                 </>
               )}
             />
-          </Col> */}
+          </Col>
 
 
           <Col span={18} style={{ display: 'flex', justifyContent: 'end' }} className="mt-10">
             <Space className='mt-20 mb-5'>
-              <Button onClick={() => navigate(DUONG_DAN_TRANG.khach_hang.danh_sach)}>Hủy bỏ</Button>
+              <Button onClick={() => navigate(DUONG_DAN_TRANG.nhan_vien.danh_sach)}>Hủy bỏ</Button>
               <Button
                 htmlType='submit'
                 type='primary'
@@ -304,27 +304,27 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
 }
 
 
-// const chuyenDoiThanhEnum = (trangThai) => {
-//   switch (trangThai) {
-//     case "Đang hoạt động":
-//       return "dang_hoat_dong";
-//     case "Ngừng hoạt động":
-//       return "ngung_hoat_dong";
-//     default:
-//       return null;
-//   }
-// };
+const chuyenDoiThanhEnum = (trangThai) => {
+  switch (trangThai) {
+    case "Đang hoạt động":
+      return "dang_hoat_dong";
+    case "Ngừng hoạt động":
+      return "ngung_hoat_dong";
+    default:
+      return null;
+  }
+};
 
-// const chuyenDoiEnumThanhTrangThai = (trangThai) => {
-//   switch (trangThai) {
-//     case "dang_hoat_dong":
-//       return "Đang hoạt động";
-//     case "ngung_hoat_dong":
-//       return "Ngừng hoạt động";
-//     default:
-//       return "Đang hoạt động";
-//   }
-// };
+const chuyenDoiEnumThanhTrangThai = (trangThai) => {
+  switch (trangThai) {
+    case "dang_hoat_dong":
+      return "Đang hoạt động";
+    case "ngung_hoat_dong":
+      return "Ngừng hoạt động";
+    default:
+      return "Đang hoạt động";
+  }
+};
 
 const chuyenDoiThanhEnumGioiTinh = (gioiTinh) => {
     switch (gioiTinh) {
