@@ -1,159 +1,199 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 // antd
-import { Table, Tag, Button } from "antd"
+import { Table, Tag, Button, Modal, InputNumber } from "antd"
 // hooks
 import useNotification from '../../../hooks/useNotification';
-import useLoading from '../../../hooks/useLoading';
+import useConfirm from '../../../hooks/useConfirm';
 
 // ----------------------------------------------------------------------
 
-export default function FormThemSuaKichCo({ danhSachKichCoHienTai }) {
+const { CheckableTag } = Tag;
+const DANH_SACH_KICH_CO = ['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49'];
+
+export default function FormThemSuaKichCo({ danhSachKichCoHienTai, id }) {
   const { onOpenSuccessNotify } = useNotification(); //mở thông báo
-  const { onOpenLoading, onCloseLoading } = useLoading(); //mở, tắt loading
+  const { showConfirm } = useConfirm(); // mở confirm
 
+  const [listKichCo, setListKichCo] = useState([]);  // danh sách kích cỡ đc hiển thị dưới table
+  const [moModal, setMoModal] = useState(false);
+  const [cacLuaChonTag, setCacLuaChonTag] = useState([]); // các lựa chọn tag trong modal
+
+  // set lại list kích cỡ khi call api xong
   useEffect(() => {
-    // khai báo hàm lấy dữ liệu thuộc tính sản phẩm
-    const layDuLieuThuocTinhTuBackEnd = async () => {
-      // bật loading
-      onOpenLoading();
-      try {
-        // gọi api từ backend
-        const response = await axios.get("http://127.0.0.1:8000/api/danh-sach-thuoc-tinh");
+    setListKichCo(danhSachKichCoHienTai || [])
+  }, [danhSachKichCoHienTai])
 
-        // nếu gọi api thành công sẽ set dữ liệu
-        // setListMauSac(response.data.data.listMauSac); // set dữ liệu được trả về từ backend
-        // setListThuongHieu(response.data.data.listThuongHieu); // set dữ liệu được trả về từ backend
-      } catch (error) {
-        console.error(error);
-        // console ra lỗi
-      } finally {
-        onCloseLoading();
-        // tắt loading
-      }
-    }
+  const danhSachTenKichCoHienTai = listKichCo?.map((kichCo) => kichCo.ten_kich_co); // lấy ra các tên kích cỡ hiện tại
 
-    // layDuLieuThuocTinhTuBackEnd();
-  }, [])
+  // xử lý onChange chọn tag kích cỡ
+  const chonCacTag = (tag, checked) => {
+    const luaChonTags = checked ? [...cacLuaChonTag, tag] : cacLuaChonTag.filter((t) => t !== tag);
+    console.log('Danh sach cac tag: ', luaChonTags);
+    setCacLuaChonTag(luaChonTags);
+  };
 
-  // hàm gọi api thêm mới sản phẩm
-  const post = async (body) => {
+  // hàm gọi api thêm kích cỡ
+  const post = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/them-san-pham", body); // gọi api
-      navigate(DUONG_DAN_TRANG.san_pham.cap_nhat(response.data.data.id)); // chuyển sang trang cập nhật
-      onOpenSuccessNotify('Thêm mới sản phẩm thành công!') // hiển thị thông báo 
+      const response = await axios.post("http://127.0.0.1:8000/api/them-kich-co", { listKichCo: cacLuaChonTag, id: id }); // gọi api
+      setListKichCo(response.data.data); //  set lại dữ liệu cho danh sách kích cỡ của sản phẩm
+      onOpenSuccessNotify('Thêm kích cỡ thành công!') // hiển thị thông báo 
+      setCacLuaChonTag([]);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
+      onOpenErrorNotify(error.response.data.message) // hiển thị thông báo lỗi
     }
   }
 
-  const onSubmit = async (data) => {
-    const body = {
-      ...data, // giữ các biến cũ trong data 
-      donGia: parseInt(formatNumber(data.donGia)), // ghi đè thuộc tính đơn giá trong data, convert thành số
-      trangThai: chuyenDoiThanhEnum(data.trangThai), // ghi đè thuộc tính trạng thái trong data, convert thành enum
+  // hàm gọi api thêm kích cỡ
+  const putTrangThai = async (trangThai, idKichCo) => {
+    try {
+      const response = await axios.put("http://127.0.0.1:8000/api/trang-thai-kich-co", { trangThai: trangThai, id: idKichCo, idSanPham: id }); // gọi api
+      setListKichCo(response.data.data); //  set lại dữ liệu cho danh sách kích cỡ của sản phẩm
+    } catch (error) {
+      console.log(error.response.data);
+      onOpenErrorNotify(error.response.data.message) // hiển thị thông báo lỗi
     }
-    console.log(body);
-
-    // hiển thị confirm
-    showConfirm("Xác nhận thêm mới sản phẩm?", "Bạn có chắc chắn muốn thêm sản phẩm?", () => post(body));
   }
+
+  // hàm gọi api thêm số lượng tồn
+  const putSoLuongTon = async (soLuong, idKichCo) => {
+    try {
+      const response = await axios.put("http://127.0.0.1:8000/api/so-luong-ton", { soLuongTon: soLuong, id: idKichCo, idSanPham: id }); // gọi api
+    } catch (error) {
+      console.log(error.response.data);
+      onOpenErrorNotify(error.response.data.message) // hiển thị thông báo lỗi
+    }
+  }
+  const themKichCo = () => {
+    if (cacLuaChonTag.length > 0) { // nếu có bất kỳ lựa chọn tag kích cỡ nào
+      console.log(cacLuaChonTag);
+      // hiển thị confirm
+      showConfirm("Xác nhận thêm mới kích cỡ?", "Bạn có chắc chắn muốn thêm kích cỡ?", () => post());
+    }
+  }
+
+  const danhSachCacTruongDuLieu = [
+    {
+      title: 'Kích cỡ',
+      align: "center",
+      render: (text, record) => {
+        return (
+          <>
+            <span className='fw-500'>
+              {record.ten_kich_co}
+            </span>
+          </>
+        )
+      },
+    },
+    {
+      title: 'Số lượng tồn',
+      align: "center",
+      render: (text, record) => {
+        return (
+          <>
+            <span className='fw-500'>
+              <InputNumber min={0} defaultValue={record.so_luong_ton} onBlur={(e) => putSoLuongTon(e.target.value, record.id)} />
+            </span>
+          </>
+        )
+      },
+    },
+    {
+      title: 'Trạng thái',
+      align: "center",
+      render: (text, record) => {
+        return (
+          <>
+            <span className='fw-500' style={{ color: 'red' }} >
+              <Tag className='ms-10 fw-500' color={hienThiMauSac(record.trang_thai)}>{hienThiTrangThai(record.trang_thai)}</Tag>
+            </span>
+          </>
+        )
+      },
+    },
+    {
+      title: 'Thao tác',
+      align: "center",
+      render: (text, record) => {
+        return (
+          <>
+            {record.trang_thai === 'dang_hoat_dong' &&
+              <Button danger type='primary' onClick={() => putTrangThai("ngung_hoat_dong", record.id)}>
+                Ngừng kích hoạt
+              </Button>
+            }
+            {record.trang_thai === 'ngung_hoat_dong' &&
+              <Button type='primary' onClick={() => putTrangThai("dang_hoat_dong", record.id)}>
+                Kich hoạt
+              </Button>
+            }
+          </>
+        )
+      },
+    },
+  ];
 
   return (
     <>
-      <div className='mt-20 text-center' style={{ paddingInline: 150 }}>
+      <div style={{ paddingInline: 150 }}>
 
-        <div className='d-flex justify-content-between mt-20'>
-          <span className='fw-500' style={{ fontSize: 25 }}>Kích cỡ & số lượng</span>
-          <Button type='primary'>Thêm kích cỡ</Button>
+        <div className='d-flex justify-content-between mt-10'>
+          <span className='fw-500' style={{ fontSize: 25 }}>Danh sách kích cỡ</span>
+          <Button type='primary' onClick={() => setMoModal(true)}>Thêm kích cỡ</Button>
         </div>
 
         <Table
           className='mt-20'
           rowKey={"id"}
           columns={danhSachCacTruongDuLieu}
-          dataSource={danhSachKichCoHienTai} // dữ liệu từ backend
+          dataSource={listKichCo} // truyền dữ liệu vào table
           pagination={false} // tắt phân trang mặc định của table
         />
       </div>
+      <Modal
+        title="Chọn kích cỡ"
+        open={moModal} // trạng thái modal
+        onOk={themKichCo} // gọi hàm thêm kích cỡ nếu bấm ok
+        onCancel={() => { // nếu bấm cancel ( hủy )
+          setMoModal(false); // đóng modal
+          setCacLuaChonTag([]); // xóa các lựa chọn tag
+        }}
+      >
+
+        <div className='mt-15'>
+          {DANH_SACH_KICH_CO.map((kichCo) => (
+            <CheckableTag
+              key={kichCo}
+              style={{
+                padding: '20px 24px',
+                marginTop: '5px',
+                fontSize: 18,
+                fontWeight: 500,
+                opacity: danhSachTenKichCoHienTai?.includes(kichCo) ? 0.5 : 1,
+                backgroundColor: danhSachTenKichCoHienTai?.includes(kichCo) ? "#1677FF" : "",
+                pointerEvents: danhSachTenKichCoHienTai?.includes(kichCo) ? "none" : "",
+              }}
+              checked={cacLuaChonTag.indexOf(kichCo) > -1}
+              onChange={(checked) => chonCacTag(kichCo, checked)}
+            >
+              {kichCo}
+            </CheckableTag>
+          ))}
+        </div>
+      </Modal>
     </>
   )
 }
 
-const danhSachCacTruongDuLieu = [
-  {
-    title: 'Kích cỡ',
-    align: "center",
-    render: (text, record) => {
-      return (
-        <>
-          <span className='fw-500'>
-            {record.maSanPham}
-          </span>
-        </>
-      )
-    },
-  },
-  {
-    title: 'Số lượng',
-    align: "center",
-    render: (text, record) => {
-      return (
-        <>
-          <span className='fw-500'>
-            {record.tenSanPham}
-          </span>
-        </>
-      )
-    },
-  },
-  {
-    title: 'Trạng thái',
-    align: "center",
-    render: (text, record) => {
-      return (
-        <>
-          <span className='fw-500' style={{ color: 'red' }} >
-            <Tag className='ms-10 fw-500' color={hienThiMauSac(record.trangThai)}>{hienThiTrangThai(record.trangThai)}</Tag>
-          </span>
-        </>
-      )
-    },
-  },
-  {
-    title: 'Thao tác',
-    align: "center",
-    render: (text, record) => {
-      return (
-        <Tooltip title="Chỉnh sửa">
-          <Link to={DUONG_DAN_TRANG.san_pham.cap_nhat(record.id)}>
-            <FaPenToSquare className='mt-8 fs-20 root-color' />
-          </Link>
-        </Tooltip>
-      )
-    },
-  },
-];
-
-const chuyenDoiThanhEnum = (trangThai) => {
-  switch (trangThai) {
-    case "Đang bán":
-      return "dang_hoat_dong";
-    case "Ngừng bán":
-      return "ngung_hoat_dong";
-    default:
-      return null;
-  }
-};
-
-const chuyenDoiEnumThanhTrangThai = (trangThai) => {
+const hienThiTrangThai = (trangThai) => {
   switch (trangThai) {
     case "dang_hoat_dong":
       return "Đang bán";
-    case "ngung_hoat_dong":
-      return "Ngừng bán";
     default:
-      return "Đang bán";
+      return "Ngừng bán";
   }
 };
 

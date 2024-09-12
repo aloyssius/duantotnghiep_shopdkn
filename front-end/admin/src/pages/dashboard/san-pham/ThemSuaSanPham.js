@@ -8,8 +8,10 @@ import Page from '../../../components/Page';
 import Container from '../../../components/Container';
 import { HeaderBreadcrumbs } from '../../../components/HeaderSection';
 import FormThemSuaSanPham from './FormThemSuaSanPham';
+import FormThemSuaKichCo from './FormThemSuaKichCo';
 // hooks
 import useLoading from '../../../hooks/useLoading';
+import FormThemSuaAnh from "./FormThemSuaAnh";
 
 export default function ThemSuaSanPham() {
   const { id } = useParams();
@@ -28,6 +30,7 @@ export default function ThemSuaSanPham() {
 
         // nếu gọi api thành công sẽ set dữ liệu
         setData(response.data.data); // set dữ liệu được trả về từ backend
+        console.log(response.data.data);
       } catch (error) {
         console.error(error);
         // console ra lỗi
@@ -64,6 +67,19 @@ export default function ThemSuaSanPham() {
             sanPhamHienTai={data}
           />
         </Container>
+
+        {id &&
+          <Container className='mt-20' style={{ minHeight: 400 }}>
+            <FormThemSuaKichCo danhSachKichCoHienTai={data?.listKichCo || []} id={id} />
+          </Container>
+        }
+
+        {id &&
+          <Container className='mt-20' style={{ minHeight: 150 }}>
+            <FormThemSuaAnh danhSachHinhAnhHienTai={data?.listHinhAnh || []} id={id} />
+          </Container>
+        }
+
       </Page>
     </>
   )
