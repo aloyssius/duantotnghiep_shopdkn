@@ -83,28 +83,19 @@ class KhachHangController extends Controller
     {
         $khachHang = TaiKhoan::query();
 
-        // Lọc theo vai_tro
+        // Hiển thị theo vai_tro khach_hang
         $khachHang->where('vai_tro', 'khach_hang');
-    
-        // Tìm kiếm theo mã
-        if ($req->has('ma')) {
-            $khachHang->where('ma', 'like', '%' . $req->input('ma') . '%');
+
+        if ($req->filled('tuKhoa')) {
+            $tuKhoa = '%' . $req->tuKhoa . '%';
+            $khachHang->where(function ($query) use ($tuKhoa) {
+                $query->where('ma', 'like', $tuKhoa)
+                    ->orWhere('ho_va_ten', 'like', $tuKhoa)
+                    ->orWhere('so_dien_thoai', 'like', $tuKhoa)
+                    ->orWhere('email', 'like', $tuKhoa);
+            });
         }
     
-        // Tìm kiếm theo họ và tên
-        if ($req->has('hoVaTen')) {
-            $khachHang->where('ho_va_ten', 'like', '%' . $req->input('hoVaTen') . '%');
-        }
-    
-        // Tìm kiếm theo số điện thoại
-        if ($req->has('soDienThoai')) {
-            $khachHang->where('so_dien_thoai', 'like', '%' . $req->input('soDienThoai') . '%');
-        }
-    
-        // Tìm kiếm theo email
-        if ($req->has('email')) {
-            $khachHang->where('email', 'like', '%' . $req->input('email') . '%');
-        }
     
         // Sắp xếp theo ngày tạo
         $khachHang->orderBy('created_at', 'desc');
