@@ -69,32 +69,21 @@ class NhanVienController extends Controller
     {
         $nhanVien = TaiKhoan::query();
 
-        // Lọc theo vai_tro
+        // Hiển thị theo vai_tro nhan_vien
         $nhanVien->where('vai_tro', 'nhan_vien');
 
-        // Tìm kiếm theo trang_thai
-        if ($req->has('trangThai')) {
-            $khachHang->where('trang_thai', $req->input('trangThai'));
+        if ($req->filled('tuKhoa')) {
+            $tuKhoa = '%' . $req->tuKhoa . '%';
+            $nhanVien->where(function ($query) use ($tuKhoa) {
+                $query->where('ma', 'like', $tuKhoa)
+                    ->orWhere('ho_va_ten', 'like', $tuKhoa)
+                    ->orWhere('so_dien_thoai', 'like', $tuKhoa)
+                    ->orWhere('email', 'like', $tuKhoa);
+            });
         }
-    
-        // Tìm kiếm theo mã
-        if ($req->has('ma')) {
-            $nhanVien->where('ma', 'like', '%' . $req->input('ma') . '%');
-        }
-    
-        // Tìm kiếm theo họ và tên
-        if ($req->has('hoVaTen')) {
-            $nhanVien->where('ho_va_ten', 'like', '%' . $req->input('hoVaTen') . '%');
-        }
-    
-        // Tìm kiếm theo số điện thoại
-        if ($req->has('soDienThoai')) {
-            $nhanVien->where('so_dien_thoai', 'like', '%' . $req->input('soDienThoai') . '%');
-        }
-    
-        // Tìm kiếm theo email
-        if ($req->has('email')) {
-            $nhanVien->where('email', 'like', '%' . $req->input('email') . '%');
+
+        if ($req->filled('trangThai')) {
+            $nhanVien->where('trang_thai', $req->trangThai);
         }
     
         // Sắp xếp theo ngày tạo
