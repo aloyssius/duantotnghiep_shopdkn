@@ -3,7 +3,7 @@ import axios from 'axios';
 import { formatCurrencyVnd } from '../../../utils/formatCurrency';
 import { useParams } from "react-router-dom";
 // antd
-import { Input, Button, Table, Tag, Flex } from 'antd';
+import { Button, Table, Tag, Flex } from 'antd';
 // routes
 import { Link } from 'react-router-dom';
 import { DUONG_DAN_TRANG } from '../../../routes/duong-dan';

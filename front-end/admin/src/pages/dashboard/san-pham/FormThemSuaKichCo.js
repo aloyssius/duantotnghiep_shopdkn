@@ -12,7 +12,7 @@ const { CheckableTag } = Tag;
 const DANH_SACH_KICH_CO = ['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49'];
 
 export default function FormThemSuaKichCo({ danhSachKichCoHienTai, id }) {
-  const { onOpenSuccessNotify } = useNotification(); //mở thông báo
+  const { onOpenSuccessNotify, onOpenErrorNotify } = useNotification(); //mở thông báo
   const { showConfirm } = useConfirm(); // mở confirm
 
   const [listKichCo, setListKichCo] = useState([]);  // danh sách kích cỡ đc hiển thị dưới table
