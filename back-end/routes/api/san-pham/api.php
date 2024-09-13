@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Products\AttributeCategoryController;
 use App\Http\Controllers\Api\Products\AttributeColorController;
 use App\Http\Controllers\Api\Products\AttributeSizeController;
 use App\Http\Controllers\Api\Products\ProductController;
+use App\Http\Controllers\SanPhamClientController;
 use App\Http\Controllers\SanPhamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +22,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-// product client
+// client
+Route::get('/danh-sach-san-pham-client', [SanPhamClientController::class, 'index']);
+
 Route::get('/product-list', [ProductController::class, 'clientIndex']);
 Route::get('/product-list/male', [ProductController::class, 'clientIndexMale']);
 Route::get('/product-list/female', [ProductController::class, 'clientIndexFemale']);
@@ -29,7 +32,7 @@ Route::get('/product-details/{sku}', [ProductController::class, 'findBySkuClient
 Route::get('/product-detail/{id}', [ProductController::class, 'findByClientId']);
 Route::get('/product-home', [ProductController::class, 'indexHomeClient']);
 
-// product
+// admin
 Route::get('/danh-sach-san-pham', [SanPhamController::class, 'index']);
 Route::get('/danh-sach-thuoc-tinh', [SanPhamController::class, 'indexThuocTinhSanPham']);
 Route::post('/them-san-pham', [SanPhamController::class, 'store']);

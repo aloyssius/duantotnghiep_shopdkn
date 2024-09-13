@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\CommonStatus;
 use App\Constants\ProductStatus;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\RestApiException;
@@ -15,10 +16,12 @@ use App\Http\Requests\Product\ProductRequestBody;
 use App\Http\Resources\Products\AttributeResource;
 use App\Http\Resources\Products\ImageResource;
 use App\Http\Resources\Products\ProductDetailResource;
-use App\Http\Resources\Products\SanPhamResource;
+use App\Http\Resources\SanPhamClientResource;
+use App\Http\Resources\SanPhamResource;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\HinhAnh;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -46,57 +49,28 @@ class SanPhamClientController extends Controller
         return ApiResponse::responseObject($response);
     }
 
-    public function clientIndexMale(ProductRequest $req)
+    public function index(Request $req)
     {
-        $req->pageSize = 15;
-        $productDetails = ProductDetails::getClientProducts($req, 'male');
+        // Khởi tạo truy vấn
+        $query = SanPham::where('trang_thai', CommonStatus::DANG_HOAT_DONG);
 
-        $brands = Brand::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $categories = Category::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $colors = Color::select(['id', 'code', 'name'])->orderBy('created_at', 'desc')->get();
-        $sizes = Size::select(['id', 'name'])->orderBy('name', 'asc')->get();
+        // Kiểm tra xem có tham số idThuongHieu trong yêu cầu không
+        if ($req->filled('idThuongHieu')) {
+            $query->where('id_thuong_hieu', $req->idThuongHieu);
+        }
 
-        $otherData['brands'] = $brands;
-        $otherData['categories'] = $categories;
-        $otherData['colors'] = $colors;
-        $otherData['sizes'] = $sizes;
+        // Lấy danh sách sản phẩm
+        $listSanPham = $query->get()->map(function ($sanPham) {
+            // Lấy hình ảnh đại diện
+            $hinhDaiDien = HinhAnh::where('id_san_pham', $sanPham->id)->first();
 
-        return ApiResponse::responsePageCustom($productDetails, [], $otherData);
-    }
-    public function clientIndexFemale(ProductRequest $req)
-    {
-        $req->pageSize = 15;
-        $productDetails = ProductDetails::getClientProducts($req, 'female');
+            // Thêm hình ảnh đại diện vào sản phẩm
+            $sanPham->hinhAnh = $hinhDaiDien ? $hinhDaiDien->duong_dan_url : null;
 
-        $brands = Brand::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $categories = Category::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $colors = Color::select(['id', 'code', 'name'])->orderBy('created_at', 'desc')->get();
-        $sizes = Size::select(['id', 'name'])->orderBy('name', 'asc')->get();
+            return $sanPham;
+        });
 
-        $otherData['brands'] = $brands;
-        $otherData['categories'] = $categories;
-        $otherData['colors'] = $colors;
-        $otherData['sizes'] = $sizes;
-
-        return ApiResponse::responsePageCustom($productDetails, [], $otherData);
-    }
-
-    public function clientIndex(ProductRequest $req)
-    {
-        $req->pageSize = 15;
-        $productDetails = ProductDetails::getClientProducts($req);
-
-        $brands = Brand::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $categories = Category::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $colors = Color::select(['id', 'code', 'name'])->orderBy('created_at', 'desc')->get();
-        $sizes = Size::select(['id', 'name'])->orderBy('name', 'asc')->get();
-
-        $otherData['brands'] = $brands;
-        $otherData['categories'] = $categories;
-        $otherData['colors'] = $colors;
-        $otherData['sizes'] = $sizes;
-
-        return ApiResponse::responsePageCustom($productDetails, [], $otherData);
+        return ApiResponse::responseObject(SanPhamClientResource::collection($listSanPham));
     }
 
     public function findBySkuClient($sku)

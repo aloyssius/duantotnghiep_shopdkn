@@ -2,38 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\ProductStatus;
-use App\Exceptions\NotFoundException;
 use App\Exceptions\RestApiException;
 use App\Helpers\ApiResponse;
-use App\Helpers\ConvertHelper;
-use App\Helpers\CustomCodeHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\AttributeRequestBody;
-use App\Http\Requests\Product\ProductRequest;
-use App\Http\Requests\Product\ProductRequestBody;
-use App\Http\Resources\Products\AttributeResource;
-use App\Http\Resources\Products\ImageResource;
-use App\Http\Resources\Products\ProductDetailResource;
 use App\Http\Resources\SanPhamResource;
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Color;
 use App\Models\HinhAnh;
-use App\Models\Image;
 use App\Models\KichCo;
 use App\Models\MauSac;
-use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\ProductDetails;
 use App\Models\SanPham;
-use App\Models\Size;
 use App\Models\ThuongHieu;
-use Cloudinary\Api\ApiClient;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Illuminate\Support\Facades\DB;
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise\Utils;
 use Illuminate\Http\Request;
 
 class SanPhamController extends Controller
