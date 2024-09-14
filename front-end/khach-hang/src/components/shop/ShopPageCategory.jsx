@@ -23,6 +23,7 @@ function ShopPageCategory(props) {
   const { onOpenLoading, onCloseLoading } = useLoading();
 
   const [data, setData] = useState([]);
+  const [listThuongHieu, setListThuongHieu] = useState([]);
   const [idThuongHieu, setIdThuongHieu] = useState(null);
 
   useEffect(() => {
@@ -38,8 +39,8 @@ function ShopPageCategory(props) {
           }
         });
         // nếu gọi api thành công sẽ set dữ liệu
-        setData(response.data.data); // set dữ liệu được trả về từ backend
-        console.log(response.data.data)
+        setData(response.data.data.listSanPham); // set dữ liệu được trả về từ backend
+        setListThuongHieu(response.data.data.listThuongHieu)
       } catch (error) {
         console.error(error);
         // console ra lỗi
@@ -52,12 +53,6 @@ function ShopPageCategory(props) {
     // gọi hàm vừa khai báo
     layDuLieuTuBackEnd();
   }, [idThuongHieu]) // hàm được gọi lần đầu tiên và sẽ gọi lại khi id thương hiệu thay đổi
-
-  const sortOptions = [
-    { value: '', label: 'Tất cả' },
-    { value: 'lowToHigh', label: 'Giá thấp đến cao' },
-    { value: 'highToLow', label: 'Giá cao xuống thấp' },
-  ];
 
   const breadcrumb = [
     { title: 'Trang chủ', url: '/' },
@@ -77,11 +72,15 @@ function ShopPageCategory(props) {
                 id="view-options-sort"
                 value={idThuongHieu}
                 onChange={(e) => setIdThuongHieu(e.target.value)}
+                defaultValue='tatCa'
               >
                 <>
-                  {sortOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                  <option key={"tatCa"} value={null}>
+                    Tất cả
+                  </option>
+                  {listThuongHieu.map(option => (
+                    <option key={option.id} value={option.id}>
+                      {option.ten}
                     </option>
                   ))}
                 </>

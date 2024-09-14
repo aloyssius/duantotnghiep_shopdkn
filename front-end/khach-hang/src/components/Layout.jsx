@@ -33,8 +33,8 @@ const DangNhapDangKy = Loadable(lazy(() => import('./account/DangNhapDangKy')));
 const MyCart = Loadable(lazy(() => import('./shop/ShopPageCart')));
 const Checkout = Loadable(lazy(() => import('./shop/ShopPageCheckout')));
 const TrackOrder = Loadable(lazy(() => import('./shop/ShopPageTrackOrder')));
-const ProductList = Loadable(lazy(() => import('./shop/ShopPageCategory')));
-const ProductDetail = Loadable(lazy(() => import('./shop/ShopPageProduct')));
+const DanhSachSanPham = Loadable(lazy(() => import('./shop/ShopPageCategory')));
+const SanPhamChiTiet = Loadable(lazy(() => import('./shop/ShopPageProduct')));
 const DonHangChiTiet = Loadable(lazy(() => import('./account/DonHangChiTiet')));
 const LichSuMuaHang = Loadable(lazy(() => import('./account/LichSuMuaHang')));
 
@@ -71,7 +71,7 @@ function Layout(props) {
               exact
               path="/san-pham"
               render={(props) => (
-                <ProductList {...props} />
+                <DanhSachSanPham {...props} />
               )}
             />
 
@@ -83,7 +83,7 @@ function Layout(props) {
               )}
             />
 
-            <Route exact path="/product-detail/:sku" component={ProductDetail} />
+            <Route exact path="/san-pham/:ma" component={SanPhamChiTiet} />
 
             <Route exact path="/gio-hang" component={MyCart} />
             <Route exact path="/checkout" component={Checkout} />

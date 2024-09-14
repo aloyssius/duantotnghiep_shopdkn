@@ -118,8 +118,8 @@ class ProductGallery extends Component {
 
     const { images } = this.props;
     const items = images?.map((image) => ({
-      src: image.pathUrl,
-      msrc: image.pathUrl,
+      src: image,
+      msrc: image,
       w: 700,
       h: 700,
     }));
@@ -210,7 +210,7 @@ class ProductGallery extends Component {
     const featured = images.map((image, index) => (
 
       <Link key={index} onClick={(event) => this.handleFeaturedClick(event, index)} target="_blank">
-        <img src={image?.pathUrl} alt="" ref={(element) => { this.imagesRefs[index] = element; }} />
+        <img src={image} alt="" ref={(element) => { this.imagesRefs[index] = element; }} />
       </Link>
     ));
 
@@ -226,7 +226,7 @@ class ProductGallery extends Component {
           onClick={() => this.handleThumbnailClick(index)}
           className={classes}
         >
-          <img className="product-gallery__carousel-image" src={image?.pathUrl} alt="" />
+          <img className="product-gallery__carousel-image" src={image} alt="" />
         </button>
       );
     });

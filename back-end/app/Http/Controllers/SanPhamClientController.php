@@ -23,11 +23,14 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\HinhAnh;
 use App\Models\Image;
+use App\Models\KichCo;
+use App\Models\MauSac;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductDetails;
 use App\Models\SanPham;
 use App\Models\Size;
+use App\Models\ThuongHieu;
 use Cloudinary\Api\ApiClient;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\DB;
@@ -70,52 +73,24 @@ class SanPhamClientController extends Controller
             return $sanPham;
         });
 
-        return ApiResponse::responseObject(SanPhamClientResource::collection($listSanPham));
+        $response['listSanPham'] = SanPhamClientResource::collection($listSanPham);
+        $response['listThuongHieu'] = ThuongHieu::all();
+
+        return ApiResponse::responseObject($response);
     }
 
-    public function findBySkuClient($sku)
+    public function show($ma)
     {
-        $product = Product::select('PRODUCTS.name', 'BRANDS.NAME as brandName', 'COLORS.NAME as colorName', 'PRODUCTS.status', 'PRODUCT_DETAILS.price', 'PRODUCT_DETAILS.sku', 'PRODUCTS.ID as productId', 'COLORS.ID as colorId', 'PRODUCTS.description')
-            ->join('PRODUCT_DETAILS', 'PRODUCTS.ID', '=', 'PRODUCT_DETAILS.PRODUCT_ID')
-            ->join('BRANDS', 'PRODUCTS.BRAND_ID', '=', 'BRANDS.ID')
-            ->join('COLORS', 'PRODUCT_DETAILS.COLOR_ID', '=', 'COLORS.ID')
-            ->where('PRODUCT_DETAILS.SKU', $sku)
-            ->groupBy('PRODUCTS.NAME', 'BRANDS.NAME', 'COLORS.NAME', 'PRODUCTS.STATUS', 'PRODUCT_DETAILS.PRICE', 'PRODUCT_DETAILS.SKU', 'PRODUCTS.ID', 'COLORS.ID')
-            ->first();
+        $timSanPham = SanPham::where('ma', $ma)->first();
 
-        if (!$product) {
-            throw new NotFoundException("Không tìm thấy sản phẩm này!");
-        }
+        $listHinhAnh = HinhAnh::where('id_san_pham', $timSanPham->id)->pluck('duong_dan_url');
 
-        if ($product->status !== ProductStatus::IS_ACTIVE) {
-            throw new NotFoundException("Không tìm thấy sản phẩm này!");
-        }
+        $listKichCo =  KichCo::where('id_san_pham', $timSanPham->id)->select('id', 'ten_kich_co as ten', 'so_luong_ton as soLuong')->orderBy('ten_kich_co', 'asc')->get();
 
-        // colors
-        $colors = ProductDetails::select('product_details.color_id as colorId', 'product_details.sku', 'colors.name', 'colors.code')
-            ->where('product_details.product_id', $product->productId)
-            ->join('colors', 'product_details.color_id', '=', 'colors.id')
-            ->groupBy('color_id', 'sku')
-            ->get();
+        $timSanPham['listHinhAnh'] = $listHinhAnh;
+        $timSanPham['listKichCo'] = $listKichCo;
 
-        // sizes
-        $productActiveStatus = 'is_active';
-        $sizes = ProductDetails::select('product_details.quantity', 'product_details.id', 'sizes.name', 'product_details.status')
-            ->where('product_details.product_id', $product->productId)
-            ->where('product_details.sku', $sku)
-            ->where('product_details.status', $productActiveStatus)
-            ->join('sizes', 'product_details.size_id', '=', 'sizes.id')
-            ->orderBy('sizes.name', 'asc')
-            ->get();
-
-        // images
-        $images = Image::select('path_url as pathUrl', 'is_default as isDefault')->where('product_id', $product->productId)->where('product_color_id', $product->colorId)->get();
-
-        $product['colors'] = $colors;
-        $product['sizes'] = $sizes;
-        $product['images'] = $images;
-
-        return ApiResponse::responseObject($product);
+        return ApiResponse::responseObject(new SanPhamResource($timSanPham));
     }
 
     public function findByClientId($id)

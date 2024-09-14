@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 // client
 Route::get('/danh-sach-san-pham-client', [SanPhamClientController::class, 'index']);
+Route::get('/tim-san-pham-client/{ma}', [SanPhamClientController::class, 'show']);
 
 Route::get('/product-list', [ProductController::class, 'clientIndex']);
 Route::get('/product-list/male', [ProductController::class, 'clientIndexMale']);

@@ -32,7 +32,7 @@ function TrangChu() {
         // gọi api từ backend
         const response = await axios.get(`http://127.0.0.1:8000/api/danh-sach-san-pham-client`);
         // nếu gọi api thành công sẽ set dữ liệu
-        setData(response.data.data); // set dữ liệu được trả về từ backend
+        setData(response.data.data.listSanPham); // set dữ liệu được trả về từ backend
         console.log(response.data.data)
       } catch (error) {
         console.error(error);
@@ -50,15 +50,6 @@ function TrangChu() {
   const listSanPhamMoiNhat = data?.map((sanPham) => (
     <div key={sanPham.id} className="products-list__item">
       <ProductCard sanPham={sanPham} />
-    </div>
-  ));
-
-  const productsListTop = data?.topSold?.map((product) => (
-    <div
-      key={product.id}
-      className="products-list__item"
-    >
-      <ProductCard latest product={product} />
     </div>
   ));
 
@@ -82,7 +73,7 @@ function TrangChu() {
 
       <HeaderProductList title="SẢN PHẨM BÁN CHẠY" />
 
-      <ProductList style={{ marginBottom: 30 }} data={productsListTop} />
+      <ProductList style={{ marginBottom: 30 }} data={listSanPhamMoiNhat} />
 
       <ButtonViewMore />
 
