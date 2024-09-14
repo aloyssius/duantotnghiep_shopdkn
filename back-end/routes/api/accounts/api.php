@@ -1,10 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\Accounts\CustomerController;
-use App\Http\Controllers\Api\Accounts\EmployeeController;
-use App\Http\Controllers\Api\Bills\BillController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaiKhoanController;
+use App\Http\Controllers\KhachHangController;
+use App\Http\Controllers\NhanVienController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,29 +18,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-// admin
-Route::post('/login', [AuthController::class, 'loginAdmin']);
-
-// admin
-Route::get('/customers', [CustomerController::class, 'index']);
-Route::post('/customers', [CustomerController::class, 'store']);
-Route::put('/customers', [CustomerController::class, 'update']);
-Route::get('/customers/{id}', [CustomerController::class, 'show']);
-
-Route::get('/customers/address/{id}', [CustomerController::class, 'show']);
-Route::post('/customers/address/', [CustomerController::class, 'storeAddress']);
-Route::get('/customers/{id}/address', [CustomerController::class, 'index']);
-
-Route::get('/employees', [EmployeeController::class, 'index']);
-Route::post('/employees', [EmployeeController::class, 'store']);
-Route::put('/employees', [EmployeeController::class, 'update']);
-Route::get('/employees/{id}', [EmployeeController::class, 'show']);
-
-Route::get('/employees/address/{id}', [EmployeeController::class, 'show']);
-Route::post('/employees/address/', [EmployeeController::class, 'storeAddress']);
-Route::get('/employees/{id}/address', [EmployeeController::class, 'index']);
-
 // client
 Route::post('/dang-nhap', [TaiKhoanController::class, 'dangNhap']);
 Route::post('/dang-ky', [TaiKhoanController::class, 'dangKy']);
 Route::get('/lich-su-mua-hang', [TaiKhoanController::class, 'showLichSuMuaHang']);
+
+// client
+Route::get('/khach-hang', [KhachHangController::class, 'index']);
+Route::post('/khach-hang', [KhachHangController::class, 'store']);
+Route::get('khach-hang/{id}', [KhachHangController::class, 'show']);
+Route::put('khach-hang/{id}', [KhachHangController::class, 'update']);
+
+Route::get('/nhan-vien', [NhanVienController::class, 'index']);
+Route::post('/nhan-vien', [NhanVienController::class, 'store']);
+Route::get('nhan-vien/{id}', [NhanVienController::class, 'show']);
+Route::put('nhan-vien/{id}', [NhanVienController::class, 'update']);
+
+
+// Route::get('/account/bills', [BillController::class, 'showBillsByAccount']);
+// Route::get('/account/bill-detail', [BillController::class, 'showBillDetailByAccount']);
+// Route::put('/account/bill/status', [BillController::class, 'updateStatusCanceledByAccount']);
+// Route::put('/account/bill/payment-method', [BillController::class, 'updatePaymentMethodByAccount']);
