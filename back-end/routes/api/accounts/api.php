@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Accounts\CustomerController;
 use App\Http\Controllers\Api\Accounts\EmployeeController;
 use App\Http\Controllers\Api\Bills\BillController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TaiKhoanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,32 +42,7 @@ Route::get('/employees/address/{id}', [EmployeeController::class, 'show']);
 Route::post('/employees/address/', [EmployeeController::class, 'storeAddress']);
 Route::get('/employees/{id}/address', [EmployeeController::class, 'index']);
 
-Route::post('/customers/address/default', [CustomerController::class, 'storeAddressDefault']);
-
-Route::get('/my-account', [AuthController::class, 'showAdmin']);
-Route::put('/change-password', [AuthController::class, 'changePasswordAdmin']);
-Route::put('/notifies/{id}', [AuthController::class, 'updateNotifies']);
-
 // client
-Route::post('/account/login', [AuthController::class, 'login']);
-Route::post('/account/register', [AuthController::class, 'register']);
-Route::post('/account/verify/{id}', [AuthController::class, 'verify']);
-Route::get('/account/register-success/{id}', [AuthController::class, 'showAccountRegister']);
-Route::post('/account/reset-password/{id}', [AuthController::class, 'resetPassword']);
-Route::get('/forgot-password', [AuthController::class, 'resetPasswordAdmin']);
-
-Route::post('/account/change-password/{id}', [AuthController::class, 'changePassword']);
-Route::post('/account/logout', [AuthController::class, 'logout']);
-Route::post('/account/refresh', [AuthController::class, 'refresh']);
-Route::post('/account/update', [AuthController::class, 'updateAccount']);
-Route::get('/account/my-account', [AuthController::class, 'show']);
-Route::get('/account/addresses', [AuthController::class, 'showListAddress']);
-Route::post('/account/addresses', [AuthController::class, 'createAddress']);
-Route::delete('/account/addresses/{id}', [AuthController::class, 'destroyAddress']);
-Route::put('/account/addresses', [AuthController::class, 'updateAddress']);
-Route::put('/account/addresses/default', [AuthController::class, 'updateIsDefaultAddress']);
-
-Route::get('/account/bills', [BillController::class, 'showBillsByAccount']);
-Route::get('/account/bill-detail', [BillController::class, 'showBillDetailByAccount']);
-Route::put('/account/bill/status', [BillController::class, 'updateStatusCanceledByAccount']);
-Route::put('/account/bill/payment-method', [BillController::class, 'updatePaymentMethodByAccount']);
+Route::post('/dang-nhap', [TaiKhoanController::class, 'dangNhap']);
+Route::post('/dang-ky', [TaiKhoanController::class, 'dangKy']);
+Route::get('/lich-su-mua-hang', [TaiKhoanController::class, 'showLichSuMuaHang']);

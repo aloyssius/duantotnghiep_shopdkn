@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 export const Logo = () => {
 
   return (
-    <img src={logo} style={{ width: "85px", /* marginTop: "25px", */ marginLeft: "35px" }} />
+    <img src={logo} style={{ width: "85px", marginLeft: "35px" }} />
   )
 
 }
@@ -23,9 +23,7 @@ export const LogoMobile = () => {
 export const LogoCollapse = () => {
 
   return (
-    // <Link to='/'>
-    <img src={logoCollapse} style={{ width: "40px"/* , marginTop: "25px"  */ }} />
-    // </Link>
+    <img src={logoCollapse} style={{ width: "40px" }} />
   )
 
 }

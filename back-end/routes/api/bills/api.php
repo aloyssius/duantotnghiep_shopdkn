@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/statistics', [DonHangController::class, 'revenueStatistics']);
 Route::get('/danh-sach-don-hang', [DonHangController::class, 'index']);
 Route::put('/bills/status', [DonHangController::class, 'adminUpdateStatus']);
-Route::get('/bills/{id}', [DonHangController::class, 'showAdmin']);
+Route::get('/tim-don-hang/{id}', [DonHangController::class, 'show']);
+Route::put('/trang-thai-don-hang/{id}', [DonHangController::class, 'capNhatTrangThaiDonHang']);
+Route::put('/huy-don-hang/{id}', [DonHangController::class, 'huyDonHang']);
 
 // client
 Route::post('/bills', [DonHangController::class, 'clientStore']);

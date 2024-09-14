@@ -2,45 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Constants\BillHistoryStatusTimeline;
-use App\Constants\ConstantSystem;
 use App\Constants\OrderStatus;
-use App\Constants\Role as ConstantsRole;
-use App\Constants\TransactionType;
-use App\Exceptions\NotFoundException;
-use App\Exceptions\RestApiException;
-use App\Exceptions\VNPayException;
 use App\Helpers\ApiResponse;
-use App\Helpers\CustomCodeHelper;
-use App\Helpers\QueryHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Bill\BillRequest;
-use App\Http\Requests\Bill\BillRequestBody;
-use App\Http\Resources\Accounts\AccountResource;
-use App\Http\Resources\Bills\BillDetailEmailResource;
-use App\Http\Resources\Bills\BillDetailResource;
-use App\Http\Resources\Bills\BillResource;
-use App\Http\Resources\Bills\HistoryResource;
-use App\Http\Resources\Bills\PaymentResource;
+use App\Http\Resources\DonHangChiTietResource;
 use App\Http\Resources\DonHangResource;
-use App\Jobs\SendEmailPlaceOrderSuccess;
-use App\Mail\PlaceOrderSuccessEmail;
-use App\Models\Account;
 use App\Models\Bill;
-use App\Models\BillDetails;
-use App\Models\BillHistory;
-use App\Models\CartDetails;
 use App\Models\DonHang;
-use App\Models\Notification;
-use App\Models\ProductDetails;
-use App\Models\Role;
-use App\Models\Transaction;
-use App\Models\Voucher;
+use App\Models\DonHangChiTiet;
+use App\Models\KichCo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 class DonHangController extends Controller
 {
@@ -87,193 +60,62 @@ class DonHangController extends Controller
         $listDonHang->orderBy('created_at', 'desc');
 
         // phân trang
-        $response = $listDonHang->paginate($req->pageSize, ['*'], 'currentPage', $req->currentPage);
+        $response = $listDonHang->paginate(10, ['*'], 'currentPage', $req->currentPage);
 
         return ApiResponse::responsePage(DonHangResource::collection($response));
     }
 
-    public function showAdmin($id)
+    public function show($id)
     {
-        $bill = Bill::find($id);
+        $timDonHang = DonHang::find($id);
 
-        if (!$bill) {
-            throw new NotFoundException("Không tìm thấy đơn hàng");
-        }
-
-        $bill = $this->getBillDetail($bill);
-
-        return ApiResponse::responseObject(new BillDetailResource($bill));
+        return ApiResponse::responseObject(new DonHangChiTietResource($timDonHang));
     }
 
-    public function adminUpdateStatus(BillRequestBody $req)
+    public function huyDonHang($id)
     {
-        $bill = Bill::find($req->id);
+        $timDonHang = DonHang::find($id);
 
-        if (!$bill) {
-            throw new NotFoundException("Không tìm thấy đơn hàng");
-        }
+        $timDonHang->trang_thai = OrderStatus::DA_HUY;
+        $timDonHang->ngay_huy_don = now(); // now() => là thời gian hiện tại
+        $timDonHang->save();
 
-        if ($bill->status === OrderStatus::CANCELED) {
-            throw new RestApiException("Đơn hàng đã được hủy bỏ từ trước đó");
-        }
+        // $donHangChiTiet = DonHangChiTiet::where('id_don_hang', $id)->get();
+        //
+        // foreach ($donHangChiTiet as $sanPhamTrongDonHang) {
+        //
+        //     $timKichCoSanPham = KichCo::find($sanPhamTrongDonHang->id_kich_co);
+        //
+        //     if ($timKichCoSanPham) {
+        //         $timKichCoSanPham->so_luong_ton = $timKichCoSanPham->so_luong + $sanPhamTrongDonHang->so_luong;
+        //         $timKichCoSanPham->save();
+        //     }
+        // }
 
-        try {
-            DB::beginTransaction();
-
-            $statusTimeline = $req->status;
-
-            if ($statusTimeline === BillHistoryStatusTimeline::WAITTING_DELIVERY) {
-                $billHistory = new BillHistory();
-                $billHistory->bill_id = $bill->id;
-                $billHistory->status_timeline = $statusTimeline;
-                $billHistory->action = $req->actionTimeline['action'];
-                $billHistory->note = $req->actionTimeline['note'];
-                $billHistory->created_by = $req->createdBy;
-                $billHistory->save();
-            } else if ($statusTimeline === BillHistoryStatusTimeline::DELYVERING) {
-                $findTimeline = BillHistory::where('status_timeline', BillHistoryStatusTimeline::WAITTING_DELIVERY)->where('bill_id', $bill->id)->first();
-                $bill->delivery_date = now();
-                $bill->save();
-
-                if ($findTimeline) {
-                    $billHistory = new BillHistory();
-                    $billHistory->bill_id = $bill->id;
-                    $billHistory->status_timeline = $statusTimeline;
-                    $billHistory->action = $req->actionTimeline['action'];
-                    $billHistory->note = $req->actionTimeline['note'];
-                    $billHistory->created_by = $req->createdBy;
-                    $billHistory->save();
-                } else {
-                    $created_at = Carbon::now();
-                    $billHistory = new BillHistory();
-                    $billHistory->bill_id = $bill->id;
-                    $billHistory->status_timeline = $statusTimeline;
-                    $billHistory->action = $req->actionTimeline['action'];
-                    $billHistory->note = $req->actionTimeline['note'];
-                    $billHistory->created_at = $created_at;
-                    $billHistory->created_by = $req->createdBy;
-                    $billHistory->save();
-
-                    $created_atWaitingDelivery = Carbon::parse($created_at)->subSeconds(1);
-                    $billHistoryWaitingDelivery = new BillHistory();
-                    $billHistoryWaitingDelivery->bill_id = $bill->id;
-                    $billHistoryWaitingDelivery->status_timeline = BillHistoryStatusTimeline::WAITTING_DELIVERY;
-                    $billHistoryWaitingDelivery->action = "Đang chuẩn bị hàng";
-                    $billHistoryWaitingDelivery->note = "Người gửi đang chuẩn bị hàng";
-                    $billHistoryWaitingDelivery->created_at = $created_atWaitingDelivery;
-                    $billHistoryWaitingDelivery->created_by = $req->createdBy;
-                    $billHistoryWaitingDelivery->save();
-                }
-            } else if ($statusTimeline === BillHistoryStatusTimeline::COMPLETED) {
-                $bill->completion_date = now();
-                $bill->save();
-
-                $billHistory = new BillHistory();
-                $billHistory->bill_id = $bill->id;
-                $billHistory->status_timeline = $statusTimeline;
-                $billHistory->action = $req->actionTimeline['action'];
-                $billHistory->note = $req->actionTimeline['note'];
-                $billHistory->created_by = $req->createdBy;
-                $billHistory->save();
-
-                if ($bill->payment_method === TransactionType::CASH) {
-                    $billPayment = new Transaction();
-                    $billPayment->type = TransactionType::CASH;
-                    $billPayment->total_money = $req->totalFinal;
-                    $billPayment->bill_id = $bill->id;
-                    $billPayment->created_by = $req->createdBy;
-                    $billPayment->save();
-                }
-            } else {
-
-                $billHistory = new BillHistory();
-                $billHistory->bill_id = $bill->id;
-                $billHistory->status_timeline = $statusTimeline;
-                $billHistory->action = $req->action;
-                $billHistory->note = $req->note;
-                $billHistory->created_by = $req->createdBy;
-                $billHistory->save();
-
-                $bill->cancellation_date = now();
-
-                $billItems = BillDetails::where('bill_id', $bill->id)->get();
-
-                foreach ($billItems as $item) {
-
-                    $findProductItem = ProductDetails::find($item->product_details_id);
-
-                    if ($findProductItem) {
-                        $findProductItem->quantity = $findProductItem->quantity + $item->quantity;
-                        $findProductItem->save();
-                    }
-                }
-            }
-
-            $bill->status = $req->status;
-            $bill->save();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw new RestApiException($e->getMessage());
-            // throw new RestApiException("Thêm sản phẩm vào giỏ hàng không thành công");
-        }
-
-
-        $bill = $this->getBillDetail($bill);
-
-        return ApiResponse::responseObject(new BillDetailResource($bill));
+        return ApiResponse::responseObject(new DonHangChiTietResource($timDonHang));
     }
 
-    public function getBillDetail($bill)
+    public function capNhatTrangThaiDonHang($id)
     {
-        $billHistories = BillHistory::select(
-            'bill_histories.id',
-            'bill_histories.created_at',
-            'bill_histories.note',
-            'bill_histories.status_timeline',
-            'bill_histories.action',
-            'accounts.full_name',
-            'accounts.code',
-            'roles.name as role'
-        )
-            ->leftJoin('accounts', 'bill_histories.created_by', '=', 'accounts.id')
-            ->leftJoin('roles', 'accounts.role_id', '=', 'roles.id')
-            ->where('bill_histories.bill_id', $bill->id)
-            ->orderBy('bill_histories.created_at', 'asc')
-            ->get();
-        $billPayment = Transaction::select(
-            'transactions.id',
-            'transactions.created_at',
-            'transactions.total_money',
-            'transactions.trading_code',
-            'transactions.type',
-            'accounts.full_name',
-            'accounts.code',
-            'roles.name as role'
-        )
-            ->leftJoin('accounts', 'transactions.created_by', '=', 'accounts.id')
-            ->leftJoin('roles', 'accounts.role_id', '=', 'roles.id')
-            ->where('bill_id', $bill->id)
-            ->first();
-        $billItems = BillDetails::getBillItemsByBillId($bill->id);
+        $timDonHang = DonHang::find($id);
 
-        if ($bill->customer_id) {
-            $account = Account::find($bill->customer_id);
-
-            if ($account) {
-                $bill->account = new AccountResource($account);
-            }
+        if ($timDonHang->trang_thai === OrderStatus::CHO_XAC_NHAN) { // nếu đang ở trạng thái chờ xác nhận
+            $timDonHang->trang_thai = OrderStatus::CHO_GIAO_HANG; // => cập nhật trạng thái thành chờ giao hàng (tức là đã xác nhận đơn hàng)
+            $timDonHang->save();
+        } else if ($timDonHang->trang_thai === OrderStatus::CHO_GIAO_HANG) { // nếu đang ở trạng thái chờ giao hàng (chờ giao tức là sắp được đi giao)
+            $timDonHang->trang_thai = OrderStatus::DANG_GIAO_HANG; // => cập nhật trạng thái thành đang giao hàng (tức là đơn hàng đã được đi giao)
+            $timDonHang->ngay_giao_hang = now(); // cập nhật ngày giao hàng, now() => là thời gian hiện tại
+            $timDonHang->save();
+        } else if ($timDonHang->trang_thai === OrderStatus::DANG_GIAO_HANG) { // nếu đang ở trạng thái đang giao hàng
+            $timDonHang->trang_thai = OrderStatus::HOAN_THANH; // => cập nhật trạng thái thành hoàn thành đơn hàng
+            $timDonHang->ngay_hoan_thanh = now(); // cập nhật ngày giao hàng, now() => là thời gian hiện tại
+            $timDonHang->save();
         }
 
-        $bill->histories = HistoryResource::collection($billHistories);
-        $bill->payment = new PaymentResource($billPayment);
-        $bill->billItems = $billItems;
-
-        return $bill;
+        return ApiResponse::responseObject(new DonHangChiTietResource($timDonHang));
     }
 
-    public function revenueStatistics(Request $req)
+    public function thongKe(Request $req)
     {
         $startDate = $req->startDate;
         $endDate = $req->endDate;

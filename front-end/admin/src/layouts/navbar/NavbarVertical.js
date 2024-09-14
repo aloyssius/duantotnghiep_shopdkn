@@ -8,7 +8,7 @@ import './navbar-vertical-style.css'
 import { LogoMobile } from '../../components/Logo';
 import { FaUserGroup, FaUserTag, FaCartPlus, FaChartPie } from "react-icons/fa6";
 import { RiShoppingBag3Fill } from "react-icons/ri";
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { DUONG_DAN_TRANG } from '../../routes/duong-dan';
 
 NavbarVertical.propTypes = {
   isCollapse: PropTypes.bool,
@@ -51,39 +51,31 @@ export default function NavbarVertical({ isCollapse, isOpenSidebar, onCloseSideb
       setSelectedKey(['voucher']);
       setOpenKeys(['discount']);
     }
-    else if (pathname.includes('/product')) {
+    else if (pathname.includes('/san-pham')) {
       setSelectedKey(['product']);
       setOpenKeys(['product-management']);
     }
-    else if (pathname.includes('/brand')) {
+    else if (pathname.includes('/thuong-hieu')) {
       setSelectedKey(['brand']);
       setOpenKeys(['product-management']);
     }
-    else if (pathname.includes('/color')) {
+    else if (pathname.includes('/mau-sac')) {
       setSelectedKey(['color']);
       setOpenKeys(['product-management']);
     }
-    else if (pathname.includes('/category')) {
-      setSelectedKey(['category']);
-      setOpenKeys(['product-management']);
-    }
-    else if (pathname.includes('/size')) {
-      setSelectedKey(['size']);
-      setOpenKeys(['product-management']);
-    }
-    else if (pathname.includes('/statistics')) {
+    else if (pathname.includes('/thong-ke')) {
       setSelectedKey(['statistics']);
       setOpenKeys([]);
     }
-    else if (pathname.includes('/bill')) {
+    else if (pathname.includes('/don-hang')) {
       setSelectedKey(['bill']);
       setOpenKeys([]);
     }
-    else if (pathname.includes('/customer')) {
+    else if (pathname.includes('/khach-hang')) {
       setSelectedKey(['customer']);
       setOpenKeys(['account']);
     }
-    else if (pathname.includes('/employee')) {
+    else if (pathname.includes('/nhan-vien')) {
       setSelectedKey(['employee']);
       setOpenKeys(['account']);
     }
@@ -171,14 +163,14 @@ const SpanStyle = ({ label }) => (
 const items = [
   {
     key: 'statistics',
-    label: <Link to={PATH_DASHBOARD.statistics}>
+    label: <Link to={DUONG_DAN_TRANG.thong_ke}>
       <SpanStyle label="Thống kê" />
     </Link>,
     icon: ICONS.statistics,
   },
   {
     key: 'bill',
-    label: <Link to={PATH_DASHBOARD.bill.list}>
+    label: <Link to={DUONG_DAN_TRANG.don_hang.danh_sach}>
       <SpanStyle label="Quản lý đơn hàng" />
     </Link>,
     icon: ICONS.bill,
@@ -191,36 +183,22 @@ const items = [
       {
         key: 'product',
         label:
-          <Link to={PATH_DASHBOARD.product.list}>
+          <Link to={DUONG_DAN_TRANG.san_pham.danh_sach}>
             <SpanStyle label="Sản phẩm" />
-          </Link>
-      },
-      {
-        key: 'category',
-        label:
-          <Link to={PATH_DASHBOARD.product.category}>
-            <SpanStyle label="Danh mục" />
           </Link>
       },
       {
         key: 'brand',
         label:
-          <Link to={PATH_DASHBOARD.product.brand}>
+          <Link to={DUONG_DAN_TRANG.san_pham.thuong_hieu}>
             <SpanStyle label="Thương hiệu" />
           </Link>
       },
       {
         key: 'color',
         label:
-          <Link to={PATH_DASHBOARD.product.color}>
+          <Link to={DUONG_DAN_TRANG.san_pham.mau_sac}>
             <SpanStyle label="Màu sắc" />
-          </Link>
-      },
-      {
-        key: 'size',
-        label:
-          <Link to={PATH_DASHBOARD.product.size}>
-            <SpanStyle label="Kích cỡ" />
           </Link>
       },
     ],
@@ -233,14 +211,14 @@ const items = [
       {
         key: 'customer',
         label:
-          <Link to={PATH_DASHBOARD.customer.list}>
+          <Link to={DUONG_DAN_TRANG.khach_hang.danh_sach}>
             <SpanStyle label='Khách hàng' />
           </Link>
       },
       {
         key: 'employee',
         label:
-          <Link to={PATH_DASHBOARD.employee.list}>
+          <Link to={DUONG_DAN_TRANG.nhan_vien.danh_sach}>
             <SpanStyle label='Nhân viên' />
           </Link>
       },
@@ -254,7 +232,7 @@ const items = [
       {
         key: 'voucher',
         label:
-          <Link to={PATH_DASHBOARD.voucher.list}>
+          <Link to={DUONG_DAN_TRANG.voucher.danh_sach}>
             <SpanStyle label='Voucher' />
           </Link>
       },
