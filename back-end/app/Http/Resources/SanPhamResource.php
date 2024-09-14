@@ -24,6 +24,8 @@ class SanPhamResource extends JsonResource
             'donGia' => $this->don_gia,
             'idThuongHieu' => $this->id_thuong_hieu,
             'idMauSac' => $this->id_mau_sac,
+            'listKichCo' => $this->listKichCo,
+            'listHinhAnh' => $this->listHinhAnh,
         ];
     }
     /**

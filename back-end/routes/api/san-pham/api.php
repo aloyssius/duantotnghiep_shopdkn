@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Products\AttributeCategoryController;
 use App\Http\Controllers\Api\Products\AttributeColorController;
 use App\Http\Controllers\Api\Products\AttributeSizeController;
 use App\Http\Controllers\Api\Products\ProductController;
+use App\Http\Controllers\SanPhamClientController;
 use App\Http\Controllers\SanPhamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +22,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-// product client
+// client
+Route::get('/danh-sach-san-pham-client', [SanPhamClientController::class, 'index']);
+Route::get('/tim-san-pham-client/{ma}', [SanPhamClientController::class, 'show']);
+
 Route::get('/product-list', [ProductController::class, 'clientIndex']);
 Route::get('/product-list/male', [ProductController::class, 'clientIndexMale']);
 Route::get('/product-list/female', [ProductController::class, 'clientIndexFemale']);
@@ -29,19 +33,16 @@ Route::get('/product-details/{sku}', [ProductController::class, 'findBySkuClient
 Route::get('/product-detail/{id}', [ProductController::class, 'findByClientId']);
 Route::get('/product-home', [ProductController::class, 'indexHomeClient']);
 
-// product
+// admin
 Route::get('/danh-sach-san-pham', [SanPhamController::class, 'index']);
 Route::get('/danh-sach-thuoc-tinh', [SanPhamController::class, 'indexThuocTinhSanPham']);
 Route::post('/them-san-pham', [SanPhamController::class, 'store']);
+Route::post('/them-kich-co', [SanPhamController::class, 'storeKichCo']);
+Route::post('/them-hinh-anh', [SanPhamController::class, 'storeHinhAnh']);
+Route::put('/trang-thai-kich-co', [SanPhamController::class, 'updateTrangThaiChoKichCo']);
+Route::put('/so-luong-ton', [SanPhamController::class, 'updateSoLuongTonChoKichCo']);
 Route::get('/tim-san-pham/{id}', [SanPhamController::class, 'show']);
-
-Route::get('/products/{id}', [ProductController::class, 'show']);
-Route::get('/products/attributes/all', [ProductController::class, 'indexAttributes']);
-Route::post('/products/attributes', [ProductController::class, 'storeAttributes']);
-Route::put('/products/status', [ProductController::class, 'updateStatus']);
-Route::put('/products', [ProductController::class, 'update']);
-Route::post('/products', [ProductController::class, 'store']);
-Route::delete('/products', [ProductController::class, 'destroy']);
+Route::put('/update-san-pham', [SanPhamController::class, 'updateSanPham']);
 
 // color
 Route::get('/attributes/colors', [AttributeColorController::class, 'index']);
@@ -50,23 +51,9 @@ Route::put('/attributes/colors', [AttributeColorController::class, 'update']);
 Route::post('/attributes/colors', [AttributeColorController::class, 'store']);
 Route::delete('/attributes/colors', [AttributeColorController::class, 'destroy']);
 
-// category
-Route::get('/attributes/categories', [AttributeCategoryController::class, 'index']);
-Route::put('/attributes/categories/status', [AttributeCategoryController::class, 'updateStatus']);
-Route::put('/attributes/categories', [AttributeCategoryController::class, 'update']);
-Route::post('/attributes/categories', [AttributeCategoryController::class, 'storeCategory']);
-Route::delete('/attributes/categories', [AttributeCategoryController::class, 'destroy']);
-
 // brand
 Route::get('/attributes/brands', [AttributeBrandController::class, 'index']);
 Route::put('/attributes/brands/status', [AttributeBrandController::class, 'updateStatus']);
 Route::put('/attributes/brands', [AttributeBrandController::class, 'update']);
 Route::post('/attributes/brands', [AttributeBrandController::class, 'storeBrand']);
 Route::delete('/attributes/brands', [AttributeBrandController::class, 'destroy']);
-
-// size
-Route::get('/attributes/sizes', [AttributeSizeController::class, 'index']);
-Route::put('/attributes/sizes/status', [AttributeSizeController::class, 'updateStatus']);
-Route::put('/attributes/sizes', [AttributeSizeController::class, 'update']);
-Route::post('/attributes/sizes', [AttributeSizeController::class, 'storeSize']);
-Route::delete('/attributes/sizes', [AttributeSizeController::class, 'destroy']);

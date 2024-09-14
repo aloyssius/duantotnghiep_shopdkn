@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Constants\CommonStatus;
 use App\Constants\ProductStatus;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\RestApiException;
@@ -15,16 +16,21 @@ use App\Http\Requests\Product\ProductRequestBody;
 use App\Http\Resources\Products\AttributeResource;
 use App\Http\Resources\Products\ImageResource;
 use App\Http\Resources\Products\ProductDetailResource;
-use App\Http\Resources\Products\SanPhamResource;
+use App\Http\Resources\SanPhamClientResource;
+use App\Http\Resources\SanPhamResource;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\HinhAnh;
 use App\Models\Image;
+use App\Models\KichCo;
+use App\Models\MauSac;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductDetails;
 use App\Models\SanPham;
 use App\Models\Size;
+use App\Models\ThuongHieu;
 use Cloudinary\Api\ApiClient;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\DB;
@@ -46,102 +52,45 @@ class SanPhamClientController extends Controller
         return ApiResponse::responseObject($response);
     }
 
-    public function clientIndexMale(ProductRequest $req)
+    public function index(Request $req)
     {
-        $req->pageSize = 15;
-        $productDetails = ProductDetails::getClientProducts($req, 'male');
+        // Khởi tạo truy vấn
+        $query = SanPham::where('trang_thai', CommonStatus::DANG_HOAT_DONG);
 
-        $brands = Brand::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $categories = Category::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $colors = Color::select(['id', 'code', 'name'])->orderBy('created_at', 'desc')->get();
-        $sizes = Size::select(['id', 'name'])->orderBy('name', 'asc')->get();
-
-        $otherData['brands'] = $brands;
-        $otherData['categories'] = $categories;
-        $otherData['colors'] = $colors;
-        $otherData['sizes'] = $sizes;
-
-        return ApiResponse::responsePageCustom($productDetails, [], $otherData);
-    }
-    public function clientIndexFemale(ProductRequest $req)
-    {
-        $req->pageSize = 15;
-        $productDetails = ProductDetails::getClientProducts($req, 'female');
-
-        $brands = Brand::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $categories = Category::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $colors = Color::select(['id', 'code', 'name'])->orderBy('created_at', 'desc')->get();
-        $sizes = Size::select(['id', 'name'])->orderBy('name', 'asc')->get();
-
-        $otherData['brands'] = $brands;
-        $otherData['categories'] = $categories;
-        $otherData['colors'] = $colors;
-        $otherData['sizes'] = $sizes;
-
-        return ApiResponse::responsePageCustom($productDetails, [], $otherData);
-    }
-
-    public function clientIndex(ProductRequest $req)
-    {
-        $req->pageSize = 15;
-        $productDetails = ProductDetails::getClientProducts($req);
-
-        $brands = Brand::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $categories = Category::select(['id', 'name'])->orderBy('created_at', 'desc')->get();
-        $colors = Color::select(['id', 'code', 'name'])->orderBy('created_at', 'desc')->get();
-        $sizes = Size::select(['id', 'name'])->orderBy('name', 'asc')->get();
-
-        $otherData['brands'] = $brands;
-        $otherData['categories'] = $categories;
-        $otherData['colors'] = $colors;
-        $otherData['sizes'] = $sizes;
-
-        return ApiResponse::responsePageCustom($productDetails, [], $otherData);
-    }
-
-    public function findBySkuClient($sku)
-    {
-        $product = Product::select('PRODUCTS.name', 'BRANDS.NAME as brandName', 'COLORS.NAME as colorName', 'PRODUCTS.status', 'PRODUCT_DETAILS.price', 'PRODUCT_DETAILS.sku', 'PRODUCTS.ID as productId', 'COLORS.ID as colorId', 'PRODUCTS.description')
-            ->join('PRODUCT_DETAILS', 'PRODUCTS.ID', '=', 'PRODUCT_DETAILS.PRODUCT_ID')
-            ->join('BRANDS', 'PRODUCTS.BRAND_ID', '=', 'BRANDS.ID')
-            ->join('COLORS', 'PRODUCT_DETAILS.COLOR_ID', '=', 'COLORS.ID')
-            ->where('PRODUCT_DETAILS.SKU', $sku)
-            ->groupBy('PRODUCTS.NAME', 'BRANDS.NAME', 'COLORS.NAME', 'PRODUCTS.STATUS', 'PRODUCT_DETAILS.PRICE', 'PRODUCT_DETAILS.SKU', 'PRODUCTS.ID', 'COLORS.ID')
-            ->first();
-
-        if (!$product) {
-            throw new NotFoundException("Không tìm thấy sản phẩm này!");
+        // Kiểm tra xem có tham số idThuongHieu trong yêu cầu không
+        if ($req->filled('idThuongHieu')) {
+            $query->where('id_thuong_hieu', $req->idThuongHieu);
         }
 
-        if ($product->status !== ProductStatus::IS_ACTIVE) {
-            throw new NotFoundException("Không tìm thấy sản phẩm này!");
-        }
+        // Lấy danh sách sản phẩm
+        $listSanPham = $query->get()->map(function ($sanPham) {
+            // Lấy hình ảnh đại diện
+            $hinhDaiDien = HinhAnh::where('id_san_pham', $sanPham->id)->first();
 
-        // colors
-        $colors = ProductDetails::select('product_details.color_id as colorId', 'product_details.sku', 'colors.name', 'colors.code')
-            ->where('product_details.product_id', $product->productId)
-            ->join('colors', 'product_details.color_id', '=', 'colors.id')
-            ->groupBy('color_id', 'sku')
-            ->get();
+            // Thêm hình ảnh đại diện vào sản phẩm
+            $sanPham->hinhAnh = $hinhDaiDien ? $hinhDaiDien->duong_dan_url : null;
 
-        // sizes
-        $productActiveStatus = 'is_active';
-        $sizes = ProductDetails::select('product_details.quantity', 'product_details.id', 'sizes.name', 'product_details.status')
-            ->where('product_details.product_id', $product->productId)
-            ->where('product_details.sku', $sku)
-            ->where('product_details.status', $productActiveStatus)
-            ->join('sizes', 'product_details.size_id', '=', 'sizes.id')
-            ->orderBy('sizes.name', 'asc')
-            ->get();
+            return $sanPham;
+        });
 
-        // images
-        $images = Image::select('path_url as pathUrl', 'is_default as isDefault')->where('product_id', $product->productId)->where('product_color_id', $product->colorId)->get();
+        $response['listSanPham'] = SanPhamClientResource::collection($listSanPham);
+        $response['listThuongHieu'] = ThuongHieu::all();
 
-        $product['colors'] = $colors;
-        $product['sizes'] = $sizes;
-        $product['images'] = $images;
+        return ApiResponse::responseObject($response);
+    }
 
-        return ApiResponse::responseObject($product);
+    public function show($ma)
+    {
+        $timSanPham = SanPham::where('ma', $ma)->first();
+
+        $listHinhAnh = HinhAnh::where('id_san_pham', $timSanPham->id)->pluck('duong_dan_url');
+
+        $listKichCo =  KichCo::where('id_san_pham', $timSanPham->id)->select('id', 'ten_kich_co as ten', 'so_luong_ton as soLuong')->orderBy('ten_kich_co', 'asc')->get();
+
+        $timSanPham['listHinhAnh'] = $listHinhAnh;
+        $timSanPham['listKichCo'] = $listKichCo;
+
+        return ApiResponse::responseObject(new SanPhamResource($timSanPham));
     }
 
     public function findByClientId($id)

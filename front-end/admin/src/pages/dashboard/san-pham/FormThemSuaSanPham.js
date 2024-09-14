@@ -17,7 +17,6 @@ import RHFInput from '../../../components/hook-form/RHFInput';
 import useConfirm from '../../../hooks/useConfirm';
 import useNotification from '../../../hooks/useNotification';
 import useLoading from '../../../hooks/useLoading';
-import FormThemSuaKichCo from './FormThemSuaKichCo';
 
 const { Option } = Select;
 
@@ -26,7 +25,7 @@ const DANH_SACH_TRANG_THAI_SAN_PHAM = ['Đang bán', 'Ngừng bán'];
 // ----------------------------------------------------------------------
 
 export default function FormThemSuaSanPham({ laCapNhat, sanPhamHienTai }) {
-  const { onOpenSuccessNotify } = useNotification(); //mở thông báo
+  const { onOpenSuccessNotify, onOpenErrorNotify } = useNotification(); //mở thông báo
   const { showConfirm } = useConfirm(); // mở confirm
   const { onOpenLoading, onCloseLoading } = useLoading(); //mở, tắt loading
 
@@ -110,19 +109,41 @@ export default function FormThemSuaSanPham({ laCapNhat, sanPhamHienTai }) {
       navigate(DUONG_DAN_TRANG.san_pham.cap_nhat(response.data.data.id)); // chuyển sang trang cập nhật
       onOpenSuccessNotify('Thêm mới sản phẩm thành công!') // hiển thị thông báo 
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
+      onOpenErrorNotify(error.response.data.message) // hiển thị thông báo lỗi
     }
   }
 
+  // hàm gọi api update sản phẩm
+  const put = async (body) => {
+    try {
+      const response = await axios.put("http://127.0.0.1:8000/api/update-san-pham", body); // gọi api
+      console.log(response.data.data);
+      navigate(DUONG_DAN_TRANG.san_pham.cap_nhat(response.data.data.id)); // chuyển sang trang cập nhật
+      onOpenSuccessNotify('Cập nhật sản phẩm thành công!') // hiển thị thông báo 
+    } catch (error) {
+      console.log(error.response.data);
+      onOpenErrorNotify(error.response.data.message) // hiển thị thông báo lỗi
+    }
+  }
+
+  // hàm submit form
   const onSubmit = async (data) => {
     const body = {
-      ...data, // giữ các biến cũ trong data 
+      ...data, // giữ các biến cũ trong form data 
       donGia: parseInt(formatNumber(data.donGia)), // ghi đè thuộc tính đơn giá trong data, convert thành số
       trangThai: chuyenDoiThanhEnum(data.trangThai), // ghi đè thuộc tính trạng thái trong data, convert thành enum
+      id: sanPhamHienTai?.id,
     }
     console.log(body);
     // hiển thị confirm
-    showConfirm("Xác nhận thêm mới sản phẩm?", "Bạn có chắc chắn muốn thêm sản phẩm?", () => post(body));
+
+    if (laCapNhat) {
+      showConfirm("Xác nhận cập nhật sản phẩm?", "Bạn có chắc chắn muốn cập nhật sản phẩm?", () => put(body));
+    }
+    else {
+      showConfirm("Xác nhận thêm mới sản phẩm?", "Bạn có chắc chắn muốn thêm sản phẩm?", () => post(body));
+    }
   }
 
   return (
@@ -278,8 +299,6 @@ export default function FormThemSuaSanPham({ laCapNhat, sanPhamHienTai }) {
         </Row>
 
       </FormProvider>
-
-      {laCapNhat && <FormThemSuaKichCo />}
     </>
   )
 }

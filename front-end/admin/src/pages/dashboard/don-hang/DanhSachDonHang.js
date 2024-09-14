@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { displayCurrencyVnd, formatCurrencyVnd } from '../../../utils/formatCurrency';
+import { formatCurrencyVnd } from '../../../utils/formatCurrency';
 import { FaPenToSquare } from "react-icons/fa6";
 import dayjs from 'dayjs'
 // antd
 import { Input, Table, Tag, Flex, DatePicker, Select, Tooltip, Pagination } from 'antd';
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 // routes
 import { Link } from 'react-router-dom';
 import { DUONG_DAN_TRANG } from '../../../routes/duong-dan';
@@ -13,7 +13,6 @@ import { DUONG_DAN_TRANG } from '../../../routes/duong-dan';
 import Page from '../../../components/Page';
 import Container from '../../../components/Container';
 import { HeaderBreadcrumbs } from '../../../components/HeaderSection';
-import IconButton from '../../../components/IconButton';
 import Space from '../../../components/Space';
 // hooks
 import useLoading from '../../../hooks/useLoading';

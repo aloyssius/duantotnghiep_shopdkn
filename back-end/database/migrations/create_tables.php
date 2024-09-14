@@ -31,22 +31,23 @@ return new class extends Migration
             $table->enum('vai_tro', Role::toArray());
         });
 
-        Schema::create('voucher', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->timestamps();
-            $table->string('ma', ConstantSystem::CODE_MAX_LENGTH)->unique();
-            $table->string('mo_ta', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
-            $table->decimal('gia_tri', 15, 2)->default(0);
-            $table->decimal('dieu_kien_ap_dung', 15, 2)->default(0);
-            $table->enum('trang_thai', VoucherStatus::toArray())->default(VoucherStatus::SAP_DIEN_RA);
-            $table->integer('so_luong')->default(0);
-            $table->timestamp('ngay_bat_dau')->nullable();
-            $table->timestamp('ngay_ket_thuc')->nullable();
-        });
+        // Schema::create('voucher', function (Blueprint $table) {
+        //     $table->uuid('id')->primary();
+        //     $table->timestamps();
+        //     $table->string('ma', ConstantSystem::CODE_MAX_LENGTH)->unique();
+        //     $table->string('mo_ta', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
+        //     $table->decimal('gia_tri', 15, 2)->default(0);
+        //     $table->decimal('dieu_kien_ap_dung', 15, 2)->default(0);
+        //     $table->enum('trang_thai', VoucherStatus::toArray())->default(VoucherStatus::SAP_DIEN_RA);
+        //     $table->integer('so_luong')->default(0);
+        //     $table->timestamp('ngay_bat_dau')->nullable();
+        //     $table->timestamp('ngay_ket_thuc')->nullable();
+        // });
 
         Schema::create('gio_hang', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('id_tai_khoan')->unique();
+            $table->timestamps();
         });
 
         Schema::create('mau_sac', function (Blueprint $table) {
@@ -83,6 +84,7 @@ return new class extends Migration
             $table->string('ten_kich_co', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
             $table->integer('so_luong_ton')->default(0);
             $table->enum('trang_thai', CommonStatus::toArray())->default(CommonStatus::DANG_HOAT_DONG);
+            $table->timestamps();
         });
 
         Schema::create('gio_hang_chi_tiet', function (Blueprint $table) {
@@ -101,15 +103,12 @@ return new class extends Migration
             $table->timestamp('ngay_giao_hang')->nullable();
             $table->timestamp('ngay_hoan_thanh')->nullable();
             $table->enum('trang_thai', OrderStatus::toArray())->default(OrderStatus::CHO_XAC_NHAN);
-            $table->enum('hinh_thuc_thanh_toan', PaymentType::toArray())->default(PaymentType::TIEN_MAT);
-            $table->enum('trang_thai_thanh_toan', ['da_thanh_toan', 'chua_thanh_toan'])->default('da_thanh_toan');
             $table->string('ho_va_ten', ConstantSystem::FULL_NAME_MAX_LENGTH)->nullable();
             $table->string('email', ConstantSystem::EMAIL_MAX_LENGTH)->nullable();
             $table->string('dia_chi', ConstantSystem::ADDRESS_MAX_LENGTH)->nullable();
             $table->string('so_dien_thoai', ConstantSystem::PHONE_NUMBER_MAX_LENGTH)->nullable();
             $table->decimal('tien_ship', 15, 2)->default(0);
             $table->decimal('tong_tien_hang', 15, 2)->default(0);
-            $table->decimal('so_tien_giam', 15, 2)->default(0);
             $table->foreignUuid('id_tai_khoan')->nullable()->references('id')->on('tai_khoan');
             $table->foreignUuid('id_voucher')->nullable()->references('id')->on('voucher');
         });
@@ -124,9 +123,9 @@ return new class extends Migration
         });
 
         Schema::create('hinh_anh', function (Blueprint $table) {
+            $table->timestamps();
             $table->uuid('id')->primary();
-            $table->string('duong_dan_url', ConstantSystem::URL_MAX_LENGTH)->nullable();
-            $table->boolean('anh_mac_dinh')->default(false);
+            $table->longText('duong_dan_url')->nullable();
             $table->foreignUuid('id_san_pham')->references('id')->on('san_pham');
         });
     }
