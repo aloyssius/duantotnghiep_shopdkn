@@ -60,19 +60,6 @@ const danhSachCacTruongDuLieu = [
     },
   },
   {
-    title: 'Trạng thái',
-    align: "center",
-    render: (text, record) => {
-      return (
-        <>
-          <span className='fw-500' style={{ color: 'red' }} >
-            <Tag className='ms-10 fw-500' color={hienThiMauSac(record.trangThai)}>{hienThiTrangThai(record.trangThai)}</Tag>
-          </span>
-        </>
-      )
-    },
-  },
-  {
     title: 'Thao tác',
     align: "center",
     render: (text, record) => {
@@ -90,7 +77,6 @@ const danhSachCacTruongDuLieu = [
 export default function DanhSachSanPham() {
   const { onOpenLoading, onCloseLoading } = useLoading();
   const [data, setData] = useState([]);
-  const [trangThai, setTrangThai] = useState(null);
   const [tuKhoa, setTuKhoa] = useState("");
   const [tongSoTrang, setTongSoTrang] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -107,7 +93,6 @@ export default function DanhSachSanPham() {
           params: {
             currentPage,
             tuKhoa,
-            trangThai: chuyenDoiThanhEnum(trangThai),
           }
         });
 
@@ -125,7 +110,7 @@ export default function DanhSachSanPham() {
 
     // gọi hàm vừa khai báo
     layDuLieuTuBackEnd();
-  }, [tuKhoa, trangThai, currentPage]) // hàm sẽ được gọi khi các biến này được thay đổi 
+  }, [tuKhoa, currentPage]) // hàm sẽ được gọi khi các biến này được thay đổi 
 
   return (
     <>
@@ -148,20 +133,6 @@ export default function DanhSachSanPham() {
             className='mt-15 d-flex'
             title={
               <Flex gap={14} style={{ padding: "15px 0px" }}>
-                <Select
-                  value={trangThai}
-                  onChange={(value) => setTrangThai(value)}
-                  style={{ width: WIDTH_SELECT }}
-                  placeholder="Trạng thái"
-                >
-                  {DANH_SACH_TRANG_THAI_THUONG_HIEU.map((trangThai, index) => {
-                    return (
-                      <>
-                        <Option key={index} value={trangThai}>{trangThai}</Option>
-                      </>
-                    )
-                  })}
-                </Select>
                 <Input
                   addonBefore={<SearchOutlined />}
                   value={tuKhoa}
@@ -196,34 +167,4 @@ export default function DanhSachSanPham() {
 }
 
 const WIDTH_SELECT = 300;
-const DANH_SACH_TRANG_THAI_THUONG_HIEU = ['Đang hoạt động', 'Ngừng hoạt động'];
-
-const chuyenDoiThanhEnum = (trangThai) => {
-  switch (trangThai) {
-    case "Đang hoạt động":
-      return "dang_hoat_dong";
-    case "Ngừng hoạt động":
-      return "ngung_hoat_dong";
-    default:
-      return null;
-  }
-};
-
-const hienThiTrangThai = (trangThai) => {
-  switch (trangThai) {
-    case "dang_hoat_dong":
-      return "Đang hoạt động";
-    default:
-      return "Ngừng hoạt động";
-  }
-};
-
-const hienThiMauSac = (trangThai) => {
-  switch (trangThai) {
-    case "dang_hoat_dong":
-      return '#0fd93b';
-    default:
-      return '#e8190e';
-  }
-}
 

@@ -34,9 +34,6 @@ class MauSacController extends Controller
                     ->orWhere('ten', 'like', $tuKhoa);
             });
         }
-        if ($req->filled('trangThai')) {
-            $mauSac->where('trang_thai', $req->trangThai);
-        }
     
 
         $mauSac->orderBy('ten', 'asc');

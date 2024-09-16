@@ -21,7 +21,7 @@ import useLoading from '../../../hooks/useLoading';
 
 const { Option } = Select;
 
-const DANH_SACH_TRANG_THAI_THUONG_HIEU = ['Đang hoạt động', 'Ngừng hoạt động'];
+
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +68,7 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
   // giá trị mặc định của biến, tương tự useState
   const defaultValues = {
     tenThuongHieu: thuongHieuHienTai?.tenThuongHieu || '',
-    trangThai: chuyenDoiEnumThanhTrangThai(thuongHieuHienTai?.trangThai),
+
   };
 
   // lấy methods từ use form
@@ -120,7 +120,6 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
     if (!laCapNhat) {
         const body = {
         ...data, // giữ các biến cũ trong data 
-        trangThai: chuyenDoiThanhEnum(data.trangThai), // ghi đè thuộc tính trạng thái trong data, convert thành enum
         }
         console.log(body);
         // hiển thị confirm
@@ -128,7 +127,6 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
     }else{
         const body = {
             ...data, // giữ các biến cũ trong data 
-            trangThai: chuyenDoiThanhEnum(data.trangThai), // ghi đè thuộc tính trạng thái trong data, convert thành enum
             }
             console.log(body);
             // hiển thị confirm
@@ -147,36 +145,6 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
               name='tenThuongHieu'
               placeholder='Nhập tên thương hiệu'
               required
-            />
-          </Col>
-
-          <Col span={9}>
-            <Controller
-              name='trangThai'
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <>
-                  <label className='mt-15 d-block' style={{ fontWeight: '500' }}>
-                    Trạng thái
-                    <span className='required'></span>
-                  </label>
-                  <Select
-                    style={{ width: '100%' }}
-                    className='mt-13'
-                    {...field}
-                    placeholder='Chọn trạng thái'
-                  >
-                    {DANH_SACH_TRANG_THAI_THUONG_HIEU.map((trangThai, index) => {
-                      return (
-                        <>
-                          <Option key={index} value={trangThai}>{trangThai}</Option>
-                        </>
-                      )
-                    })}
-                  </Select>
-                  {error && <span className='color-red mt-3 d-block'>{error?.message}</span>}
-                </>
-              )}
             />
           </Col>
 
@@ -201,25 +169,5 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
 }
 
 
-const chuyenDoiThanhEnum = (trangThai) => {
-  switch (trangThai) {
-    case "Đang hoạt động":
-      return "dang_hoat_dong";
-    case "Ngừng hoạt động":
-      return "ngung_hoat_dong";
-    default:
-      return null;
-  }
-};
 
-const chuyenDoiEnumThanhTrangThai = (trangThai) => {
-  switch (trangThai) {
-    case "dang_hoat_dong":
-      return "Đang hoạt động";
-    case "ngung_hoat_dong":
-      return "Ngừng hoạt động";
-    default:
-      return "Đang hoạt động";
-  }
-};
 

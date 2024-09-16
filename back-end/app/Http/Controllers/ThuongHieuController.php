@@ -34,9 +34,6 @@ class ThuongHieuController extends Controller
                     ->orWhere('ten', 'like', $tuKhoa);
             });
         }
-        if ($req->filled('trangThai')) {
-            $thuongHieu->where('trang_thai', $req->trangThai);
-        }
     
         // Sắp xếp theo ngày tạo
         $thuongHieu->orderBy('created_at', 'desc');
