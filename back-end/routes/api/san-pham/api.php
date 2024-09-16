@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Products\ProductController;
 use App\Http\Controllers\SanPhamClientController;
 use App\Http\Controllers\SanPhamController;
 use App\Http\Controllers\ThuongHieuController;
+use App\Http\Controllers\MauSacController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +49,10 @@ Route::get('/thuong-hieu', [ThuongHieuController::class, 'index']);
 Route::post('/thuong-hieu', [ThuongHieuController::class, 'store']);
 Route::get('/thuong-hieu/{id}', [ThuongHieuController::class, 'show']);
 Route::put('/thuong-hieu/{id}', [ThuongHieuController::class, 'update']);
+Route::get('/mau-sac', [MauSacController::class, 'index']);
+Route::post('/mau-sac', [MauSacController::class, 'store']);
+Route::get('/mau-sac/{id}', [MauSacController::class, 'show']);
+Route::put('/mau-sac/{id}', [MauSacController::class, 'update']);
 // color
 Route::get('/attributes/colors', [AttributeColorController::class, 'index']);
 Route::put('/attributes/colors/status', [AttributeColorController::class, 'updateStatus']);

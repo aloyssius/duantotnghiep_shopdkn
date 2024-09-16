@@ -17,8 +17,8 @@ class MauSac extends Model
     protected $table = 'mau_sac';
 
     protected $fillable = [
-        'ma_mau_sac',
-        'ten_mau_sac',
+        'ma',
+        'ten',
         'trang_thai',
     ];
 

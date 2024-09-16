@@ -21,11 +21,11 @@ import useLoading from '../../../hooks/useLoading';
 
 const { Option } = Select;
 
-const DANH_SACH_TRANG_THAI_THUONG_HIEU = ['Đang hoạt động', 'Ngừng hoạt động'];
+const DANH_SACH_TRANG_THAI_MAU_SAC = ['Đang hoạt động', 'Ngừng hoạt động'];
 
 // ----------------------------------------------------------------------
 
-export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) {
+export default function FormThemSuaThuongHieu({ laCapNhat, mauSacHienTai }) {
   const { onOpenSuccessNotify } = useNotification(); //mở thông báo
   const { showConfirm } = useConfirm(); // mở confirm
   const { onOpenLoading, onCloseLoading } = useLoading(); //mở, tắt loading
@@ -57,7 +57,7 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
 //   }, [])
 
   // validate
-  const ThuongHieuSchema = Yup.object().shape({
+  const MauSacSchema = Yup.object().shape({
 //     tenSanPham: Yup.string().trim().required('Tên không được bỏ trống'),
 //     maSanPham: Yup.string().trim().required('Mã không được bỏ trống'),
 //     donGia: Yup.string().required('Đơn giá không được bỏ trống'),
@@ -67,13 +67,14 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
 
   // giá trị mặc định của biến, tương tự useState
   const defaultValues = {
-    tenThuongHieu: thuongHieuHienTai?.tenThuongHieu || '',
-    trangThai: chuyenDoiEnumThanhTrangThai(thuongHieuHienTai?.trangThai),
+    tenMauSac: mauSacHienTai?.tenMauSac || '',
+    maMauSac:mauSacHienTai?.maMauSac || '',
+    trangThai: chuyenDoiEnumThanhTrangThai(mauSacHienTai?.trangThai),
   };
 
   // lấy methods từ use form
   const methods = useForm({
-    resolver: yupResolver(ThuongHieuSchema),
+    resolver: yupResolver(MauSacSchema),
     defaultValues,
   });
 
@@ -86,21 +87,21 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
 
   useEffect(() => {
     // nếu là trang cập nhật => sẽ reset lại các biến trong defaultValues
-    if (laCapNhat && thuongHieuHienTai) {
+    if (laCapNhat && mauSacHienTai) {
       reset(defaultValues);
     }
     // nếu là trang thêm mới => sẽ reset lại các biến trong defaultValues
     if (!laCapNhat) {
       reset(defaultValues);
     }
-  }, [laCapNhat, thuongHieuHienTai]) // gọi useEffect này mỗi khi các tham số truyền vào thay đỏi
+  }, [laCapNhat, mauSacHienTai]) // gọi useEffect này mỗi khi các tham số truyền vào thay đỏi
 
   // hàm gọi api thêm mới khách hàng
   const post = async (body) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/thuong-hieu", body); // gọi api
-      navigate(DUONG_DAN_TRANG.san_pham.cap_nhat_thuong_hieu(response.data.data.id)); // chuyển sang trang cập nhật
-      onOpenSuccessNotify('Thêm mới thương hiệu thành công!') // hiển thị thông báo 
+      const response = await axios.post("http://127.0.0.1:8000/api/mau-sac", body); // gọi api
+      navigate(DUONG_DAN_TRANG.san_pham.cap_nhat_mau_sac(response.data.data.id)); // chuyển sang trang cập nhật
+      onOpenSuccessNotify('Thêm mới màu sắc thành công!') // hiển thị thông báo 
     } catch (error) {
       console.log(error);
     }
@@ -108,9 +109,9 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
 
   const put = async (body, id) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:8000/api/thuong-hieu/${id}`, body); // gọi API cập nhật
-      navigate(DUONG_DAN_TRANG.san_pham.cap_nhat_thuong_hieu(response.data.data.id)); // chuyển sang trang cập nhật
-      onOpenSuccessNotify('Cập nhật thương hiệu thành công!'); // hiển thị thông báo 
+      const response = await axios.put(`http://127.0.0.1:8000/api/mau-sac/${id}`, body); // gọi API cập nhật
+      navigate(DUONG_DAN_TRANG.san_pham.cap_nhat_mau_sac(response.data.data.id)); // chuyển sang trang cập nhật
+      onOpenSuccessNotify('Cập nhật màu sắc thành công!'); // hiển thị thông báo 
     } catch (error) {
       console.log(error);
     }
@@ -124,7 +125,7 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
         }
         console.log(body);
         // hiển thị confirm
-        showConfirm("Xác nhận thêm mới thương hiệu?", "Bạn có chắc chắn muốn thêm thương hiệu?", () => post(body));
+        showConfirm("Xác nhận thêm mới màu sắc?", "Bạn có chắc chắn muốn thêm màu sắc?", () => post(body));
     }else{
         const body = {
             ...data, // giữ các biến cũ trong data 
@@ -132,7 +133,7 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
             }
             console.log(body);
             // hiển thị confirm
-            showConfirm("Xác nhận cập nhật thương hiệu?", "Bạn có chắc chắn muốn cập nhật thương hiệu?", () => put(body,  thuongHieuHienTai?.id));
+            showConfirm("Xác nhận cập nhật màu sắc?", "Bạn có chắc chắn muốn cập nhật màu sắc?", () => put(body,  mauSacHienTai?.id));
     }
   }
 
@@ -143,9 +144,18 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
 
           <Col span={9}>
             <RHFInput
-              label='Tên thương hiệu'
-              name='tenThuongHieu'
-              placeholder='Nhập tên thương hiệu'
+              label='Tên màu sắc'
+              name='tenMauSac'
+              placeholder='Nhập tên màu sắc'
+              required
+            />
+          </Col>
+
+          <Col span={9}>
+            <RHFInput
+              label='Mã màu sắc'
+              name='maMauSac'
+              placeholder='Nhập mã màu sắc'
               required
             />
           </Col>
@@ -166,7 +176,7 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
                     {...field}
                     placeholder='Chọn trạng thái'
                   >
-                    {DANH_SACH_TRANG_THAI_THUONG_HIEU.map((trangThai, index) => {
+                    {DANH_SACH_TRANG_THAI_MAU_SAC.map((trangThai, index) => {
                       return (
                         <>
                           <Option key={index} value={trangThai}>{trangThai}</Option>
@@ -183,7 +193,7 @@ export default function FormThemSuaThuongHieu({ laCapNhat, thuongHieuHienTai }) 
 
           <Col span={18} style={{ display: 'flex', justifyContent: 'end' }} className="mt-10">
             <Space className='mt-20 mb-5'>
-              <Button onClick={() => navigate(DUONG_DAN_TRANG.san_pham.thuong_hieu)}>Hủy bỏ</Button>
+              <Button onClick={() => navigate(DUONG_DAN_TRANG.san_pham.mau_sac)}>Hủy bỏ</Button>
               <Button
                 htmlType='submit'
                 type='primary'

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Products;
+namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
 use App\Helpers\QueryHelper;
@@ -8,12 +8,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\RestApiException;
+use App\Helpers\ConvertHelper;
+use App\Helpers\CustomCodeHelper;
 use App\Http\Requests\Product\AttributeRequest;
-use App\Http\Requests\Product\ColorRequestBody;
+use App\Http\Requests\Product\AttributeRequestBody;
 use App\Http\Resources\Products\AttributeResource;
-use App\Models\Color;
-use App\Models\ProductDetails;
+use App\Models\Brand;
+use App\Models\Product;
+use App\Models\MauSac;
 use Illuminate\Http\Request;
+use App\Http\Resources\MauSacResource;
 
 class MauSacController extends Controller
 {
@@ -21,124 +25,72 @@ class MauSacController extends Controller
     public function index(Request $req)
     {
 
-        $colors = Color::select(AttributeResource::fields());
+        $mauSac = MauSac::query();
 
-        if ($req->filled('search')) {
-            $search = $req->search;
-            $searchFields = ['code', 'name'];
-            QueryHelper::buildQuerySearchContains($colors, $search, $searchFields);
+        if ($req->filled('tuKhoa')) {
+            $tuKhoa = '%' . $req->tuKhoa . '%';
+            $mauSac->where(function ($query) use ($tuKhoa) {
+                $query->where('ma', 'like', $tuKhoa)
+                    ->orWhere('ten', 'like', $tuKhoa);
+            });
         }
-
-        if ($req->filled('status')) {
-            QueryHelper::buildQueryEquals($colors, 'status', $req->status);
+        if ($req->filled('trangThai')) {
+            $mauSac->where('trang_thai', $req->trangThai);
         }
+    
 
-        $statusCounts = Color::select(DB::raw('count(status) as count, status'))
-            ->groupBy('status')
-            ->get();
+        $mauSac->orderBy('ten', 'asc');
+    
+        // Phân trang
+        // $response = $mauSac->paginate($req->pageSize, ['*'], 'currentPage', $req->currentPage);
+        $response = $mauSac->paginate(10, ['*'], 'currentPage', $req->currentPage);
+        // $response = $query->paginate($req->input('pageSize', 15), ['*'], 'currentPage', $req->input('currentPage', 1));
+    
+        return ApiResponse::responsePage(MauSacResource::collection($response));
 
-        QueryHelper::buildOrderBy($colors, 'created_at', 'desc');
-        $colors = QueryHelper::buildPagination($colors, $req);
-
-        return ApiResponse::responsePage(AttributeResource::collection($colors), $statusCounts);
     }
 
-    public function store(ColorRequestBody $req)
+    public function show($id)
     {
-        Color::create($req->all());
+        $mauSac = MauSac::find($id);
+        if (!$mauSac) {
+            throw new NotFoundException("Không tìm thấy màu sắc có id là " . $id);
+        }
 
-        $response = $this->findAllPage($req);
-
-        return ApiResponse::responseObject($response);
+        return ApiResponse::responseObject(new MauSacResource($mauSac));
     }
 
-    public function update(ColorRequestBody $req)
+    public function store(Request $req)
     {
-        $color = Color::find($req->id);
 
-        if (!$color) {
-            throw new NotFoundException("Không tìm thấy màu sắc có id là " . $req->id);
-        }
+        // Tạo một đối tượng MauSac mới từ dữ liệu đã được xác thực
+        $mauSac = new MauSac();
+        $mauSac->ma = $req->input('maMauSac'); // Đảm bảo mã mới được gán cho trường ma
+        $mauSac->ten = $req->input('tenMauSac');
+        $mauSac->trang_thai = 'dang_hoat_dong';
 
-        if ($req->code !== $color->code) {
-            $existingColor = Color::where('code', '=', $req->code)->first();
+        // Lưu đối tượng TaiKhoan vào cơ sở dữ liệu
+        $mauSac->save();
 
-            if ($existingColor) {
-                throw new RestApiException("Mã màu sắc này đã tồn tại!");
-            }
-        }
-
-        $color->name = $req->name;
-        $color->code = $req->code;
-        $color->update();
-
-        $response = $this->findAllPage($req);
-
-        return ApiResponse::responseObject($response);
+        // Trả về phản hồi với dữ liệu khách hàng mới được tạo
+        return ApiResponse::responseObject(new MauSacResource($mauSac));
     }
 
-    public function updateStatus(ColorRequestBody $req)
+    public function update(Request $req, $id)
     {
-        $color = Color::find($req->id);
-
-        if (!$color) {
-            throw new NotFoundException("Không tìm thấy màu sắc có id là " . $req->id);
+        $mauSac = MauSac::find($id);
+        if (!$mauSac) {
+            throw new NotFoundException("Không tìm thấy màu sắc có id là " . $id);
         }
+            $mauSac->ten = $req->input('tenMauSac', $mauSac->ten);
+            $mauSac->ma = $req->input('maMauSac', $mauSac->ma);
+            $mauSac->trang_thai = $req->input('trangThai', $mauSac->trang_thai);
 
-        $color->status = $req->status;
-        $color->update();
+            // Lưu các thay đổi vào cơ sở dữ liệu
+            $mauSac->save();
 
-        $response = $this->findAllPage($req);
-
-        return ApiResponse::responseObject($response);
+            // Trả về dữ liệu khách hàng đã cập nhật dưới dạng JSON
+            return ApiResponse::responseObject(new MauSacResource($mauSac));
     }
 
-    public function destroy(AttributeRequest $req)
-    {
-        $color = Color::find($req->id);
-
-        if (!$color) {
-            throw new NotFoundException("Không tìm thấy màu sắc có id là " . $req->id);
-        }
-
-        $productItem = ProductDetails::where('color_id', $req->id)->first();
-
-        if ($productItem) {
-            throw new NotFoundException("Không thể xóa màu sắc này!");
-        }
-
-        $color->delete();
-
-        $response = $this->findAllPage($req);
-
-        return ApiResponse::responseObject($response);
-    }
-
-    private function findAllPage($req)
-    {
-        $colors = Color::select(AttributeResource::fields());
-
-        if ($req->filled('search')) {
-            $search = $req->search;
-            $searchFields = ['code', 'name'];
-            QueryHelper::buildQuerySearchContains($colors, $search, $searchFields);
-        }
-
-        if ($req->filled('filterStatus')) {
-            QueryHelper::buildQueryEquals($colors, 'status', $req->filterStatus);
-        }
-
-        QueryHelper::buildOrderBy($colors, 'created_at', 'desc');
-        $colors = QueryHelper::buildPagination($colors, $req);
-
-        $statusCounts = Color::select(DB::raw('count(status) as count, status'))
-            ->groupBy('status')
-            ->get();
-
-        $result['statusCounts'] = $statusCounts;
-        $result['colors'] = $colors->items();
-        $result['totalPages'] = $colors->lastPage();
-
-        return $result;
-    }
 }
