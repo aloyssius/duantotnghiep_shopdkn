@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Products\AttributeSizeController;
 use App\Http\Controllers\Api\Products\ProductController;
 use App\Http\Controllers\SanPhamClientController;
 use App\Http\Controllers\SanPhamController;
+use App\Http\Controllers\ThuongHieuController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,7 +44,10 @@ Route::put('/trang-thai-kich-co', [SanPhamController::class, 'updateTrangThaiCho
 Route::put('/so-luong-ton', [SanPhamController::class, 'updateSoLuongTonChoKichCo']);
 Route::get('/tim-san-pham/{id}', [SanPhamController::class, 'show']);
 Route::put('/update-san-pham', [SanPhamController::class, 'updateSanPham']);
-
+Route::get('/thuong-hieu', [ThuongHieuController::class, 'index']);
+Route::post('/thuong-hieu', [ThuongHieuController::class, 'store']);
+Route::get('/thuong-hieu/{id}', [ThuongHieuController::class, 'show']);
+Route::put('/thuong-hieu/{id}', [ThuongHieuController::class, 'update']);
 // color
 Route::get('/attributes/colors', [AttributeColorController::class, 'index']);
 Route::put('/attributes/colors/status', [AttributeColorController::class, 'updateStatus']);

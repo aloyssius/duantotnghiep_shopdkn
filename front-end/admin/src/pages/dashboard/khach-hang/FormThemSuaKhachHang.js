@@ -21,7 +21,7 @@ import useLoading from '../../../hooks/useLoading';
 
 const { Option } = Select;
 
-const DANH_SACH_TRANG_THAI_KHACH_HANG = ['Đang hoạt động', 'Ngừng hoạt động'];
+// const DANH_SACH_TRANG_THAI_KHACH_HANG = ['Đang hoạt động', 'Ngừng hoạt động'];
 const DANH_SACH_GIOI_TINH_KHACH_HANG = ['Nam', 'Nữ'];
 
 // ----------------------------------------------------------------------
@@ -178,7 +178,7 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
             />
           </Col>
 
-          <Col span={9}>
+          {/* <Col span={9}>
             <Controller
               name='matKhau'
               control={control}
@@ -197,7 +197,7 @@ export default function FormThemSuaKhachHang({ laCapNhat, khachHangHienTai }) {
                 </>
               )}
             />
-          </Col>
+          </Col> */}
 
           <Col span={9}>
             <Controller

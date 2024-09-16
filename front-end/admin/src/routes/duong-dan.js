@@ -25,6 +25,8 @@ export const DUONG_DAN_TRANG = {
     cap_nhat: (id) => `/san-pham/${id}`,
     mau_sac: '/mau-sac/danh-sach',
     thuong_hieu: '/thuong-hieu/danh-sach',
+    tao_moi_thuong_hieu: '/thuong-hieu/tao-moi',
+    cap_nhat_thuong_hieu: (id) => `/thuong-hieu/${id}`,
   },
 };
 

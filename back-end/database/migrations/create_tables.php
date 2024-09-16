@@ -110,7 +110,7 @@ return new class extends Migration
             $table->decimal('tien_ship', 15, 2)->default(0);
             $table->decimal('tong_tien_hang', 15, 2)->default(0);
             $table->foreignUuid('id_tai_khoan')->nullable()->references('id')->on('tai_khoan');
-            $table->foreignUuid('id_voucher')->nullable()->references('id')->on('voucher');
+            // $table->foreignUuid('id_voucher')->nullable()->references('id')->on('voucher');
         });
 
         Schema::create('don_hang_chi_tiet', function (Blueprint $table) {
