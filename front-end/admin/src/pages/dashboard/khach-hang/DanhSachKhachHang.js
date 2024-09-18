@@ -111,7 +111,7 @@ export default function DanhSachSanPham() {
 
         // nếu gọi api thành công sẽ set dữ liệu
         setData(response.data.data); // set dữ liệu được trả về từ backend
-        setTongSoTrang(response.data.page.totalPages); // set tổng số trang được trả về từ backend
+        setTongSoTrang(response.data.page.totalElements); // set tổng số trang được trả về từ backend
       } catch (error) {
         console.error(error);
         // console ra lỗi

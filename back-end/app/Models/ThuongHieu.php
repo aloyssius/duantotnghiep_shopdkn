@@ -17,8 +17,8 @@ class ThuongHieu extends Model
     protected $table = 'thuong_hieu';
 
     protected $fillable = [
-        'ma_thuong_hieu',
-        'ten_thuong_hieu',
+        'ma',
+        'ten',
         'trang_thai',
     ];
 

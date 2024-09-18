@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class TaiKhoan extends Model
 {
-    use HasUuids;
+    use HasUuids; //tự sinh id
 
     protected $table = 'tai_khoan';
 
-    public $incrementing = false;
+    public $incrementing = false; //tắt tự tăng của id
 
     protected $keyType = 'string';
 

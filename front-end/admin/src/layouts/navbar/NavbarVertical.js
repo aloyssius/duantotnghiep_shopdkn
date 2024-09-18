@@ -224,18 +224,18 @@ const items = [
       },
     ],
   },
-  {
-    key: 'discount',
-    label: <SpanStyle label="Khuyến mãi" />,
-    icon: ICONS.voucher,
-    children: [
-      {
-        key: 'voucher',
-        label:
-          <Link to={DUONG_DAN_TRANG.voucher.danh_sach}>
-            <SpanStyle label='Voucher' />
-          </Link>
-      },
-    ],
-  },
+  // {
+  //   key: 'discount',
+  //   label: <SpanStyle label="Khuyến mãi" />,
+  //   icon: ICONS.voucher,
+  //   children: [
+  //     {
+  //       key: 'voucher',
+  //       label:
+  //         <Link to={DUONG_DAN_TRANG.voucher.danh_sach}>
+  //           <SpanStyle label='Voucher' />
+  //         </Link>
+  //     },
+  //   ],
+  // },
 ];

@@ -101,7 +101,8 @@ class KhachHangController extends Controller
         $khachHang->orderBy('created_at', 'desc');
     
         // Phân trang
-        $response = $khachHang->paginate($req->pageSize, ['*'], 'currentPage', $req->currentPage);
+        // $response = $khachHang->paginate($req->pageSize, ['*'], 'currentPage', $req->currentPage);
+        $response = $khachHang->paginate(10, ['*'], 'currentPage', $req->currentPage);
         // $response = $query->paginate($req->input('pageSize', 15), ['*'], 'currentPage', $req->input('currentPage', 1));
     
         return ApiResponse::responsePage(KhachHangResource::collection($response));

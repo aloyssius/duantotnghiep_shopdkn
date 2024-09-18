@@ -3,9 +3,7 @@
 use App\Constants\CommonStatus;
 use App\Constants\ConstantSystem;
 use App\Constants\OrderStatus;
-use App\Constants\PaymentType;
 use App\Constants\Role;
-use App\Constants\VoucherStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -129,7 +127,6 @@ return new class extends Migration
         Schema::dropIfExists('don_hang');
         Schema::dropIfExists('don_hang_chi_tiet');
         Schema::dropIfExists('tai_khoan');
-        Schema::dropIfExists('voucher');
         Schema::dropIfExists('gio_hang');
         Schema::dropIfExists('gio_hang_chi_tiet');
         Schema::dropIfExists('san_pham');

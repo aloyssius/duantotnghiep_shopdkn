@@ -43,6 +43,24 @@ export default function Router() {
         },
 
         {
+          path: 'thuong-hieu',
+          children: [
+            { path: 'danh-sach', element: <DanhSachThuongHieu /> },
+            { path: 'tao-moi', element: <ThemSuaThuongHieu /> },
+            { path: ':id', element: <ThemSuaThuongHieu /> },
+          ],
+        },
+
+        {
+          path: 'mau-sac',
+          children: [
+            { path: 'danh-sach', element: <DanhSachMauSac /> },
+            { path: 'tao-moi', element: <ThemSuaMauSac /> },
+            { path: ':id', element: <ThemSuaMauSac /> },
+          ],
+        },
+
+        {
           path: 'don-hang',
           children: [
             { path: 'danh-sach', element: <DanhSachDonHang /> },
@@ -81,6 +99,10 @@ const ThemSuaSanPham = Loadable(lazy(() => import('../pages/dashboard/san-pham/T
 const DanhSachDonHang = Loadable(lazy(() => import('../pages/dashboard/don-hang/DanhSachDonHang')));
 const DonHangChiTiet = Loadable(lazy(() => import('../pages/dashboard/don-hang/DonHangChiTiet')));
 const DanhSachSanPham = Loadable(lazy(() => import('../pages/dashboard/san-pham/DanhSachSanPham')));
+const DanhSachThuongHieu = Loadable(lazy(() => import('../pages/dashboard/san-pham/DanhSachThuongHieu')));
+const ThemSuaThuongHieu = Loadable(lazy(() => import('../pages/dashboard/san-pham/ThemSuaThuongHieu')));
+const DanhSachMauSac = Loadable(lazy(() => import('../pages/dashboard/san-pham/DanhSachMauSac')));
+const ThemSuaMauSac = Loadable(lazy(() => import('../pages/dashboard/san-pham/ThemSuaMauSac')));
 const ThemSuaNhanVien = Loadable(lazy(() => import('../pages/dashboard/nhan-vien/ThemSuaNhanVien')));
 const DanhSachNhanVien = Loadable(lazy(() => import('../pages/dashboard/nhan-vien/DachSachNhanVien')));
 const ThemSuaKhachHang = Loadable(lazy(() => import('../pages/dashboard/khach-hang/ThemSuaKhachHang')));
