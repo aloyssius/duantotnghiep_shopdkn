@@ -18,15 +18,14 @@ class GioHangController extends Controller
     {
         $timGioHang = GioHang::where('id_tai_khoan', $req->idTaiKhoan)->first();
         $timSanPham = SanPham::where('ma', $req->maSanPham)->first();
+        $timKichCo = KichCo::find($req->idKichCo);
 
-        // tìm xem sản phẩm đã có trong giỏ hàng chi tiết hay chưa
-        $timSanPhamTrongGioHangChiTiet = GioHangChiTiet::where('id_san_pham', $timSanPham->id)->where('id_gio_hang', $timGioHang->id)->first();
+        // tìm xem sản phẩm (kích cỡ) đã có trong giỏ hàng chi tiết hay chưa
+        $timSanPhamTrongGioHangChiTiet = GioHangChiTiet::where('ten_kich_co', $timKichCo->ten_kich_co)->where('id_gio_hang', $timGioHang->id)->first();
         if ($timSanPhamTrongGioHangChiTiet) { // nếu đã có rồi cộng số lượng lên 1
             $timSanPhamTrongGioHangChiTiet->so_luong = $timSanPhamTrongGioHangChiTiet->so_luong + 1;
             $timSanPhamTrongGioHangChiTiet->save();
         } else { // nếu chưa có thì thêm mới giỏ hàng chi tiết
-            $timKichCo = KichCo::find($req->idKichCo);
-
             $gioHangChiTietMoi = new GioHangChiTiet();
             $gioHangChiTietMoi->id_san_pham = $timSanPham->id;
             $gioHangChiTietMoi->id_gio_hang = $timGioHang->id;
