@@ -37,7 +37,7 @@ class SanPhamClientController extends Controller
             return $sanPham;
         });
 
-        $response['listSanPham'] = SanPhamClientResource::collection($listSanPham);
+        $response['listSanPham'] = SanPhamClientResource::collection($listSanPham); //dữ liệu trả về api
         $response['listThuongHieu'] = ThuongHieu::all();
 
         return ApiResponse::responseObject($response);
