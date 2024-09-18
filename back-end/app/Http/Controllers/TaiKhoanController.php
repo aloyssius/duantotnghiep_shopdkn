@@ -10,6 +10,8 @@ use App\Http\Resources\DonHangResource;
 use App\Models\DonHang;
 use App\Models\GioHang;
 use App\Models\GioHangChiTiet;
+use App\Models\HinhAnh;
+use App\Models\SanPham;
 use App\Models\TaiKhoan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -31,10 +33,19 @@ class TaiKhoanController extends Controller
         }
 
         $timGioHang = GioHang::where('id_tai_khoan', $taiKhoan->id)->first(); // tìm giỏ hàng của tài khoản
-        $timGioHangChiTiet = GioHangChiTiet::where('id_gio_hang', $timGioHang->id)->get(); // tìm danh sách giỏ hàng chi tiết của tài khoản
+        $listGioHangChiTiet = GioHangChiTiet::where('id_gio_hang', $timGioHang->id)->orderBy('created_at', 'desc')->get(); // tìm danh sách giỏ hàng chi tiết của tài khoản
+
+        $listGioHangChiTiet->map(function ($gioHangChiTiet) {
+            $timSanPham = SanPham::find($gioHangChiTiet->id_san_pham);
+            $hinhAnh = HinhAnh::where('id_san_pham', $timSanPham->id)->first();
+            $gioHangChiTiet->hinh_anh = $hinhAnh->duong_dan_url;
+            $gioHangChiTiet->don_gia = $timSanPham->don_gia;
+            $gioHangChiTiet->ten = $timSanPham->ten;
+            $gioHangChiTiet->ma = $timSanPham->ma;
+        });
 
         $response['taiKhoan'] = $taiKhoan;
-        $response['gioHangChiTiet'] = $timGioHangChiTiet;
+        $response['gioHangChiTiet'] = $listGioHangChiTiet;
 
         return ApiResponse::responseObject($response);
     }

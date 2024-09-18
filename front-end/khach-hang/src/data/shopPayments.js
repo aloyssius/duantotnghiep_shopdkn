@@ -10,16 +10,16 @@ export default [
     title: 'Thanh toán khi nhận hàng (COD)',
     description: 'Là phương thức thanh toán bằng tiền mặt trực tiếp khi nhận hàng',
   },
-  {
-    key: 'cash',
-    title: 'Thanh toán khi nhận hàng (COD)',
-    description: 'Là phương thức thanh toán bằng tiền mặt trực tiếp khi nhận hàng',
-  },
-  {
-    key: 'transfer',
-    title: 'Thanh toán trực tuyến',
-    description: 'Phương thức thanh toán trực tuyến qua nền tảng ví điện tử VNPAY',
-  },
+  // {
+  //   key: 'cash',
+  //   title: 'Thanh toán khi nhận hàng (COD)',
+  //   description: 'Là phương thức thanh toán bằng tiền mặt trực tiếp khi nhận hàng',
+  // },
+  // {
+  //   key: 'transfer',
+  //   title: 'Thanh toán trực tuyến',
+  //   description: 'Phương thức thanh toán trực tuyến qua nền tảng ví điện tử VNPAY',
+  // },
   // {
   //     key: 'paypal',
   //     title: 'PayPal',

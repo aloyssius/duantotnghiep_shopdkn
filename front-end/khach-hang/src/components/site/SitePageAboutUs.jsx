@@ -4,7 +4,6 @@ import React from 'react';
 // third-party
 import { Helmet } from 'react-helmet';
 import PageHeader from '../shared/PageHeader';
-import { PATH_PAGE } from '../../routes/path';
 
 // data stubs
 import theme from '../../data/theme';
@@ -12,7 +11,7 @@ import Logo from '../Logo';
 
 
 const breadcrumb = [
-  { title: 'Trang chủ', url: PATH_PAGE.root },
+  { title: 'Trang chủ', url: '/' },
   { title: 'Giới thiệu', url: '' },
 ];
 

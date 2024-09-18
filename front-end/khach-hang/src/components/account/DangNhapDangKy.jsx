@@ -62,9 +62,8 @@ export default function DangNhapDangKy() {
     try {
       // gọi api từ backend
       const response = await axios.post("http://127.0.0.1:8000/api/dang-nhap", data);
-
       // nếu gọi api thành công
-      // set tài khoản và mật khẩu vào bộ nhớ local storage của trình duyệt
+      // set tài khoản vào bộ nhớ local storage của trình duyệt
       console.log(response.data.data)
       localStorage.setItem('tai-khoan', JSON.stringify(response.data.data.taiKhoan));
       // set giỏ hàng chi tiết của tài khoản vào bộ nhớ local storage của trình duyệt

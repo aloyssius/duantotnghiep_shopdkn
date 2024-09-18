@@ -1,50 +1,58 @@
 // react
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 // third-party
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
-// application
-import Pagination from '../shared/Pagination';
-
 // data stubs
 import theme from '../../data/theme';
-import useFetch from '../../hooks/useFetch';
-import { CLIENT_API } from '../../api/apiConfig';
-import useAuth from '../../hooks/useAuth';
 import { formatCurrencyVnd } from '../../utils/formatNumber';
-import { PATH_PAGE } from '../../routes/path';
+import useLoading from '../../hooks/useLoading';
 
 export default function LichSuMuaHang() {
 
-  const { authUser } = useAuth();
-  const { fetch, res, page } = useFetch(null, { fetch: false });
-  const [currentPage, setCurrentPage] = useState(1);
+  const { onOpenLoading, onCloseLoading } = useLoading();
 
-  const handleFilter = () => {
-    const params = {
-      currentPage,
-      accountId: authUser?.id
-    };
-    fetch(CLIENT_API.account.bills, params, () => { }, () => { }, false);
-  }
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    handleFilter();
-  }, [currentPage])
+    // khai báo hàm lấy dữ liệu
+    const layDuLieuTuBackEnd = async () => {
+      // bật loading
+      onOpenLoading();
+      try {
+        // gọi api từ backend
+        const taiKhoan = JSON.parse(localStorage.getItem('tai-khoan'));
+        const response = await axios.get(`http://127.0.0.1:8000/api/danh-sach-don-hang-cua-tai-khoan/${taiKhoan?.id}`);
+        // nếu gọi api thành công sẽ set dữ liệu
+        setData(response.data.data); // set dữ liệu được trả về từ backend
+        console.log(response.data.data)
+      } catch (error) {
+        console.error(error);
+        // console ra lỗi
+      } finally {
+        onCloseLoading();
+        // tắt loading
+      }
+    }
 
-  const ordersList = res?.map((order) => (
-    <tr key={order.id}>
-      <td><Link className="text-decoration" style={{ fontWeight: '500' }} to={PATH_PAGE.account.order_detail(order?.code)}>{`#${order?.code}`}</Link></td>
-      <td>{order.createdAt}</td>
-      <td>{convertOrderStatus(order.status)}</td>
-      <td>{formatCurrencyVnd(String(order.totalMoney))}</td>
+    // gọi hàm vừa khai báo
+    layDuLieuTuBackEnd();
+  }, []) // hàm được gọi lần đầu tiên và sẽ gọi lại khi id thương hiệu thay đổi
+
+  const ordersList = data?.map((donHang) => (
+    <tr key={donHang.id}>
+      <td><Link className="text-decoration" style={{ fontWeight: '500' }} to={`/thong-tin-don-hang/${donHang?.ma}`}>{`#${donHang?.ma}`}</Link></td>
+      <td>{donHang.ngayTao}</td>
+      <td>{convertOrderStatus(donHang.trangThai)}</td>
+      <td>{formatCurrencyVnd(String(donHang.tongTien))}</td>
     </tr>
   ));
 
   return (
-    <div className="card">
+    <div className="card container mt-4">
       <Helmet>
         <title>{`Lịch sử mua hàng — ${theme.name}`}</title>
       </Helmet>
@@ -70,26 +78,22 @@ export default function LichSuMuaHang() {
           </table>
         </div>
       </div>
-      <div className="card-divider" />
-      <div className="card-footer">
-        <Pagination siblings={4} current={currentPage} total={page?.totalPages} onPageChange={(page) => setCurrentPage(page)} />
-      </div>
     </div>
   );
 }
 const convertOrderStatus = (status) => {
   let statusConverted = "";
   switch (status) {
-    case "pending_confirm":
+    case "cho_xac_nhan":
       statusConverted = "Chờ xác nhận";
       break;
-    case "waitting_delivery":
+    case "cho_giao_hang":
       statusConverted = "Chờ giao hàng";
       break;
-    case "delivering":
+    case "dang_giao_hang":
       statusConverted = "Đang giao hàng";
       break;
-    case "completed":
+    case "hoan_thanh":
       statusConverted = "Đã giao";
       break;
     default:

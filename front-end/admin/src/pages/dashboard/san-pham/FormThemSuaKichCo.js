@@ -60,7 +60,7 @@ export default function FormThemSuaKichCo({ danhSachKichCoHienTai, id }) {
   // hàm gọi api thêm số lượng tồn
   const putSoLuongTon = async (soLuong, idKichCo) => {
     try {
-      const response = await axios.put("http://127.0.0.1:8000/api/so-luong-ton", { soLuongTon: soLuong, id: idKichCo, idSanPham: id }); // gọi api
+      const response = await axios.put("http://127.0.0.1:8000/api/so-luong-ton", { soLuongTon: soLuong || 0, id: idKichCo, idSanPham: id }); // gọi api
     } catch (error) {
       console.log(error.response.data);
       onOpenErrorNotify(error.response.data.message) // hiển thị thông báo lỗi

@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 
 // data stubs
 import theme from '../../data/theme';
-import { PATH_PAGE } from '../../routes/path';
 
 
 function SitePageNotFound() {
@@ -24,7 +23,7 @@ function SitePageNotFound() {
             <img width={500} src="https://ananas.vn/wp-content/themes/ananas/assets/images/page_not_found.png" alt="" />
           </div>
 
-          <Link to={PATH_PAGE.root} className="btn btn-primary btn-xl mt-5">Quay lại trang chủ</Link>
+          <Link to={'/'} className="btn btn-primary btn-xl mt-5">Quay lại trang chủ</Link>
         </div>
       </div>
     </div>

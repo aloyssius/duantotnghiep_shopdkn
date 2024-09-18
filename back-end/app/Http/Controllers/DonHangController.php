@@ -10,7 +10,9 @@ use App\Http\Resources\DonHangResource;
 use App\Models\Bill;
 use App\Models\DonHang;
 use App\Models\DonHangChiTiet;
+use App\Models\HinhAnh;
 use App\Models\KichCo;
+use App\Models\SanPham;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -69,6 +71,19 @@ class DonHangController extends Controller
     {
         $timDonHang = DonHang::find($id);
 
+        $listDonHangChiTiet = DonHangChiTiet::where('id_don_hang', $timDonHang->id)->get();
+
+        $listDonHangChiTiet->map(function ($donHangChiTiet) {
+            $timSanPham = SanPham::find($donHangChiTiet->id_san_pham);
+            $hinhAnh = HinhAnh::where('id_san_pham', $timSanPham->id)->first();
+            $donHangChiTiet->hinh_anh = $hinhAnh->duong_dan_url;
+            $donHangChiTiet->don_gia = $timSanPham->don_gia;
+            $donHangChiTiet->ten = $timSanPham->ten;
+            $donHangChiTiet->ma = $timSanPham->ma;
+        });
+
+        $timDonHang['listDonHangChiTiet'] = $listDonHangChiTiet;
+
         return ApiResponse::responseObject(new DonHangChiTietResource($timDonHang));
     }
 
@@ -80,17 +95,18 @@ class DonHangController extends Controller
         $timDonHang->ngay_huy_don = now(); // now() => là thời gian hiện tại
         $timDonHang->save();
 
-        // $donHangChiTiet = DonHangChiTiet::where('id_don_hang', $id)->get();
-        //
-        // foreach ($donHangChiTiet as $sanPhamTrongDonHang) {
-        //
-        //     $timKichCoSanPham = KichCo::find($sanPhamTrongDonHang->id_kich_co);
-        //
-        //     if ($timKichCoSanPham) {
-        //         $timKichCoSanPham->so_luong_ton = $timKichCoSanPham->so_luong + $sanPhamTrongDonHang->so_luong;
-        //         $timKichCoSanPham->save();
-        //     }
-        // }
+        $listDonHangChiTiet = DonHangChiTiet::where('id_don_hang', $timDonHang->id)->get();
+
+        $listDonHangChiTiet->map(function ($donHangChiTiet) {
+            $timSanPham = SanPham::find($donHangChiTiet->id_san_pham);
+            $hinhAnh = HinhAnh::where('id_san_pham', $timSanPham->id)->first();
+            $donHangChiTiet->hinh_anh = $hinhAnh->duong_dan_url;
+            $donHangChiTiet->don_gia = $timSanPham->don_gia;
+            $donHangChiTiet->ten = $timSanPham->ten;
+            $donHangChiTiet->ma = $timSanPham->ma;
+        });
+
+        $timDonHang['listDonHangChiTiet'] = $listDonHangChiTiet;
 
         return ApiResponse::responseObject(new DonHangChiTietResource($timDonHang));
     }
@@ -111,6 +127,19 @@ class DonHangController extends Controller
             $timDonHang->ngay_hoan_thanh = now(); // cập nhật ngày giao hàng, now() => là thời gian hiện tại
             $timDonHang->save();
         }
+
+        $listDonHangChiTiet = DonHangChiTiet::where('id_don_hang', $timDonHang->id)->get();
+
+        $listDonHangChiTiet->map(function ($donHangChiTiet) {
+            $timSanPham = SanPham::find($donHangChiTiet->id_san_pham);
+            $hinhAnh = HinhAnh::where('id_san_pham', $timSanPham->id)->first();
+            $donHangChiTiet->hinh_anh = $hinhAnh->duong_dan_url;
+            $donHangChiTiet->don_gia = $timSanPham->don_gia;
+            $donHangChiTiet->ten = $timSanPham->ten;
+            $donHangChiTiet->ma = $timSanPham->ma;
+        });
+
+        $timDonHang['listDonHangChiTiet'] = $listDonHangChiTiet;
 
         return ApiResponse::responseObject(new DonHangChiTietResource($timDonHang));
     }

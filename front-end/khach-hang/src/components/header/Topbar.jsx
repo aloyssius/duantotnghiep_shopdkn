@@ -14,7 +14,9 @@ function Topbar() {
 
   const dangXuat = () => {
     localStorage.removeItem('tai-khoan');
+    localStorage.removeItem('gio-hang-chi-tiet-tai-khoan');
     console.log(localStorage.getItem('tai-khoan'));
+    console.log(localStorage.getItem('gio-hang-chi-tiet-tai-khoan'));
     history.push('/'); // chuyển sang trang chủ
   }
 
@@ -24,7 +26,9 @@ function Topbar() {
   ];
 
   const taiKhoan = JSON.parse(localStorage.getItem('tai-khoan'));
+  const gioHang = JSON.parse(localStorage.getItem('gio-hang-chi-tiet-tai-khoan'));
   console.log(taiKhoan);
+  console.log(gioHang);
 
   return (
     <div className="site-header__topbar topbar">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DonHangClientController;
 use App\Http\Controllers\DonHangController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,19 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/statistics', [DonHangController::class, 'revenueStatistics']);
+Route::get('/thong-ke', [DonHangController::class, 'thongKe']);
 Route::get('/danh-sach-don-hang', [DonHangController::class, 'index']);
-Route::put('/bills/status', [DonHangController::class, 'adminUpdateStatus']);
 Route::get('/tim-don-hang/{id}', [DonHangController::class, 'show']);
 Route::put('/trang-thai-don-hang/{id}', [DonHangController::class, 'capNhatTrangThaiDonHang']);
 Route::put('/huy-don-hang/{id}', [DonHangController::class, 'huyDonHang']);
 
 // client
-Route::post('/bills', [DonHangController::class, 'clientStore']);
-Route::get('/tracking-order', [DonHangController::class, 'showClient']);
-Route::put('/bill/status/customer', [DonHangController::class, 'updateStatusCanceledByCustomer']);
-
-Route::post('/bills/vn-pay/payment', [DonHangController::class, 're_vnpay_payment']);
-Route::get('/bills/vn-pay/process-payment', [DonHangController::class, 'processPaymentBill']);
-
-Route::put('/bill/payment-method', [DonHangController::class, 'updatePaymentMethodByCustomer']);
+Route::post('/dat-hang', [DonHangClientController::class, 'storeDatHang']);
+Route::get('/danh-sach-don-hang-cua-tai-khoan/{id}', [DonHangClientController::class, 'danhSachDonHangCuaTaiKhoan']);
+Route::get('/chi-tiet-don-hang/{ma}', [DonHangClientController::class, 'chiTietDonHang']);

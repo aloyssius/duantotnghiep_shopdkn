@@ -22,7 +22,6 @@ class DonHangResource extends JsonResource
             'soDienThoai' => $this->so_dien_thoai,
             'tongTien' => $this->tong_tien_hang,
             'trangThai' => $this->trang_thai,
-            'trangThaiThanhToan' => $this->trang_thai_thanh_toan,
             'ngayTao' => $this->created_at,
         ];
     }

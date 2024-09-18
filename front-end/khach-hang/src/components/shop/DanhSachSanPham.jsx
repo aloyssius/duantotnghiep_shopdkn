@@ -9,7 +9,6 @@ import { Helmet } from 'react-helmet';
 
 // application
 import PageHeader from '../shared/PageHeader';
-import ProductsView from './ProductsView';
 import { sidebarClose } from '../../store/sidebar';
 
 // data stubs
@@ -18,13 +17,13 @@ import useLoading from '../../hooks/useLoading';
 import ProductCard from '../shared/ProductCard';
 
 
-function ShopPageCategory(props) {
+function DanhSachSanPham() {
 
   const { onOpenLoading, onCloseLoading } = useLoading();
 
   const [data, setData] = useState([]);
   const [listThuongHieu, setListThuongHieu] = useState([]);
-  const [idThuongHieu, setIdThuongHieu] = useState(null);
+  const [idThuongHieu, setIdThuongHieu] = useState('tatCa');
 
   useEffect(() => {
     // khai báo hàm lấy dữ liệu
@@ -35,7 +34,7 @@ function ShopPageCategory(props) {
         // gọi api từ backend
         const response = await axios.get(`http://127.0.0.1:8000/api/danh-sach-san-pham-client`, {
           params: {
-            idThuongHieu: idThuongHieu !== null ? idThuongHieu : null,
+            idThuongHieu: idThuongHieu === 'tatCa' ? null : idThuongHieu,
           }
         });
         // nếu gọi api thành công sẽ set dữ liệu
@@ -72,10 +71,10 @@ function ShopPageCategory(props) {
                 id="view-options-sort"
                 value={idThuongHieu}
                 onChange={(e) => setIdThuongHieu(e.target.value)}
-                defaultValue='tatCa'
+                defaultValue={'tatCa'}
               >
                 <>
-                  <option key={"tatCa"} value={null}>
+                  <option key={"tatCa"} value={'tatCa'}>
                     Tất cả
                   </option>
                   {listThuongHieu.map(option => (
@@ -117,7 +116,7 @@ function ShopPageCategory(props) {
   );
 }
 
-ShopPageCategory.propTypes = {
+DanhSachSanPham.propTypes = {
   /**
    * number of product columns (default: 3)
    */
@@ -135,7 +134,7 @@ ShopPageCategory.propTypes = {
   sidebarPosition: PropTypes.oneOf(['start', 'end']),
 };
 
-ShopPageCategory.defaultProps = {
+DanhSachSanPham.defaultProps = {
   columns: 3,
   viewMode: 'grid',
   sidebarPosition: 'start',
@@ -149,5 +148,5 @@ const mapDispatchToProps = {
   sidebarClose,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopPageCategory);
+export default connect(mapStateToProps, mapDispatchToProps)(DanhSachSanPham);
 

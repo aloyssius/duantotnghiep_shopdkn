@@ -4,7 +4,6 @@ import React from 'react';
 // third-party
 import { Helmet } from 'react-helmet';
 import PageHeader from '../shared/PageHeader';
-import { PATH_PAGE } from '../../routes/path';
 
 
 // data stubs
@@ -14,7 +13,7 @@ import Logo from '../Logo';
 
 
 const breadcrumb = [
-  { title: 'Trang chủ', url: PATH_PAGE.root },
+  { title: 'Trang chủ', url: '/' },
   { title: 'Chính sách', url: '' },
 ];
 
@@ -56,6 +55,13 @@ function SitePolicy() {
           </p>
           <p>
             Chúng tôi cam kết sẽ cung cấp thông tin sản phẩm, giá cả, dịch vụ và nội dung khác chính xác nhất đến người dùng. Tuy nhiên, đôi lúc vẫn có sai sót xảy ra, ví dụ như trường hợp giá cả sản phẩm, phí vận chuyển, hình ảnh sản phẩm,… không hiển thị chính xác ở một vài thời điểm và trên một số thiết bị. Tùy theo từng trường hợp cụ thể, ĐKN-Shop sẽ liên hệ trực tiếp nhằm hướng dẫn hoặc thông báo đến bạn để khắc phục và xử lý.
+          </p>
+
+          <p style={{ fontWeight: 'bold', fontSize: 25 }}>
+            4. ĐIỀU KHOẢN HỦY ĐƠN HÀNG
+          </p>
+          <p>
+            Nếu bạn cần hủy đơn hàng sau khi đặt hàng thành công, hãy liên hệ với cửa hàng để được hỗ trợ.
           </p>
 
         </p>

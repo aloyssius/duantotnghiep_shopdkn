@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Carts\CartController;
+use App\Http\Controllers\GioHangController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,11 +16,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// product
-Route::post('/carts', [CartController::class, 'store']);
-Route::put('/carts', [CartController::class, 'update']);
-Route::put('/carts/quantity', [CartController::class, 'updateQuantity']);
-Route::delete('/carts/{id}', [CartController::class, 'destroy']);
-Route::get('/carts', [CartController::class, 'index']);
-Route::get('/carts/{accountId}', [CartController::class, 'indexByAccount']);
-Route::get('/cart-voucher', [CartController::class, 'findVoucher']);
+Route::post('/them-gio-hang-chi-tiet', [GioHangController::class, 'storeGioHangChiTiet']);
+Route::delete('/xoa-gio-hang-chi-tiet/{id}', [GioHangController::class, 'xoaGioHangChiTiet']);

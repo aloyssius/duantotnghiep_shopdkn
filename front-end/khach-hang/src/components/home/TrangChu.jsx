@@ -67,15 +67,7 @@ function TrangChu() {
 
       <ProductList style={{ marginBottom: 30 }} data={listSanPhamMoiNhat} />
 
-      <ButtonViewMore />
-
       <BlockBanner />
-
-      <HeaderProductList title="SẢN PHẨM BÁN CHẠY" />
-
-      <ProductList style={{ marginBottom: 30 }} data={listSanPhamMoiNhat} />
-
-      <ButtonViewMore />
 
       <BlockBrands />
     </React.Fragment>

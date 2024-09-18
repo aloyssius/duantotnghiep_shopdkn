@@ -19,13 +19,13 @@ import useNotification from '../../../hooks/useNotification';
 
 const danhSachCacTruongDuLieu = [
   {
-    title: 'Mã sản phẩm',
+    title: 'Hình ảnh',
     align: "center",
     render: (text, record) => {
       return (
         <>
           <span className='fw-500'>
-            {record.ma}
+            <img src={record.hinh_anh} width='80px' alt="img" />
           </span>
         </>
       )
@@ -38,7 +38,7 @@ const danhSachCacTruongDuLieu = [
       return (
         <>
           <span className='fw-500'>
-            {record.hoVaTen}
+            {record.ten} {" "} ({record.ma})
           </span>
         </>
       )
@@ -51,7 +51,7 @@ const danhSachCacTruongDuLieu = [
       return (
         <>
           <span className='fw-500'>
-            {record.soDienThoai}
+            {record.ten_kich_co}
           </span>
         </>
       )
@@ -64,7 +64,7 @@ const danhSachCacTruongDuLieu = [
       return (
         <>
           <span className='fw-500'>
-            {record.ngayTao}
+            {record.so_luong}
           </span>
         </>
       )
@@ -77,7 +77,7 @@ const danhSachCacTruongDuLieu = [
       return (
         <>
           <span className='fw-500' style={{ color: 'red' }} >
-            {formatCurrencyVnd(record.tongTien) + "đ"}
+            {formatCurrencyVnd(record.don_gia) + "đ"}
           </span>
         </>
       )
@@ -90,7 +90,7 @@ const danhSachCacTruongDuLieu = [
       return (
         <>
           <span className='fw-500' style={{ color: 'red' }} >
-            {formatCurrencyVnd(record.tongTien) + "đ"}
+            {formatCurrencyVnd(record.don_gia * record.so_luong) + "đ"}
           </span>
         </>
       )
@@ -207,7 +207,7 @@ export default function DonHangChiTiet() {
                     </Button>
                   }
 
-                  {(data?.trangThai === 'cho_xac_nhan' || data?.trangThai === 'cho_giao_hang') &&
+                  {(data?.trangThai === 'cho_xac_nhan' || data?.trangThai === 'cho_giao_hang' || data?.trangThai === 'dang_giao_hang') &&
                     <Button onClick={() => huyDonHang()} type='primary' danger size='large'>
                       Hủy đơn
                     </Button>
@@ -285,7 +285,7 @@ export default function DonHangChiTiet() {
               className=''
               rowKey={"id"}
               columns={danhSachCacTruongDuLieu}
-              dataSource={data?.donHangChiTiet || []} // dữ liệu từ backend
+              dataSource={data?.listDonHangChiTiet || []} // dữ liệu từ backend
               pagination={false} // tắt phân trang mặc định của table
             />
           </Space>

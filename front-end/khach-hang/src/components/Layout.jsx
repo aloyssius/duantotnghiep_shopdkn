@@ -30,11 +30,11 @@ const Loadable = (Component) => (props) => {
 };
 
 const DangNhapDangKy = Loadable(lazy(() => import('./account/DangNhapDangKy')));
-const MyCart = Loadable(lazy(() => import('./shop/ShopPageCart')));
-const Checkout = Loadable(lazy(() => import('./shop/ShopPageCheckout')));
-const TrackOrder = Loadable(lazy(() => import('./shop/ShopPageTrackOrder')));
-const DanhSachSanPham = Loadable(lazy(() => import('./shop/ShopPageCategory')));
-const SanPhamChiTiet = Loadable(lazy(() => import('./shop/ShopPageProduct')));
+const GioHang = Loadable(lazy(() => import('./shop/GioHang')));
+const ThanhToan = Loadable(lazy(() => import('./shop/ThanhToan')));
+const TraCuuDonHang = Loadable(lazy(() => import('./shop/TraCuuDonHang')));
+const DanhSachSanPham = Loadable(lazy(() => import('./shop/DanhSachSanPham')));
+const SanPhamChiTiet = Loadable(lazy(() => import('./shop/SanPhamChiTiet')));
 const DonHangChiTiet = Loadable(lazy(() => import('./account/DonHangChiTiet')));
 const LichSuMuaHang = Loadable(lazy(() => import('./account/LichSuMuaHang')));
 
@@ -52,7 +52,6 @@ function Layout(props) {
         <title>{theme.name}</title>
         <meta name="description" content={theme.fullName} />
       </Helmet>
-
 
       <Quickview />
 
@@ -75,23 +74,15 @@ function Layout(props) {
               )}
             />
 
-            <Route
-              exact
-              path="/theo-doi-don-hang"
-              render={(props) => (
-                <DonHangChiTiet {...props} trackOrder />
-              )}
-            />
-
             <Route exact path="/san-pham/:ma" component={SanPhamChiTiet} />
 
-            <Route exact path="/gio-hang" component={MyCart} />
-            <Route exact path="/checkout" component={Checkout} />
-            <Route exact path="/tra-cuu-don-hang" component={TrackOrder} />
+            <Route exact path="/gio-hang" component={GioHang} />
+            <Route exact path="/thanh-toan" component={ThanhToan} />
+            <Route exact path="/tra-cuu-don-hang" component={TraCuuDonHang} />
 
             <Route exact path="/dang-nhap" component={DangNhapDangKy} />
             <Route exact path="/lich-su-mua-hang" component={LichSuMuaHang} />
-            <Route exact path="/don-hang-cua-ban/:ma" component={DonHangChiTiet} />
+            <Route exact path="/thong-tin-don-hang/:ma" component={DonHangChiTiet} />
 
             <Route exact path="/gioi-thieu" component={SitePageAboutUs} />
             <Route exact path="/chinh-sach" component={SitePolicy} />

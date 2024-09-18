@@ -31,19 +31,6 @@ return new class extends Migration
             $table->enum('vai_tro', Role::toArray());
         });
 
-        // Schema::create('voucher', function (Blueprint $table) {
-        //     $table->uuid('id')->primary();
-        //     $table->timestamps();
-        //     $table->string('ma', ConstantSystem::CODE_MAX_LENGTH)->unique();
-        //     $table->string('mo_ta', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
-        //     $table->decimal('gia_tri', 15, 2)->default(0);
-        //     $table->decimal('dieu_kien_ap_dung', 15, 2)->default(0);
-        //     $table->enum('trang_thai', VoucherStatus::toArray())->default(VoucherStatus::SAP_DIEN_RA);
-        //     $table->integer('so_luong')->default(0);
-        //     $table->timestamp('ngay_bat_dau')->nullable();
-        //     $table->timestamp('ngay_ket_thuc')->nullable();
-        // });
-
         Schema::create('gio_hang', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('id_tai_khoan')->unique();
@@ -90,6 +77,7 @@ return new class extends Migration
         Schema::create('gio_hang_chi_tiet', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->timestamps();
+            $table->string('ten_kich_co', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
             $table->integer('so_luong')->default(0);
             $table->foreignUuid('id_gio_hang')->references('id')->on('gio_hang');
             $table->foreignUuid('id_san_pham')->references('id')->on('san_pham');
@@ -110,12 +98,12 @@ return new class extends Migration
             $table->decimal('tien_ship', 15, 2)->default(0);
             $table->decimal('tong_tien_hang', 15, 2)->default(0);
             $table->foreignUuid('id_tai_khoan')->nullable()->references('id')->on('tai_khoan');
-            $table->foreignUuid('id_voucher')->nullable()->references('id')->on('voucher');
         });
 
         Schema::create('don_hang_chi_tiet', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->timestamps();
+            $table->string('ten_kich_co', ConstantSystem::DEFAULT_MAX_LENGTH)->nullable();
             $table->decimal('don_gia', 15, 2)->default(0);
             $table->integer('so_luong')->default(0);
             $table->foreignUuid('id_don_hang')->references('id')->on('don_hang');

@@ -28,11 +28,8 @@ class DonHangChiTietResource extends JsonResource
             'ngayHoanThanh' => $this->ngay_hoan_thanh,
             'ngayHuyDon' => $this->ngay_huy_don,
             'tongTien' => $this->tong_tien_hang,
-            // 'billItems' => $this->billItems,
-            // 'totalFinal' => $this->totalFinal,
-            // 'paymentMethod' => $this->payment_method,
-            // 'token' => $this->token,
-            // 'account' => $this->account,
+            'tienShip' => $this->tien_ship,
+            'listDonHangChiTiet' => $this->listDonHangChiTiet,
         ];
     }
 }
