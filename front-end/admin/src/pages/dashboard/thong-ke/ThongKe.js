@@ -1,12 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { formatCurrencyVnd } from '../../../utils/formatCurrency';
-import { useParams } from "react-router-dom";
 // antd
-import { Button, Table, Tag, Flex } from 'antd';
-// routes
-import { Link } from 'react-router-dom';
-import { DUONG_DAN_TRANG } from '../../../routes/duong-dan';
+import { Table, Flex } from 'antd';
 // components
 import Page from '../../../components/Page';
 import Container from '../../../components/Container';
@@ -14,18 +10,16 @@ import { HeaderBreadcrumbs } from '../../../components/HeaderSection';
 import Space from '../../../components/Space';
 // hooks
 import useLoading from '../../../hooks/useLoading';
-import useConfirm from '../../../hooks/useConfirm';
-import useNotification from '../../../hooks/useNotification';
 
 const danhSachCacTruongDuLieu = [
   {
-    title: 'Hình ảnh',
+    title: 'Mã sản phẩm',
     align: "center",
     render: (text, record) => {
       return (
         <>
           <span className='fw-500'>
-            <img src={record.hinh_anh} width='80px' alt="img" />
+            {record.ma}
           </span>
         </>
       )
@@ -38,33 +32,7 @@ const danhSachCacTruongDuLieu = [
       return (
         <>
           <span className='fw-500'>
-            {record.ten} {" "} ({record.ma})
-          </span>
-        </>
-      )
-    },
-  },
-  {
-    title: 'Kích cỡ',
-    align: "center",
-    render: (text, record) => {
-      return (
-        <>
-          <span className='fw-500'>
-            {record.ten_kich_co}
-          </span>
-        </>
-      )
-    },
-  },
-  {
-    title: 'Số lượng',
-    align: "center",
-    render: (text, record) => {
-      return (
-        <>
-          <span className='fw-500'>
-            {record.so_luong}
+            {record.ten}
           </span>
         </>
       )
@@ -83,26 +51,10 @@ const danhSachCacTruongDuLieu = [
       )
     },
   },
-  {
-    title: 'Thành tiền',
-    align: "center",
-    render: (text, record) => {
-      return (
-        <>
-          <span className='fw-500' style={{ color: 'red' }} >
-            {formatCurrencyVnd(record.don_gia * record.so_luong) + "đ"}
-          </span>
-        </>
-      )
-    },
-  },
 ];
 
 export default function ThongKe() {
-  const { onOpenSuccessNotify } = useNotification(); //mở thông báo
   const { onOpenLoading, onCloseLoading } = useLoading();
-  const { showConfirm } = useConfirm(); // mở confirm
-  const { id } = useParams(); // id trên đường dẫn
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -112,7 +64,7 @@ export default function ThongKe() {
       onOpenLoading();
       try {
         // gọi api từ backend
-        const response = await axios.get(`http://127.0.0.1:8000/api/tim-don-hang/${id}`);
+        const response = await axios.get(`http://127.0.0.1:8000/api/thong-ke`);
         // nếu gọi api thành công sẽ set dữ liệu
         setData(response.data.data); // set dữ liệu được trả về từ backend
         console.log(response.data.data)
@@ -150,30 +102,30 @@ export default function ThongKe() {
               <Flex gap={10} vertical>
                 <Flex gap={5}>
                   <span>Tổng số sản phẩm đã bán: </span>
-                  <span>{data?.ma}</span>
+                  <span>{data?.tongTatCaDoanhThu?.tongSoLuongSanPhamDaBan}</span>
                 </Flex>
                 <Flex gap={5}>
                   <span>Tổng số đơn hàng: </span>
-                  <span>{data?.ma}</span>
+                  <span>{data?.tongTatCaDoanhThu?.tongSoDonHangDaBan}</span>
                 </Flex>
                 <Flex gap={5}>
                   <span>Tổng doanh thu: </span>
-                  <span>{data?.ma}</span>
+                  <span>{formatCurrencyVnd(parseInt(data?.tongTatCaDoanhThu?.tongDoanhThu))}</span>
                 </Flex>
               </Flex>
 
               <Flex style={{ marginRight: 300 }} gap={10} vertical>
                 <Flex gap={5}>
                   <span>Tổng số sản phẩm đã bán tuần này: </span>
-                  <span>{data?.ma}</span>
+                  <span>{data?.tongTatCaDoanhThuTuan?.tongSoLuongSanPhamDaBanTuan}</span>
                 </Flex>
                 <Flex gap={5}>
                   <span>Tổng số đơn hàng tuần này: </span>
-                  <span>{data?.ma}</span>
+                  <span>{data?.tongTatCaDoanhThuTuan?.tongSoDonHangDaBanTuan}</span>
                 </Flex>
                 <Flex gap={5}>
                   <span>Tổng doanh thu tuần này: </span>
-                  <span>{data?.ma}</span>
+                  <span>{formatCurrencyVnd(parseInt(data?.tongTatCaDoanhThuTuan?.tongDoanhThuTuan))}</span>
                 </Flex>
               </Flex>
 
@@ -184,30 +136,30 @@ export default function ThongKe() {
               <Flex gap={10} vertical>
                 <Flex gap={5}>
                   <span>Tổng số sản phẩm đã bán tháng này: </span>
-                  <span>{data?.ma}</span>
+                  <span>{data?.tongTatCaDoanhThuThang?.tongSoLuongSanPhamDaBanThang}</span>
                 </Flex>
                 <Flex gap={5}>
                   <span>Tổng số đơn hàng tháng này: </span>
-                  <span>{data?.ma}</span>
+                  <span>{data?.tongTatCaDoanhThuThang?.tongSoDonHangDaBanThang}</span>
                 </Flex>
                 <Flex gap={5}>
                   <span>Tổng doanh thu tháng này: </span>
-                  <span>{data?.ma}</span>
+                  <span>{formatCurrencyVnd(parseInt(data?.tongTatCaDoanhThuThang?.tongDoanhThuThang))}</span>
                 </Flex>
               </Flex>
 
               <Flex style={{ marginRight: 300 }} gap={10} vertical>
                 <Flex gap={5}>
                   <span>Tổng số sản phẩm đã bán năm này: </span>
-                  <span>{data?.ma}</span>
+                  <span>{data?.tongTatCaDoanhThuNam?.tongSoLuongSanPhamDaBanNam}</span>
                 </Flex>
                 <Flex gap={5}>
                   <span>Tổng số đơn hàng năm này: </span>
-                  <span>{data?.ma}</span>
+                  <span>{data?.tongTatCaDoanhThuNam?.tongSoDonHangDaBanNam}</span>
                 </Flex>
                 <Flex gap={5}>
                   <span>Tổng doanh thu năm này: </span>
-                  <span>{data?.ma}</span>
+                  <span>{formatCurrencyVnd(parseInt(data?.tongTatCaDoanhThuNam?.tongDoanhThuNam))}</span>
                 </Flex>
               </Flex>
 
@@ -227,7 +179,7 @@ export default function ThongKe() {
               className=''
               rowKey={"id"}
               columns={danhSachCacTruongDuLieu}
-              dataSource={data?.listDonHangChiTiet || []} // dữ liệu từ backend
+              dataSource={data?.listSanPhamMoiNhat || []} // dữ liệu từ backend
               pagination={false} // tắt phân trang mặc định của table
             />
           </Space>
@@ -237,34 +189,3 @@ export default function ThongKe() {
     </>
   )
 }
-
-const hienThiTrangThai = (trangThai) => {
-  switch (trangThai) {
-    case "cho_xac_nhan":
-      return "Chờ xác nhận";
-    case "cho_giao_hang":
-      return "Chờ giao hàng";
-    case "dang_giao_hang":
-      return "Đang giao hàng";
-    case "hoan_thanh":
-      return "Hoàn thành";
-    default:
-      return "Đã hủy";
-  }
-};
-
-export const hienThiMauSac = (trangThai) => {
-  switch (trangThai) {
-    case "cho_xac_nhan":
-      return '#e8da0e';
-    case "cho_giao_hang":
-      return '#e8da0e';
-    case "dang_giao_hang":
-      return '#0fd93b';
-    case "hoan_thanh":
-      return '#108ee9';
-    default:
-      return '#e8190e';
-  }
-}
-

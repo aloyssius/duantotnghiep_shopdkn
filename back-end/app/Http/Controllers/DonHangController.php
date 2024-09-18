@@ -144,104 +144,92 @@ class DonHangController extends Controller
         return ApiResponse::responseObject(new DonHangChiTietResource($timDonHang));
     }
 
-    public function thongKe(Request $req)
+    public function thongKe()
     {
-        $startDate = $req->startDate;
-        $endDate = $req->endDate;
 
-        $totalBill = Bill::join('bill_details', 'bills.id', '=', 'bill_details.bill_id')
-            ->whereBetween('bills.created_at', [
-                Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay(),
-                Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay()
-            ])
-            ->where('bills.status', OrderStatus::COMPLETED)
-            ->selectRaw('SUM(bills.total_money - COALESCE(bills.discount_amount, 0)) as totalMoney')
-            ->selectRaw('COUNT(bills.id) as totalOrder')
-            ->selectRaw('SUM(bill_details.quantity) as totalSold')
-            ->first();
+        $tongSoDonHangDaBan = DonHang::where('trang_thai', 'hoan_thanh')->count();
+        $tongSoLuongSanPhamDaBan = DB::table('don_hang_chi_tiet')
+            ->join('don_hang', 'don_hang.id', '=', 'don_hang_chi_tiet.id_don_hang')
+            ->where('don_hang.trang_thai', 'hoan_thanh')
+            ->sum('don_hang_chi_tiet.so_luong');
+        $tongDoanhThu = DonHang::where('trang_thai', 'hoan_thanh')->sum('tong_tien_hang');
 
-        $totalStatus = Bill::whereIn('status', [OrderStatus::COMPLETED, OrderStatus::CANCELED])
-            ->whereBetween('created_at', [
-                Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay(),
-                Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay()
-            ])
-            ->selectRaw('COUNT(*) as count, status')
-            ->groupBy('status')
-            ->get();
-        $completedCount = $totalStatus->where('status', 'completed')->first()->count ?? 0;
-        $canceledCount = $totalStatus->where('status', 'canceled')->first()->count ?? 0;
-        $totalCountBillCompletedAndCanceled = $completedCount + $canceledCount;
+        $tongTatCaDoanhThu = [
+            'tongSoLuongSanPhamDaBan' => $tongSoLuongSanPhamDaBan,
+            'tongSoDonHangDaBan' => $tongSoDonHangDaBan,
+            'tongDoanhThu' => $tongDoanhThu,
+        ];
 
-        $totalStatusPercent = DB::table('bills')
-            ->whereIn('status', [OrderStatus::COMPLETED, OrderStatus::CANCELED])
-            ->whereBetween('created_at', [
-                Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay(),
-                Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay()
-            ])
-            ->selectRaw('
-        status,
-        COUNT(*) AS count,
-        ROUND(COUNT(*) * 100.0 / (
-            SELECT COUNT(*)
-            FROM bills
-            WHERE status IN (\'completed\', \'canceled\')
-            AND created_at BETWEEN ? AND ?
-        ), 2) AS percentage
-    ', [
-                Carbon::createFromFormat('d-m-Y', $startDate)->startOfDay(),
-                Carbon::createFromFormat('d-m-Y', $endDate)->endOfDay()
-            ])
-            ->groupBy('status')
-            ->get();
-        //     $totalStatusPercent = DB::table('bills')
-        //         ->whereIn('status', [OrderStatus::COMPLETED, OrderStatus::CANCELED])
-        //         ->selectRaw('
-        //     status,
-        //     COUNT(*) AS count,
-        //     ROUND(COUNT(*) * 100.0 / (
-        //         SELECT COUNT(*)
-        //         FROM bills
-        //         WHERE status IN (\'completed\', \'canceled\')
-        //     ), 2) AS percentage
-        // ')
-        //         ->groupBy('status')
-        //         ->get();
+        $tongSoLuongSanPhamDaBanTuan = DB::table('don_hang_chi_tiet')
+            ->join('don_hang', 'don_hang.id', '=', 'don_hang_chi_tiet.id_don_hang')
+            ->where('don_hang.trang_thai', 'hoan_thanh')
+            ->whereBetween('don_hang.created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->sum('don_hang_chi_tiet.so_luong');
 
-        $query = "
-            WITH PRODUCT_DEFAULT_IMAGE AS (
-              SELECT PRODUCT_ID, path_url, PRODUCT_COLOR_ID
-              FROM IMAGES
-              WHERE IS_DEFAULT = 1
-            )
-            SELECT PD.sku as code, P.name, C.name as colorName, PDI.path_url as pathUrl, sum(BD.quantity) as totalSold
-            FROM BILL_DETAILS BD
-            JOIN BILLS B ON BD.BILL_ID = B.ID
-            JOIN PRODUCT_DETAILS PD ON BD.PRODUCT_DETAILS_ID = PD.ID
-            JOIN COLORS C ON PD.COLOR_ID = C.ID
-            JOIN PRODUCTS P ON PD.PRODUCT_ID = P.ID
-            JOIN PRODUCT_DEFAULT_IMAGE PDI ON PD.PRODUCT_ID = PDI.PRODUCT_ID
-            AND PD.COLOR_ID = PDI.PRODUCT_COLOR_ID
-            WHERE B.status = 'completed'
-            group by pd.sku, p.name, PDI.path_url, c.name
-            order by sum(BD.quantity) desc
-            limit 5;
-        ";
-        $products = DB::select($query);
+        $tongSoDonHangDaBanTuan = DonHang::where('trang_thai', 'hoan_thanh')
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->count();
 
-        $revenueByMonth = DB::table('bills as b')
-            ->join('bill_details as bd', 'b.id', '=', 'bd.bill_id')
-            // ->whereYear('b.created_at', 2024)
-            ->where('b.status', 'completed')
-            ->selectRaw('MONTH(b.created_at) as month, YEAR(b.created_at) as year, SUM((bd.quantity * bd.price) - COALESCE(b.discount_amount, 0)) as totalRevenue')
-            ->groupBy('month', 'year')
-            ->orderBy('month')
-            ->get();
+        $tongDoanhThuTuan = DonHang::where('trang_thai', 'hoan_thanh')
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->sum('tong_tien_hang');
 
-        $response['totalBill'] = $totalBill;
-        $response['totalCount'] = $totalCountBillCompletedAndCanceled;
-        $response['totalPercent'] = $totalStatusPercent;
-        $response['products'] = $products;
-        $response['revenueByMonth'] = $revenueByMonth;
+        $tongTatCaDoanhThuTuan = [
+            'tongSoLuongSanPhamDaBanTuan' => $tongSoLuongSanPhamDaBanTuan,
+            'tongSoDonHangDaBanTuan' => $tongSoDonHangDaBanTuan,
+            'tongDoanhThuTuan' => $tongDoanhThuTuan,
+        ];
+
+        $tongSoLuongSanPhamDaBanThang = DB::table('don_hang_chi_tiet')
+            ->join('don_hang', 'don_hang.id', '=', 'don_hang_chi_tiet.id_don_hang')
+            ->where('don_hang.trang_thai', 'hoan_thanh')
+            ->whereYear('don_hang.created_at', Carbon::now()->year)
+            ->whereMonth('don_hang.created_at', Carbon::now()->month)
+            ->sum('don_hang_chi_tiet.so_luong');
+
+        $tongSoDonHangDaBanThang = DonHang::where('trang_thai', 'hoan_thanh')
+            ->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->count();
+
+        $tongDoanhThuThang = DonHang::where('trang_thai', 'hoan_thanh')
+            ->whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->sum('tong_tien_hang');
+
+        $tongTatCaDoanhThuThang = [
+            'tongSoLuongSanPhamDaBanThang' => $tongSoLuongSanPhamDaBanThang,
+            'tongSoDonHangDaBanThang' => $tongSoDonHangDaBanThang,
+            'tongDoanhThuThang' => $tongDoanhThuThang,
+        ];
+
+        $tongSoLuongSanPhamDaBanNam = DB::table('don_hang_chi_tiet')
+            ->join('don_hang', 'don_hang.id', '=', 'don_hang_chi_tiet.id_don_hang')
+            ->where('don_hang.trang_thai', 'hoan_thanh')
+            ->whereYear('don_hang.created_at', Carbon::now()->year)
+            ->sum('don_hang_chi_tiet.so_luong');
+
+        $tongSoDonHangDaBanNam = DonHang::where('trang_thai', 'hoan_thanh')
+            ->whereYear('created_at', Carbon::now()->year)
+            ->count();
+
+        $tongDoanhThuNam = DonHang::where('trang_thai', 'hoan_thanh')
+            ->whereYear('created_at', Carbon::now()->year)
+            ->sum('tong_tien_hang');
+
+        $tongTatCaDoanhThuNam = [
+            'tongSoLuongSanPhamDaBanNam' => $tongSoLuongSanPhamDaBanNam,
+            'tongSoDonHangDaBanNam' => $tongSoDonHangDaBanNam,
+            'tongDoanhThuNam' => $tongDoanhThuNam,
+        ];
+
+        $listSanPhamMoiNhat = SanPham::orderBy('created_at', 'desc')->take(5)->get();
+
+        $response['tongTatCaDoanhThu'] = $tongTatCaDoanhThu;
+        $response['tongTatCaDoanhThuTuan'] = $tongTatCaDoanhThuTuan;
+        $response['tongTatCaDoanhThuThang'] = $tongTatCaDoanhThuThang;
+        $response['tongTatCaDoanhThuNam'] = $tongTatCaDoanhThuNam;
+        $response['listSanPhamMoiNhat'] = $listSanPhamMoiNhat;
 
         return ApiResponse::responseObject($response);
     }
