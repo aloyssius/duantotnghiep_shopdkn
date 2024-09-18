@@ -53,16 +53,3 @@ Route::get('/mau-sac', [MauSacController::class, 'index']);
 Route::post('/mau-sac', [MauSacController::class, 'store']);
 Route::get('/mau-sac/{id}', [MauSacController::class, 'show']);
 Route::put('/mau-sac/{id}', [MauSacController::class, 'update']);
-// color
-Route::get('/attributes/colors', [AttributeColorController::class, 'index']);
-Route::put('/attributes/colors/status', [AttributeColorController::class, 'updateStatus']);
-Route::put('/attributes/colors', [AttributeColorController::class, 'update']);
-Route::post('/attributes/colors', [AttributeColorController::class, 'store']);
-Route::delete('/attributes/colors', [AttributeColorController::class, 'destroy']);
-
-// brand
-Route::get('/attributes/brands', [AttributeBrandController::class, 'index']);
-Route::put('/attributes/brands/status', [AttributeBrandController::class, 'updateStatus']);
-Route::put('/attributes/brands', [AttributeBrandController::class, 'update']);
-Route::post('/attributes/brands', [AttributeBrandController::class, 'storeBrand']);
-Route::delete('/attributes/brands', [AttributeBrandController::class, 'destroy']);

@@ -3,18 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
-use App\Helpers\QueryHelper;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 use App\Exceptions\NotFoundException;
-use App\Exceptions\RestApiException;
-use App\Helpers\ConvertHelper;
-use App\Helpers\CustomCodeHelper;
-use App\Http\Requests\Product\AttributeRequest;
-use App\Http\Requests\Product\AttributeRequestBody;
-use App\Http\Resources\Products\AttributeResource;
-use App\Models\Brand;
-use App\Models\Product;
 use App\Models\MauSac;
 use Illuminate\Http\Request;
 use App\Http\Resources\MauSacResource;
@@ -34,17 +24,16 @@ class MauSacController extends Controller
                     ->orWhere('ten', 'like', $tuKhoa);
             });
         }
-    
+
 
         $mauSac->orderBy('ten', 'asc');
-    
+
         // Phân trang
         // $response = $mauSac->paginate($req->pageSize, ['*'], 'currentPage', $req->currentPage);
         $response = $mauSac->paginate(10, ['*'], 'currentPage', $req->currentPage);
         // $response = $query->paginate($req->input('pageSize', 15), ['*'], 'currentPage', $req->input('currentPage', 1));
-    
-        return ApiResponse::responsePage(MauSacResource::collection($response));
 
+        return ApiResponse::responsePage(MauSacResource::collection($response));
     }
 
     public function show($id)
@@ -79,15 +68,14 @@ class MauSacController extends Controller
         if (!$mauSac) {
             throw new NotFoundException("Không tìm thấy màu sắc có id là " . $id);
         }
-            $mauSac->ten = $req->input('tenMauSac', $mauSac->ten);
-            $mauSac->ma = $req->input('maMauSac', $mauSac->ma);
-            $mauSac->trang_thai = $req->input('trangThai', $mauSac->trang_thai);
+        $mauSac->ten = $req->input('tenMauSac', $mauSac->ten);
+        $mauSac->ma = $req->input('maMauSac', $mauSac->ma);
+        $mauSac->trang_thai = $req->input('trangThai', $mauSac->trang_thai);
 
-            // Lưu các thay đổi vào cơ sở dữ liệu
-            $mauSac->save();
+        // Lưu các thay đổi vào cơ sở dữ liệu
+        $mauSac->save();
 
-            // Trả về dữ liệu khách hàng đã cập nhật dưới dạng JSON
-            return ApiResponse::responseObject(new MauSacResource($mauSac));
+        // Trả về dữ liệu khách hàng đã cập nhật dưới dạng JSON
+        return ApiResponse::responseObject(new MauSacResource($mauSac));
     }
-
 }

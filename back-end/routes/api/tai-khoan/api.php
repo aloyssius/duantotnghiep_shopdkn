@@ -33,9 +33,3 @@ Route::get('/nhan-vien', [NhanVienController::class, 'index']);
 Route::post('/nhan-vien', [NhanVienController::class, 'store']);
 Route::get('nhan-vien/{id}', [NhanVienController::class, 'show']);
 Route::put('nhan-vien/{id}', [NhanVienController::class, 'update']);
-
-
-// Route::get('/account/bills', [BillController::class, 'showBillsByAccount']);
-// Route::get('/account/bill-detail', [BillController::class, 'showBillDetailByAccount']);
-// Route::put('/account/bill/status', [BillController::class, 'updateStatusCanceledByAccount']);
-// Route::put('/account/bill/payment-method', [BillController::class, 'updatePaymentMethodByAccount']);
