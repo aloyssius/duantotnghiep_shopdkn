@@ -21,7 +21,8 @@ class GioHangController extends Controller
         $timKichCo = KichCo::find($req->idKichCo);
 
         // tìm xem sản phẩm (kích cỡ) đã có trong giỏ hàng chi tiết hay chưa
-        $timSanPhamTrongGioHangChiTiet = GioHangChiTiet::where('ten_kich_co', $timKichCo->ten_kich_co)->where('id_gio_hang', $timGioHang->id)->first();
+        $timSanPhamTrongGioHangChiTiet = GioHangChiTiet::where('ten_kich_co', $timKichCo->ten_kich_co)
+        ->where('id_gio_hang', $timGioHang->id)->first();
         if ($timSanPhamTrongGioHangChiTiet) { // nếu đã có rồi cộng số lượng lên 1
             $timSanPhamTrongGioHangChiTiet->so_luong = $timSanPhamTrongGioHangChiTiet->so_luong + 1;
             $timSanPhamTrongGioHangChiTiet->save();

@@ -39,7 +39,6 @@ class DonHangClientController extends Controller
             $timSanPham = SanPham::find($donHangChiTiet->id_san_pham);
             $hinhAnh = HinhAnh::where('id_san_pham', $timSanPham->id)->first();
             $donHangChiTiet->hinh_anh = $hinhAnh->duong_dan_url;
-            $donHangChiTiet->don_gia = $timSanPham->don_gia;
             $donHangChiTiet->ten = $timSanPham->ten;
             $donHangChiTiet->ma = $timSanPham->ma;
         });
@@ -78,7 +77,7 @@ class DonHangClientController extends Controller
             $donHangChiTiet->save();
 
             $timKichCo = KichCo::where('id_san_pham', $donHangChiTiet->id_san_pham)->where('ten_kich_co', $donHangChiTiet->ten_kich_co)->first();
-            $timKichCo->so_luong_ton = $timKichCo->so_luong_ton - $donHangChiTiet->so_luong;
+            $timKichCo->so_luong_ton = $timKichCo->so_luong_ton - $donHangChiTiet->so_luong; //trừ số lượng tồn trong bảng Kích cỡ
             $timKichCo->save();
         }
 

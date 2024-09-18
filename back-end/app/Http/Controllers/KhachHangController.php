@@ -88,9 +88,6 @@ class KhachHangController extends Controller
         $khachHang->ho_va_ten = $req->input('hoVaTen', $khachHang->ho_va_ten);
         $khachHang->ngay_sinh = $req->input('ngaySinh', $khachHang->ngay_sinh);
         $khachHang->so_dien_thoai = $req->input('soDienThoai', $khachHang->so_dien_thoai);
-        if ($req->has('matKhau')) {
-            $khachHang->mat_khau = Hash::make($req->input('matKhau')); // Mã hóa mật khẩu nếu có thay đổi
-        }
         $khachHang->email = $req->input('email', $khachHang->email);
         $khachHang->gioi_tinh = $req->input('gioiTinh', $khachHang->gioi_tinh);
         // $khachHang->trang_thai = $req->input('trangThai', $khachHang->trang_thai);

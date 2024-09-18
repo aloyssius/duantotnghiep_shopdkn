@@ -83,7 +83,7 @@ function SanPhamChiTiet(props) {
         console.log(response.data.data);
 
         if (laMuaNgay) {
-          history.push('/thanh-toan');
+          history.push('/gio-hang');
         }
 
       } catch (error) {

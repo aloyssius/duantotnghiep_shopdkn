@@ -267,6 +267,15 @@ export default function DonHangChiTiet() {
                   <span>Tổng tiền hàng: </span>
                   <span style={{ color: 'red' }}>{formatCurrencyVnd(data?.tongTien) + "đ"} </span>
                 </Flex>
+
+                <Flex gap={5}>
+                  <span>Tiền ship: </span>
+                  <span style={{ color: 'red' }}>{formatCurrencyVnd(data?.tienShip) + "đ"} </span>
+                </Flex><Flex gap={5}>
+
+                  <span>Cần thanh toán: </span>
+                  <span style={{ color: 'red' }}>{formatCurrencyVnd(data?.tongTien + data?.tienShip) + "đ"} </span>
+                </Flex>
               </Flex>
 
             </div>

@@ -201,11 +201,7 @@ class ProductGallery extends Component {
     const { layout, images } = this.props;
     const { currentIndex } = this.state;
 
-    images?.sort((a, b) => {
-      if (a.isDefault === 1) return -1;
-      if (b.isDefault === 0) return 1;
-      return 0;
-    });
+
 
     const featured = images.map((image, index) => (
 

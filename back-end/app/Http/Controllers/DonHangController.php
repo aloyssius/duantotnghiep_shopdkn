@@ -77,7 +77,6 @@ class DonHangController extends Controller
             $timSanPham = SanPham::find($donHangChiTiet->id_san_pham);
             $hinhAnh = HinhAnh::where('id_san_pham', $timSanPham->id)->first();
             $donHangChiTiet->hinh_anh = $hinhAnh->duong_dan_url;
-            $donHangChiTiet->don_gia = $timSanPham->don_gia;
             $donHangChiTiet->ten = $timSanPham->ten;
             $donHangChiTiet->ma = $timSanPham->ma;
         });
@@ -101,7 +100,6 @@ class DonHangController extends Controller
             $timSanPham = SanPham::find($donHangChiTiet->id_san_pham);
             $hinhAnh = HinhAnh::where('id_san_pham', $timSanPham->id)->first();
             $donHangChiTiet->hinh_anh = $hinhAnh->duong_dan_url;
-            $donHangChiTiet->don_gia = $timSanPham->don_gia;
             $donHangChiTiet->ten = $timSanPham->ten;
             $donHangChiTiet->ma = $timSanPham->ma;
         });
@@ -134,7 +132,6 @@ class DonHangController extends Controller
             $timSanPham = SanPham::find($donHangChiTiet->id_san_pham);
             $hinhAnh = HinhAnh::where('id_san_pham', $timSanPham->id)->first();
             $donHangChiTiet->hinh_anh = $hinhAnh->duong_dan_url;
-            $donHangChiTiet->don_gia = $timSanPham->don_gia;
             $donHangChiTiet->ten = $timSanPham->ten;
             $donHangChiTiet->ma = $timSanPham->ma;
         });

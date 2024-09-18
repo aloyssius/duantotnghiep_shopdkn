@@ -61,6 +61,7 @@ class TaiKhoanController extends Controller
         $taiKhoanKhachHang->ma = CustomCodeHelper::taoMa(TaiKhoan::query(), 'KH');
         $taiKhoanKhachHang->email = $req->email;
         $taiKhoanKhachHang->mat_khau = bcrypt($req->matKhau);
+        $taiKhoanKhachHang->vai_tro = 'khach_hang';
         $taiKhoanKhachHang->save();
 
         $taoGioHang = new GioHang();
